@@ -1,40 +1,31 @@
 <script setup>
-import { ref } from 'vue'
-
 defineProps({
-  msg: String
+  title: String
 })
 
-const count = ref(0)
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
-
-  <p>
-    Recommended IDE setup:
-    <a href="https://code.visualstudio.com/" target="_blank">VS Code</a>
-    +
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-  </p>
-
-  <p>
-    <a href="https://vitejs.dev/guide/features.html" target="_blank">
-      Vite Documentation
-    </a>
-    |
-    <a href="https://v3.vuejs.org/" target="_blank">Vue 3 Documentation</a>
-  </p>
-
-  <button type="button" @click="count++">count is: {{ count }}</button>
-  <p>
-    Edit
-    <code>components/HelloWorld.vue</code> to test hot module replacement.
-  </p>
+  <div class="block">
+      <div class="title-box">
+          {{title}}
+      </div>
+      <slot></slot>
+  </div>
 </template>
 
-<style scoped>
-a {
-  color: #42b983;
+<style scoped lang="scss">
+.block {
+    box-sizing: border-box;
+    padding: 24px 21px 0 20px;
+    margin-top: 16px;
+    border-radius: 8px;
+    background-color: white;
+}
+.title-box {
+  font-weight: 600;
+  font-size: 20px; 
+  color: #6E4DFE;
+  margin-bottom: 20px;
 }
 </style>

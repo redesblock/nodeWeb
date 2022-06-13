@@ -47,7 +47,7 @@
       </el-menu>
       
     </el-col>
-    <el-col :span="20">
+    <el-col :span="20" class="page-content">
       <div class="content-bar"> </div>
       <router-view></router-view>
     </el-col>
@@ -79,11 +79,15 @@ const openRouter = (path) => {
 </script>
 <style scoped lang="scss">
 .el-menu-vertical {
-  height: 100vh;
+  height: 100%;
 }
 .logo-box {
   padding-left: calc(var(--el-menu-base-level-padding) + var(--el-menu-level) * var(--el-menu-level-padding));
   padding-top: 30px;
+}
+.page-content {
+  height: 100vh;
+  overflow-y: scroll;
 }
 .content-bar {
   height: 65px;

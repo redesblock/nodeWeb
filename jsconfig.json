@@ -1,7 +1,10 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "target": "es6"
-    },
-    "include": ["src/**/*"]
-  }
+  "compilerOptions": {
+    "target": "esnext",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

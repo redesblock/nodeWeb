@@ -13,7 +13,7 @@
         <div class="logo-box">
           <img src="../assets/img/logo.svg" alt="">
         </div>
-        <el-menu-item @click="openRouter('/home')" index="home">
+        <el-menu-item @click="openRouter" index="/home">
           <template #title>
             <el-icon><HomeFilled /></el-icon>
             <span>Info</span>
@@ -90,6 +90,7 @@ const openRouter = (item) => {
 }
 .page-content {
   height: 100vh;
+  background-color: rgba(239, 239, 239, 1);
   overflow-y: scroll;
 }
 .content-bar {

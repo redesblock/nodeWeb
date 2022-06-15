@@ -1,5 +1,5 @@
 <template>
-  <Block title="Stamps">
+  <Block title="Vouchers">
     <el-button type="primary" class="right mgb20" @click="addStampHandle"> 
       <el-icon><Plus /></el-icon> 
       BUY NEW  STAMP

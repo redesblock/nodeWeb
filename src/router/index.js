@@ -8,7 +8,9 @@ const routerInstance = createRouter({
         { path: '/files/upload', component: () => import('@/views/files/upload.vue') },
         { path: '/files/download', component: () => import('@/views/files/download.vue') },
         { path: '/assets/chequebock', component: () => import('@/views/assets/chequebock.vue') },
-        { path: '/assets/stamps', component: () => import('@/views/assets/stamps.vue') },
+        { path: '/assets/vouchers', component: () => import('@/views/assets/vouchers.vue') },
+        { path: '/assets/rewards', component: () => import('@/views/assets/rewards.vue') },
+        { path: '/assets/pledges', component: () => import('@/views/assets/pledges.vue') },
         { path: '/setting/api', component: () => import('@/views/setting/api.vue') },
         { path: '/setting/node', component: () => import('@/views/setting/node.vue') },
       ]

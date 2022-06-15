@@ -24,24 +24,26 @@
             <el-icon><Files /></el-icon>
             <span>Files</span>
           </template>
-            <el-menu-item @click="openRouter('/files/upload')" index="/files/upload">upload</el-menu-item>
-            <el-menu-item @click="openRouter('/files/download')" index="/files/download">download</el-menu-item>
+            <el-menu-item @click="openRouter" index="/files/upload">upload</el-menu-item>
+            <el-menu-item @click="openRouter" index="/files/download">download</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="Assets">
           <template #title>
             <el-icon><CreditCard /></el-icon>
             <span>Assets</span>
           </template>
-            <el-menu-item @click="openRouter('/assets/chequebock')" index="/assets/chequebock">Chequebock</el-menu-item>
-            <el-menu-item @click="openRouter('/assets/stamps')" index="/assets/stamps">Stamps</el-menu-item>
+            <el-menu-item @click="openRouter" index="/assets/chequebock">Chequebock</el-menu-item>
+            <el-menu-item @click="openRouter" index="/assets/vouchers">Vouchers</el-menu-item>
+            <el-menu-item @click="openRouter" index="/assets/rewards">Rewards</el-menu-item>
+            <el-menu-item @click="openRouter" index="/assets/pledges">Pledges</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="Settings">
           <template #title>
             <el-icon><Setting /></el-icon>
             <span>Settings</span>
           </template>
-            <el-menu-item @click="openRouter('/setting/api')" index="/setting/api">Api</el-menu-item>
-            <el-menu-item @click="openRouter('/setting/node')" index="/setting/node">Node</el-menu-item>
+            <el-menu-item @click="openRouter" index="/setting/api">Api</el-menu-item>
+            <el-menu-item @click="openRouter" index="/setting/node">Node</el-menu-item>
         </el-sub-menu>
         
       </el-menu>
@@ -71,9 +73,10 @@ const handleClose = (key, keyPath) => {
   console.log(key, keyPath)
 }
 
-const openRouter = (path) => {
+const openRouter = (item) => {
+  console.log(item)
   router.push({
-    path
+    path: item.index
   })
 }
 </script>

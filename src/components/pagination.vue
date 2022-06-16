@@ -8,7 +8,7 @@
     v-model:page-size="pageOptions.pageSize"
     :page-sizes="pagination.pageSizes || [10,30,50,100,500]"
     :layout="pagination.layout || 'total, prev, pager, next, sizes, jumper'"
-    :total="dataList.total"
+    :total="total"
     :pager-count="pagination.paperCount || 7"
     @size-change="handleSizeChange"
     @current-change="handleCurrentChange"
@@ -24,14 +24,10 @@ const props = defineProps({
       layout: 'total, prev, pager, next, sizes, jumper',
     }
   },
-  dataList: {
-    type: Object,
-    default: () => {
-      return {
-        list: [],
-        total: 1000
-      }
-    }
+  total: {
+    type: Number,
+    default: 0
+    
   },
   pageOptions: {
     type: Object,

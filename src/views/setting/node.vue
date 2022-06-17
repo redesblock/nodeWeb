@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<Page>
   <div class="list-box">
       <span> Connettion to Hop  API</span>
       <el-icon class="point"><ArrowRightBold /></el-icon>
@@ -130,7 +130,7 @@
         </div>
       </div>
   </div>
-</div>
+</Page>
 
 
 </template>

@@ -1,12 +1,11 @@
 <script setup>
-import Block from "@/components/Block.vue";
 import {
   Warning
 } from '@element-plus/icons-vue'
 </script>
 
 <template>
-  <div class="container">
+  <Page>
     <Block title="Hop Base NODE">
       <el-card shadow="never">
         <template #header>
@@ -91,13 +90,10 @@ import {
         </div>
       </el-card>
     </Block>
-  </div>
+  </Page>
 </template>
 
 <style scoped lang="scss">
-.container {
-  padding: 0 80px 30px 40px;
-}
 .version {
   text-align: right;
   font-weight: bold;

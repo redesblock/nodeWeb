@@ -1,9 +1,7 @@
 <template>
   <el-pagination
     class="pagination"
-    v-bind="{
-      ...pagination
-    }"
+    v-bind="pagination"
     v-model:currentPage="pageOptions.pageNum"
     v-model:page-size="pageOptions.pageSize"
     :page-sizes="pagination.pageSizes || [10,30,50,100,500]"

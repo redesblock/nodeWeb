@@ -17,10 +17,9 @@ defineProps({
 <style scoped lang="scss">
 .block {
     box-sizing: border-box;
-    padding: 24px 21px 0 20px;
-    margin-top: 16px;
+    // padding: 24px 21px 0 20px;
+    margin: 16px 0;
     border-radius: 8px;
-    // background-color: white;
 }
 .title-box {
   font-weight: 600;

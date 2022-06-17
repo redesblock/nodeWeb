@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<Page>
    <Block title="Chequebook">
     <div class="mgb20" style="text-align: right;">
       <el-button type="primary" @click="showWithdrawHandle">
@@ -78,11 +78,10 @@
   :stampModal="stampModal2" 
   title="Deposit" 
   tips="Specify the anount of MOP you would like to deposit to your NODE."></Modal>
-</div>
+</Page>
 
 </template>
 <script setup>
-import Block from "@/components/Block.vue";
 import {
   ArrowRightBold,
   Download,
@@ -114,7 +113,6 @@ function confirmHandle() {
 @mixin baseStyle($marginTop) {
   display: flex;
   justify-content: space-between;
-  margin: 0 30px;
   padding: 0 20px;
   box-sizing: border-box;
   margin-top: $marginTop;
@@ -122,15 +120,11 @@ function confirmHandle() {
   align-items: center;
   background-color: white;
 }
-.container {
-  height: 100vh;
-  background-color: rgba(239, 239, 239, 1);
-}
+
 .board-card {
   display: flex;
   &>div{
     flex: 1 1 0;
-    margin: 0 10px;
     height: 125px;
     background-color: white;
     padding: 0 20px;
@@ -138,6 +132,9 @@ function confirmHandle() {
       font-size: 16px;
       font-weight: bold;
     }
+  }
+  &>div+div {
+    margin-left: 15px;
   }
 }
 .list-box {

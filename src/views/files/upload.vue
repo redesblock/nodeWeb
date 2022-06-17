@@ -1,21 +1,22 @@
 
 <template>
-<el-card shadow="never" class="actions">
-    <el-button> + ADD FILE </el-button>
-    <el-button> + ADD FOLDER</el-button>
-</el-card>
-<Block title="pload History">
-<PTable
-border
-:columns="columns" 
-:dataList="dataList"
-:pageOptions="pageOptions">
-</PTable>
-</Block>
+<Page>
+    <el-card shadow="never" class="actions">
+        <el-button> + ADD FILE </el-button>
+        <el-button> + ADD FOLDER</el-button>
+    </el-card>
+    <Block title="pload History">
+    <PTable
+    border
+    :columns="columns" 
+    :dataList="dataList"
+    :pageOptions="pageOptions">
+    </PTable>
+    </Block>
+</Page>
 </template>
 
 <script setup>
-import Block  from "@/components/Block.vue";
 import PTable from "@/components/PTable.vue";
 import { reactive } from "vue";
 
@@ -54,6 +55,5 @@ let pageOptions = reactive({
 <style scoped lang="scss">
 .actions {
     text-align: center;
-    margin: 0 20px;
 }
 </style>

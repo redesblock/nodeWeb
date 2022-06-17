@@ -1,28 +1,30 @@
 <template>
-<div class="list-box">
-    <span>APISettings</span>
-    <el-icon class="point"><ArrowRightBold /></el-icon>
-</div>
-<div class="content">
-    <h3>Hop  API</h3>
-    <div>
-        <el-input v-model.trim="api" placeholder="please enter" />
-        <div style="margin-top: 10px;">
-            <el-button type="primary" class="mgr10">save</el-button>
-            <el-button >cancel</el-button>
+<Page>
+    <div class="list-box">
+        <span>APISettings</span>
+        <el-icon class="point"><ArrowRightBold /></el-icon>
+    </div>
+    <div class="content">
+        <h3>Hop  API</h3>
+        <div>
+            <el-input v-model.trim="api" placeholder="please enter" />
+            <div style="margin-top: 10px;">
+                <el-button type="primary" class="mgr10">save</el-button>
+                <el-button >cancel</el-button>
+            </div>
         </div>
     </div>
-</div>
-<div class="content">
-    <h3>Hop  Debug  API</h3>
-    <div>
-        <el-input v-model.trim="debugapi" placeholder="please enter" />
-        <div style="margin-top: 10px;">
-            <el-button type="primary" class="mgr10">save</el-button>
-            <el-button >cancel</el-button>
+    <div class="content">
+        <h3>Hop  Debug  API</h3>
+        <div>
+            <el-input v-model.trim="debugapi" placeholder="please enter" />
+            <div style="margin-top: 10px;">
+                <el-button type="primary" class="mgr10">save</el-button>
+                <el-button >cancel</el-button>
+            </div>
         </div>
     </div>
-</div>
+</Page>
 </template>
 <script setup>
 import {

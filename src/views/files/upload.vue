@@ -2,8 +2,8 @@
 <template>
 <Page>
     <el-card shadow="never" class="actions">
-        <el-button> + ADD FILE </el-button>
-        <el-button> + ADD FOLDER</el-button>
+        <el-button type="primary"> + ADD FILE </el-button>
+        <el-button type="primary"> + ADD FOLDER</el-button>
     </el-card>
     <Block title="pload History">
     <PTable

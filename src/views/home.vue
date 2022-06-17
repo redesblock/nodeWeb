@@ -1,27 +1,22 @@
-<script setup>
-import {
-  Warning
-} from '@element-plus/icons-vue'
-</script>
 
 <template>
   <Page>
     <Block title="Hop Base NODE">
       <el-card shadow="never">
         <template #header>
-          <div class="version">4.1</div>
+          <div class="version">{{appModule.version}}</div>
         </template>
         <div class="item">
-          <span>Publick Key</span>
-          <p>030ec63337c3d4f09cffe40caaaca7d9e9719714a9b72ad4a6c3e33c76f563675b</p>
+          <Encipherment
+          title="Publick Key" :str="obj.publicKey"></Encipherment>
         </div>
         <div class="item">
-          <span>Publick Key</span>
-          <p>030ec63337c3d4f09cffe40caaaca7d9e9719714a9b72ad4a6c3e33c76f563675b</p>
+          <Encipherment
+          title="Pss Publick Key" :str="obj.pssPublicKey"></Encipherment>
         </div>
         <div class="item">
-          <span>Publick Key</span>
-          <p>030ec63337c3d4f09cffe40caaaca7d9e9719714a9b72ad4a6c3e33c76f563675b</p>
+          <Encipherment
+          title="NODE Peer Id" :str="obj.overlay"></Encipherment>
         </div>
       </el-card>
     </Block>
@@ -35,7 +30,7 @@ import {
            </div>
          </div>
          <div>
-           <h3>Overall Health Indicator</h3>
+           <h3>Connected Peers</h3>
            <div>
              <span class="number">50%</span>
               <el-tooltip
@@ -47,7 +42,7 @@ import {
            </div>
          </div>
          <div>
-           <h3>Overall Health Indicator</h3>
+           <h3>Population</h3>
            <div>
              <span class="number">50%</span>
               <el-tooltip
@@ -59,7 +54,7 @@ import {
            </div>
          </div>
          <div>
-           <h3>Overall Health Indicator</h3>
+           <h3>Depth</h3>
            <div>
              <span class="number">50%</span>
               <el-tooltip
@@ -77,21 +72,52 @@ import {
     <Block title="Blockchain">
       <el-card shadow="never">
         <div class="item">
-          <span>Publick Key</span>
-          <p>030ec63337c3d4f09cffe40caaaca7d9e9719714a9b72ad4a6c3e33c76f563675b</p>
+          <Encipherment
+          title="Bsc address" :str="obj.ethereum"></Encipherment>
         </div>
         <div class="item">
-          <span>Publick Key</span>
-          <p>030ec63337c3d4f09cffe40caaaca7d9e9719714a9b72ad4a6c3e33c76f563675b</p>
-        </div>
-        <div class="item">
-          <span>Publick Key</span>
-          <p>030ec63337c3d4f09cffe40caaaca7d9e9719714a9b72ad4a6c3e33c76f563675b</p>
+          <Encipherment
+          title="Chequebook address" :str="obj.chequebookAddress"></Encipherment>
         </div>
       </el-card>
     </Block>
   </Page>
 </template>
+
+<script setup>
+import {
+  Warning,
+} from '@element-plus/icons-vue'
+import { onMounted, reactive } from "vue";
+import { getAddress, getChequebookAddress } from "@/apis/index";
+import { useAppModule } from "@/store/appModule";
+import { split, isPrefixedHexString } from "@/utils/index";
+import Encipherment from "@/components/Encipherment.vue";
+const appModule = useAppModule();
+
+let obj = reactive({
+  pssPublicKey: '',
+  publicKey: '',
+  overlay: '',
+  ethereum: '',
+  underlay: [],
+  chequebookAddress: '',
+})
+
+onMounted(async() => {
+  let res = await getAddress()
+  if(res.status == 200) {
+    Object.keys(res.data).forEach(k => {
+      obj[k] = res.data[k]
+    })
+  }
+
+  let res2 = await getChequebookAddress()
+  if(res2.status == 200) {
+    obj.chequebookAddress = res2.data.chequebookAddress
+  }
+})
+</script>
 
 <style scoped lang="scss">
 .version {

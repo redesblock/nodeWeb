@@ -15,6 +15,12 @@ export function getChequebookAddress () {
         url: 'http://207.148.71.27:1635/chequebook/address'
     })
 }
+
+export function getTopology () {
+    return request({
+        url: 'http://207.148.71.27:1635/topology'
+    })
+}
 // 
 export function getHealth () {
     return request({

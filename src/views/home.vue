@@ -26,16 +26,16 @@
          <div>
            <h3>Overall Health Indicator</h3>
            <div>
-             <span class="number">50%</span>
+             <span class="number">{{percentageText}}</span>
            </div>
          </div>
          <div>
            <h3>Connected Peers</h3>
            <div>
-             <span class="number">50%</span>
+             <span class="number">{{topology.connected.score}}</span>
               <el-tooltip
                 effect="dark"
-                content="Top Left prompts info"
+                :content="topology.connected.explanation"
               >
              <el-icon class="right"><Warning /></el-icon>
             </el-tooltip>
@@ -44,10 +44,10 @@
          <div>
            <h3>Population</h3>
            <div>
-             <span class="number">50%</span>
+             <span class="number">{{topology.population.score}}</span>
               <el-tooltip
                 effect="dark"
-                content="Top Left prompts info"
+                :content="topology.population.explanation"
               >
              <el-icon class="right"><Warning /></el-icon>
             </el-tooltip>
@@ -56,10 +56,10 @@
          <div>
            <h3>Depth</h3>
            <div>
-             <span class="number">50%</span>
+             <span class="number">{{topology.depth.score}}</span>
               <el-tooltip
                 effect="dark"
-                content="Top Left prompts info"
+                :content="topology.depth.explanation"
               >
              <el-icon class="right"><Warning /></el-icon>
             </el-tooltip>
@@ -88,11 +88,11 @@
 import {
   Warning,
 } from '@element-plus/icons-vue'
-import { onMounted, reactive } from "vue";
-import { getAddress, getChequebookAddress } from "@/apis/index";
+import { onMounted, reactive, ref } from "vue";
+import { getAddress, getChequebookAddress, getTopology } from "@/apis/index";
 import { useAppModule } from "@/store/appModule";
-import { split, isPrefixedHexString } from "@/utils/index";
 import Encipherment from "@/components/Encipherment.vue";
+import { pickThreshold } from "@/utils/data";
 const appModule = useAppModule();
 
 let obj = reactive({
@@ -104,18 +104,46 @@ let obj = reactive({
   chequebookAddress: '',
 })
 
-onMounted(async() => {
+let topology = reactive({
+  depth: {},
+  population: {},
+  connected: {},
+})
+let percentageText = ref(null)
+
+
+const fetchGetAddress = async () => {
   let res = await getAddress()
   if(res.status == 200) {
     Object.keys(res.data).forEach(k => {
       obj[k] = res.data[k]
     })
   }
+}
 
-  let res2 = await getChequebookAddress()
-  if(res2.status == 200) {
-    obj.chequebookAddress = res2.data.chequebookAddress
+const fetGetChequebookAddress = async () => {
+  let res = await getChequebookAddress()
+  if(res.status == 200) {
+    obj.chequebookAddress = res.data.chequebookAddress
   }
+}
+
+const fetgetTopology = async () => {
+  let res = await getTopology()
+  if(res.status == 200) {
+    topology.depth = pickThreshold('depth', res.data.depth)
+    topology.population = pickThreshold('population', res.data.population)
+    topology.connected = pickThreshold('connected', res.data.connected)
+    const maximumTotalScore = Object.values(topology).reduce((sum, item) => sum + item.maximumScore, 0)
+    const actualTotalScore = Object.values(topology).reduce((sum, item) => sum + item.score, 0)
+    percentageText.value = Math.round((actualTotalScore / maximumTotalScore) * 100) + '%'
+  }
+}
+
+onMounted(async() => {
+  fetchGetAddress()
+  fetGetChequebookAddress()
+  fetgetTopology()
 })
 </script>
 

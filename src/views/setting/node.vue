@@ -7,55 +7,49 @@
         <div>
             <el-input v-model.trim="api" placeholder="please enter" />
             <div style="margin-top: 10px;">
-                <el-button type="primary" class="mgr10">save</el-button>
-                <el-button >cancel</el-button>
+                <el-button @click="saveApi" type="primary" class="mgr10">save</el-button>
+                <el-button @click="cancelApi">cancel</el-button>
             </div>
         </div>
     </div>
   </Fold>
   
-  <Fold label="Connettion to Hop Debug API">
+  <Fold label="Connettion to Hop Debug API" marginTop="20px">
     <div class="content">
         <div class="tips"> The connection to the Hop NODEs debug APIhas been successful</div>
         <h3>Hop  Debug  API</h3>
         <div>
-            <el-input v-model.trim="api" placeholder="please enter" />
+            <el-input v-model.trim="debugApi" placeholder="please enter" />
             <div style="margin-top: 10px;">
-                <el-button type="primary" class="mgr10">save</el-button>
-                <el-button >cancel</el-button>
+                <el-button @click="saveDebugApi" type="primary" class="mgr10">save</el-button>
+                <el-button @click="cancelDebugApi">cancel</el-button>
             </div>
         </div>
     </div>
   </Fold>
   
-  <Fold label="Hop Version">
+  <Fold label="Hop Version" marginTop="20px">
     <div class="content">
         <div class="tips"> You are running the latest version of Hop.</div>
         <div class="list-item">
           <span>Your Version</span>
-          <span>1.41</span>
+          <span>{{appModule.version}}</span>
         </div>
         <div class="list-item">
           <span>Latest Version</span>
-          <span>1.40</span>
+          <span>{{appModule.latestVersion || '-'}}</span>
         </div>
     </div>
   </Fold>
   
-  <Fold label="Connettion to Blockchain">
+  <Fold label="Connettion to Blockchain" marginTop="20px">
     <div class="content">
       <div class="tips">Your NODE is connected to the xDai blockchain</div>
-      <div class="list-item">
-        <span>Ethereum Address</span>
-      </div>
-      <div class="list-item">
-        <span>0x75f59cd2b244baf23246e482b1008e0650c4d55d</span>
-        <el-icon><CopyDocument /></el-icon>
-      </div>
+      <Encipherment line v-if="appModule.address.ethereum" title="Ethereum Address" :str="appModule.address.ethereum"></Encipherment>
     </div>
   </Fold>
   
-  <Fold label="Chequebook Deployment & Funding">
+  <Fold label="Chequebook Deployment & Funding" marginTop="20px">
     <div class="content">
       <div class="tips">Your chequebook is deployed and funded</div>
       <!-- <Encipherment title="Chequebook Address" str="0x5128C5d8d9bb73037f335D26d7dee6DBDfB82efA"></Encipherment> -->
@@ -72,7 +66,7 @@
     </div>
   </Fold>
   
-  <Fold label="Connettion to Peers">
+  <Fold label="Connettion to Peers" marginTop="20px">
     <div class="content">
         <div class="tips"> You are connected to other Hop NODEs</div>
         <div class="list-item">
@@ -131,7 +125,10 @@ import {
 import { ref } from 'vue'
 import Fold from "@/components/Fold.vue";
 import Encipherment from "@/components/Encipherment.vue";
-const api = ref(null)
+import { useApiConfig } from "@/store/api";
+import { useAppModule } from "@/store/appModule";
+const appModule = useAppModule()
+const {api, debugApi, cancelApi, saveApi, cancelDebugApi, saveDebugApi} = useApiConfig()
 </script>
 
 <style scoped lang="scss">

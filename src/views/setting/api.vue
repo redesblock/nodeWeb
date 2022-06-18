@@ -27,25 +27,8 @@
 </template>
 <script setup>
 import Fold from "@/components/Fold.vue";
-import { ref } from "vue";
-import { useAppModule } from "@/store/appModule";
-const store = useAppModule()
-let api = ref(store.api)
-let debugApi = ref(store.debugApi)
-function cancelApi() {
-    api.value = sessionStorage.getItem('api')
-}
-function saveApi() {
-    sessionStorage.setItem('api', api.value)
-}
-function cancelDebugApi() {
-    debugApi.value = sessionStorage.getItem('debug_api')
-    store.initAppConfig({api: api.value})
-}
-function saveDebugApi() {
-    sessionStorage.setItem('debug_api', debugApi.value)
-    store.initAppConfig({debugApi: debugApi.value})
-}
+import { useApiConfig } from "@/store/api";
+const {api, debugApi, cancelApi, saveApi, cancelDebugApi, saveDebugApi} = useApiConfig()
 </script>
 
 <style scoped lang="scss">

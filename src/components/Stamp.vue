@@ -1,5 +1,5 @@
 <template>
-    <el-drawer title="Buy new Stamp" v-model="stampModal" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" size="70%">
+    <el-drawer title="Buy new Vouchers" v-model="stampModal" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" size="70%">
       <template #default>
         <el-form
           ref="ruleFormRef"
@@ -10,10 +10,14 @@
           :size="formSize"
           status-icon
         >
-          <el-form-item label="Depth" prop="Depth">
-            <el-input v-model="ruleForm.Depth" />
+          <el-form-item label="Size" prop="Depth">
+            <!-- <el-input v-model.number="ruleForm.Depth" /> -->
+            <el-input-number
+            v-model="ruleForm.Depth"
+            controls-position="right"
+          />
           </el-form-item>
-          <el-form-item label="Amount" prop="Amount">
+          <el-form-item label="TTL" prop="Amount">
             <el-input v-model="ruleForm.Amount" />
           </el-form-item>
           <el-form-item label="Label" prop="Label">
@@ -32,17 +36,32 @@
 
 <script setup>
 import { ref, reactive } from "vue";
+import { createStamps } from "@/apis/index";
+import { ElLoading } from 'element-plus'
 defineProps({
   stampModal: {
     type: Boolean,
     default: false
   }
 })
+
 const emit = defineEmits(['cancel', 'confirm'])
+
+const validateDepth = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('Required field'))
+  } else if(value < 16) {
+      callback(new Error('Minimal Size is 16'))
+  }else if(value > 255) {
+      callback(new Error('Maximal Size is 255'))
+  }else {
+      callback()
+  }
+}
+
 const rules = reactive({
   Depth: [
-    { required: true, message: 'Required field', trigger: 'blur' },
-    { min: 16, max: 255, message: 'Length should be 16 to 255', trigger: 'blur' },
+    { required: true, validator: validateDepth},
   ],
   Amount: [
     { required: true, message: 'Required field', trigger: 'blur' },
@@ -52,7 +71,7 @@ const rules = reactive({
 const ruleForm = reactive({
   Depth: null,
   Amount: null,
-  Label: null,
+  Label: '',
 })
 
 const formSize = ref('default')
@@ -65,12 +84,19 @@ const cancelClick = (formEl) =>{
 
 const confirmClick = async (formEl) => {
   if (!formEl) return
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
-      emit('confirm')
-      console.log('submit!')
-    } else {
-      console.log('error submit!', fields)
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Service Pending',
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
+      let res = await createStamps(ruleForm)
+      console.log(res)
+      if(res.status == 200 || res.status == 201) {
+        loading.close()
+        emit('confirm')
+      }
     }
   })
 }

@@ -1,7 +1,6 @@
 import axios from "axios";
 const request = axios.create({
     baseURL:'', // api的base_url
-    timeout: 15000 // 请求超时时间
   })
 
 export function getAddress () {
@@ -37,6 +36,13 @@ export function getSettlements () {
 export function getStamps () {
     return request({
         url: 'http://207.148.71.27:1635/stamps'
+    })
+}
+
+export function createStamps (params) {
+    return request({
+        url: `http://207.148.71.27:1635/stamps/${params.Amount}/${params.Depth}?label=${params.Label}`,
+        method: 'POST'
     })
 }
 // 

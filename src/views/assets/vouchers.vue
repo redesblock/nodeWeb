@@ -3,7 +3,7 @@
     <Block title="Vouchers">
       <el-button type="primary" class="right mgb20" @click="addStampHandle"> 
         <el-icon><Plus /></el-icon> 
-        BUY NEW  STAMP
+        Buy Vouchers
       </el-button>
       <el-table border :data="dataList.list" style="width: 100%">
         <el-table-column prop="batchID" label="Voucher ID">
@@ -12,7 +12,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="capacity" label="Vouchers Capacity" width="220"/>
-        <el-table-column prop="batchTTL" label="Vouchers TTL" width="160" />
+        <el-table-column prop="amount" label="Vouchers TTL" width="160" />
         <el-table-column prop="blockNumber" label="Voucher Block" width="160" />
       </el-table>
     </Block>
@@ -42,6 +42,7 @@ function cancelHandle() {
 }
 function confirmHandle() {
   stampModal.value = false
+  fetchGetStamps()
 }
 let dataList = reactive({
   list: [],

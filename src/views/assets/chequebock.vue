@@ -13,57 +13,51 @@
     </div>
     <div class="board-card">
          <div>
-           <h3>Overall Health Indicator</h3>
-            <span class="number">50%</span>
+           <div class="label">Total Balance</div>
+            <span class="number">{{cardObj.totalBalance.toFixedDecimal()}} MOP</span>
          </div>
          <div>
-           <h3>Overall Health Indicator</h3>
-             <span class="number">50%</span>
+           <div class="label">Available  Balance</div>
+             <span class="number">{{cardObj.availableBalance.toFixedDecimal()}} MOP</span>
          </div>
          <div>
-           <h3>Overall Health Indicator</h3>
-             <span class="number">50%</span>
+           <div class="label">Total Cheques Amount Sent</div>
+             <span class="number">{{cardObj.totalSent.toFixedDecimal()}} MOP</span>
          </div>
          <div>
-           <h3>Overall Health Indicator</h3>
-             <span class="number">50%</span>
+           <div class="label">Total Cheques Amount Received</div>
+             <span class="number">{{cardObj.totalReceived.toFixedDecimal()}} MOP</span>
          </div>
          
-       </div>
+    </div>
   </Block>
-  <div class="list-box">
-    <span>PEERS(160)</span>
-    <el-icon><ArrowRightBold /></el-icon>
-  </div>
-  <div class="list-total">
-    <span>Uncashed Amount Total</span>
-    <span>1.0000000 MOP</span>
-  </div>
-  <div class="list-item">
-    <span>peer oagjgjgk[....]</span>
-    <el-icon><ArrowRightBold /></el-icon>
-  </div>
-  <div class="list-item">
-    <span>Peer ID</span>
-    <span>11030ec6[.....]369975b1</span>
-  </div>
-  <div class="list-item">
-    <span>Outstanding Balance</span>
-    <span>0.0000000 MOP</span>
-  </div>
-  <div class="list-item">
-    <span>Settlements Sent / Received</span>
-    <span>-0.0000000 / 0.0000000 MOP</span>
-  </div>
-  <div class="list-item">
-    <span>Total</span>
-    <span>0.0000000 MOP</span>
-  </div>
-  <div class="list-item">
-    <span>Uncashed Amount</span>
-    <span>0.0000000 MOP</span>
-  </div>
-
+    <Fold :label="PEERS" marginTop="50px">
+      <div class="list-total">
+      <span>Uncashed Amount Total</span>
+        <span>{{dataList.totalUncashed.toFixedDecimal()}} MOP</span>
+      </div>
+      <Fold :label="'peer ' + item.peer.slice(0, 8) + '[…]'" v-for="item in dataList.settlements">
+        <div class="list-item">
+          <Encipherment title="Peer ID" :str="item.peer"></Encipherment>
+        </div>
+        <div class="list-item">
+          <span>Outstanding Balance</span>
+          <span>0.0000000 MOP</span>
+        </div>
+        <div class="list-item">
+          <span>Settlements Sent / Received</span>
+          <span>-{{item.sent.toFixedDecimal()}} / {{item.received.toFixedDecimal()}} MOP</span>
+        </div>
+        <div class="list-item">
+          <span>Total</span>
+          <span>0.0000000 MOP</span>
+        </div>
+        <div class="list-item">
+          <span>Uncashed Amount</span>
+          <span>0.0000000 MOP</span>
+        </div>
+      </Fold>
+    </Fold>
     
   <Modal 
   :stampModal="stampModal1" 
@@ -83,13 +77,15 @@
 </template>
 <script setup>
 import {
-  ArrowRightBold,
   Download,
   Upload
 } from '@element-plus/icons-vue'
 import Modal from "@/components/Modal.vue";
-
-import { ref } from "vue";
+import Fold from "@/components/Fold.vue";
+import Encipherment from "@/components/Encipherment.vue";
+import { getBalance, getSettlements } from "@/apis/index";
+import Token from "@/utils/Token";
+import { ref, onMounted, reactive, computed } from "vue";
 let stampModal1 = ref(false)
 let stampModal2 = ref(false)
 
@@ -107,6 +103,50 @@ function cancelHandle() {
 function confirmHandle() {
   stampModal2.value = false
 }
+
+let cardObj = reactive({
+  availableBalance: new Token(0),
+  totalBalance:  new Token(0),
+  totalReceived:  new Token(0),
+  totalSent:  new Token(0),
+})
+
+let dataList = reactive({
+  totalUncashed: new Token(0),
+  settlements: [],
+})
+let PEERS = computed(() => {
+  return `PEERS(${dataList.settlements.length})`
+})
+
+
+async function fetchGetBalance() {
+  let res = await getBalance()
+  if(res.status == 200) {
+    cardObj.totalBalance = new Token(res.data.totalBalance)
+    cardObj.availableBalance = new Token(res.data.totalBalance)
+  }
+}
+
+async function fetchGetSettlements() {
+  let res = await getSettlements()
+  if(res.status == 200) {
+    cardObj.totalReceived = new Token(res.data.totalReceived)
+    cardObj.totalSent = new Token(res.data.totalSent)
+    dataList.settlements = res.data.settlements.map(item => {
+      return {
+        peer: item.peer,
+        received: new Token(item.received),
+        sent: new Token(item.sent),
+      }
+    })
+  }
+}
+
+onMounted(() => {
+  fetchGetBalance()
+  fetchGetSettlements()
+})
 </script>
 
 <style scoped lang="scss">
@@ -137,14 +177,16 @@ function confirmHandle() {
     margin-left: 15px;
   }
 }
-.list-box {
-   @include baseStyle($marginTop: 50px);
-}
 .list-total {
   @include baseStyle($marginTop: 10px);
   margin-bottom: 10px;
 }
 .list-item {
   @include baseStyle($marginTop: 1px);
+}
+
+.label {
+  margin-top: 20px;
+  margin-bottom: 25px;
 }
 </style>

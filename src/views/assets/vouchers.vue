@@ -5,11 +5,15 @@
         <el-icon><Plus /></el-icon> 
         BUY NEW  STAMP
       </el-button>
-      <el-table border :data="tableData" style="width: 100%">
-        <el-table-column prop="date" label="Batch ID"  />
-        <el-table-column prop="name" label="Stamp Depth"/>
-        <el-table-column prop="address" label="Capacity" />
-        <el-table-column prop="address" label="Amount" />
+      <el-table border :data="dataList.list" style="width: 100%">
+        <el-table-column prop="batchID" label="Voucher ID">
+          <template #default="scope">
+            <Encipherment title="Voucher ID" :str="scope.row.batchID"></Encipherment>
+          </template>
+        </el-table-column>
+        <el-table-column prop="capacity" label="Vouchers Capacity" width="220"/>
+        <el-table-column prop="batchTTL" label="Vouchers TTL" width="160" />
+        <el-table-column prop="blockNumber" label="Voucher Block" width="160" />
       </el-table>
     </Block>
   </Page>
@@ -22,11 +26,13 @@
 
 <script setup>
 import Stamp from "@/components/Stamp.vue";
+import { getStamps } from "@/apis/index";
+import { getHumanReadableFileSize } from "@/utils/index";
+import Encipherment from "@/components/Encipherment.vue";
 import {
   Plus,
 } from '@element-plus/icons-vue'
-import { ref } from "vue";
-let tableData = []
+import { ref, onMounted, reactive } from "vue";
 let stampModal = ref(false)
 function addStampHandle() {
   stampModal.value = true
@@ -37,6 +43,37 @@ function cancelHandle() {
 function confirmHandle() {
   stampModal.value = false
 }
+let dataList = reactive({
+  list: [],
+  total: 0
+})
+
+function enrichStamp(postageBatch) {
+  const { depth, bucketDepth, utilization } = postageBatch
+
+  const usage = utilization / Math.pow(2, depth - bucketDepth)
+  const usageText = `${Math.ceil(usage * 100)}%`
+  const capacity = `${getHumanReadableFileSize(2 ** depth * 4096 * usage)} / ${getHumanReadableFileSize(2 ** depth * 4096)}`
+  return {
+    ...postageBatch,
+    usage,
+    usageText,
+    capacity
+  }
+}
+
+async function fetchGetStamps() {
+  let res = await getStamps()
+  if(res.status == 200 ){
+    dataList.list = res.data.stamps.map(enrichStamp)
+    dataList.total = dataList.list.length
+  }
+}
+
+onMounted(() => {
+  fetchGetStamps()
+})
+
 </script>
 
 <style scoped lang="scss">

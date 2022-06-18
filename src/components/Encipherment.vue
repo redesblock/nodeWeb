@@ -2,13 +2,19 @@
 <script setup>
 import { ref, computed } from "vue";
 import { split, isPrefixedHexString } from "@/utils/index";
+import copy from 'copy-to-clipboard';
 import {
   View,
-  Hide
+  Hide,
+  CopyDocument
 } from '@element-plus/icons-vue'
 const props = defineProps({
   title: String,
-  str: String
+  str: String,
+  showCopy: {
+    type: Boolean,
+    default: true
+  }
 })
 let status = ref(false)
 const spanText = computed(() => {
@@ -29,15 +35,24 @@ function showInfoHandle() {
   status.value = !status.value
 }
 
+function copyText() {
+  copy(props.str)
+}
+
 </script>
 
 <template>
-    <span class="label">{{title}}</span> 
-    <el-icon :size="20" @click="showInfoHandle">
-      <View v-if="!status" />
-      <Hide v-else />
-    </el-icon>
-    <p>{{status ? normalStr : spanText}}</p>
+    <div>
+      <span class="label">{{title}}</span> 
+      <el-icon :size="20" @click="showInfoHandle">
+        <View v-if="!status" />
+        <Hide v-else />
+      </el-icon>
+    </div>
+    <p>
+      {{status ? normalStr : spanText}}
+      <el-icon style="padding-left: 20px;" v-if="showCopy" class="right" :size="20" @click="copyText"><CopyDocument /></el-icon>
+    </p>
 </template>
 
 <style scoped lang="scss">

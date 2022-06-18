@@ -9,6 +9,6 @@
 <style scoped lang="scss">
 .page-container {
   box-sizing: border-box;
-  padding: 0 60px 0 40px;
+  padding: 0 60px 20px 40px;
 }
 </style>

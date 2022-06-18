@@ -19,15 +19,19 @@ import {
   ArrowRightBold,
   ArrowDownBold
 } from '@element-plus/icons-vue'
-defineProps({
+const props = defineProps({
   label: String,
   marginTop: {
     type: String,
     default: '1px'
+  },
+  status: {
+    type: Boolean,
+    default: false
   }
 })
 
-let showMore = ref(false)
+let showMore = ref(props.status)
 function unfoldHandle() {
   showMore.value = !showMore.value
 }

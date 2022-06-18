@@ -21,6 +21,24 @@ export function getTopology () {
         url: 'http://207.148.71.27:1635/topology'
     })
 }
+
+export function getBalance () {
+    return request({
+        url: 'http://207.148.71.27:1635/chequebook/balance'
+    })
+}
+
+export function getSettlements () {
+    return request({
+        url: 'http://207.148.71.27:1635/settlements'
+    })
+}
+
+export function getStamps () {
+    return request({
+        url: 'http://207.148.71.27:1635/stamps'
+    })
+}
 // 
 export function getHealth () {
     return request({

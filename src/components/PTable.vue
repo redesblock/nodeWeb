@@ -10,6 +10,7 @@
     </template>
   </el-table>
   <Pagination
+  v-if="showPage"
   :pagination="pagination"
   :pageOptions="pageOptions"
   :total="dataList.total"
@@ -19,6 +20,10 @@
 <script setup>
 import Pagination from "@/components/pagination.vue";
 defineProps({
+  showPage: {
+    type: Boolean,
+    default: true
+  },
   pagination: {
     type: Object,
     default: {}

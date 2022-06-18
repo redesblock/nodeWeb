@@ -112,6 +112,8 @@
     @cancel="cancelHandle"
     @confirm="cancelHandle"
     :methodHandle="postDeposit"
+    successMessage="Successful deposit."
+    errorMessage="Error with depositing"
     title="Deposit" 
     tips="Deposit Specify the anount of MOP you would like to deposit to your NODE." 
     ></Modal>

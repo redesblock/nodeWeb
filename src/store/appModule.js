@@ -96,8 +96,6 @@ export const useAppModule = defineStore('appModule', {
         initAppConfig({api, debugApi} = {}) {
             sessionStorage.setItem('api', api ?? import.meta.env.VITE_BASE_API)
             sessionStorage.setItem('debug_api', debugApi ?? import.meta.env.VITE_BASE_DEBUG_API)
-            console.log(api)
-            console.log(debugApi)
             this.config.api = api ?? import.meta.env.VITE_BASE_API
             this.config.debugApi = debugApi ?? import.meta.env.VITE_BASE_DEBUG_API
         }

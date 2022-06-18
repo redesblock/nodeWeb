@@ -20,7 +20,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="cancelClick">Cancel</el-button>
-        <el-button type="primary" @click="confirmClick">Confirm</el-button>
+        <el-button type="primary" @click="confirmClick">{{title}}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -48,6 +48,14 @@ const props = defineProps({
     type: String,
     default: ''
   },
+  successMessage: {
+    type: String,
+    default: ''
+  },
+  errorMessage: {
+    type: String,
+    default: ''
+  },
 })
 const emit = defineEmits(['cancel', 'confirm'])
 
@@ -67,14 +75,14 @@ const confirmClick = async () => {
       let res = await props.methodHandle({amount: new Token(ruleForm.amount).toBigInt})
       if(res.status == 200) {
         ElMessage({
-          message: 'Successful deposit.' + `Transaction ${res.data.transactionHash}`,
+          message: `${props.successMessage} Transaction ${res.data.transactionHash}`,
           type: 'success',
         })
         emit('confirm')
       }
     } catch (error) {
         ElMessage({
-          message: 'Error with depositing' + `Error: ${(error).message},`,
+          message: `${props.errorMessage} Error: ${(error).message},`,
           type: 'eerror',
         })
     }

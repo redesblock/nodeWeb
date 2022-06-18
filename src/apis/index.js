@@ -53,6 +53,14 @@ export function postDeposit (data) {
     })
 }
 
+export function postWithdraw (data) {
+    return request({
+        url: getApi() + '/chequebook/withdraw',
+        method: 'post',
+        params: data
+    })
+}
+
 export function createStamps (params) {
     return request({
         url: getApi() + `/stamps/${params.Amount}/${params.Depth}?label=${params.Label}`,

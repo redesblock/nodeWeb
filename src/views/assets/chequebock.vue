@@ -31,45 +31,52 @@
          
     </div>
   </Block>
-    <Fold :label="PEERS" marginTop="50px" status>
-      <div class="list-total">
-      <span>Uncashed Amount Total</span>
-        <span>{{dataList.totalUncashed.toFixedDecimal()}} MOP</span>
+  <Fold :label="PEERS" marginTop="50px" show>
+    <div class="list-total">
+    <span>Uncashed Amount Total</span>
+      <span>{{dataList.totalUncashed.toFixedDecimal()}} MOP</span>
+    </div>
+    <Fold :label="'peer ' + item.peer.slice(0, 8) + '[…]'" v-for="item in dataList.settlements">
+      <div class="list-item">
+        <Encipherment title="Peer ID" :str="item.peer"></Encipherment>
       </div>
-      <Fold :label="'peer ' + item.peer.slice(0, 8) + '[…]'" v-for="item in dataList.settlements">
-        <div class="list-item">
-          <Encipherment title="Peer ID" :str="item.peer"></Encipherment>
-        </div>
-        <div class="list-item">
-          <span>Outstanding Balance</span>
-          <span>0.0000000 MOP</span>
-        </div>
-        <div class="list-item">
-          <span>Settlements Sent / Received</span>
-          <span>-{{item.sent.toFixedDecimal()}} / {{item.received.toFixedDecimal()}} MOP</span>
-        </div>
-        <div class="list-item">
-          <span>Total</span>
-          <span>0.0000000 MOP</span>
-        </div>
-        <div class="list-item">
-          <span>Uncashed Amount</span>
-          <span>0.0000000 MOP</span>
-        </div>
-      </Fold>
+      <div class="list-item">
+        <span>Outstanding Balance</span>
+        <span>0.0000000 MOP</span>
+      </div>
+      <div class="list-item">
+        <span>Settlements Sent / Received</span>
+        <span>-{{item.sent.toFixedDecimal()}} / {{item.received.toFixedDecimal()}} MOP</span>
+      </div>
+      <div class="list-item">
+        <span>Total</span>
+        <span>0.0000000 MOP</span>
+      </div>
+      <div class="list-item">
+        <span>Uncashed Amount</span>
+        <span>0.0000000 MOP</span>
+      </div>
     </Fold>
+  </Fold>
     
   <Modal 
   :stampModal="stampModal1" 
   @cancel="cancelHandle"
-  @confirm="confirmHandle"
+  @confirm="cancelHandle"
+  :methodHandle="postWithdraw"
+  successMessage="Successful withdraw."
+  errorMessage="error withdraw."
   title="Withdraw" 
   tips="Specify the anount of MOP you would like to withdraw frrom your NODE." 
   ></Modal>
+
   <Modal 
   @cancel="cancelHandle"
-  @confirm="confirmHandle"
+  @confirm="cancelHandle"
   :stampModal="stampModal2" 
+  :methodHandle="postDeposit"
+  successMessage="Successful deposit."
+  errorMessage="Error with depositing"
   title="Deposit" 
   tips="Specify the anount of MOP you would like to deposit to your NODE."></Modal>
 </Page>
@@ -83,7 +90,7 @@ import {
 import Modal from "@/components/Modal.vue";
 import Fold from "@/components/Fold.vue";
 import Encipherment from "@/components/Encipherment.vue";
-import { getBalance, getSettlements } from "@/apis/index";
+import { getBalance, getSettlements, postWithdraw, postDeposit } from "@/apis/index";
 import Token from "@/utils/Token";
 import { ref, onMounted, reactive, computed } from "vue";
 let stampModal1 = ref(false)
@@ -98,9 +105,6 @@ function showDepositHandle(params) {
 
 function cancelHandle() {
   stampModal1.value = false
-  stampModal2.value = false
-}
-function confirmHandle() {
   stampModal2.value = false
 }
 

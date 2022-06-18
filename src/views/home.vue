@@ -7,16 +7,13 @@
           <div class="version">{{appModule.version}}</div>
         </template>
         <div class="item">
-          <Encipherment
-          title="Publick Key" :str="obj.publicKey"></Encipherment>
+          <Encipherment title="Publick Key" :str="obj.publicKey"></Encipherment>
         </div>
         <div class="item">
-          <Encipherment
-          title="Pss Publick Key" :str="obj.pssPublicKey"></Encipherment>
+          <Encipherment title="Pss Publick Key" :str="obj.pssPublicKey"></Encipherment>
         </div>
         <div class="item">
-          <Encipherment
-          title="NODE Peer Id" :str="obj.overlay"></Encipherment>
+          <Encipherment title="NODE Peer Id" :str="obj.overlay"></Encipherment>
         </div>
       </el-card>
     </Block>
@@ -72,12 +69,10 @@
     <Block title="Blockchain">
       <el-card shadow="never">
         <div class="item">
-          <Encipherment
-          title="Bsc address" :str="obj.ethereum"></Encipherment>
+          <Encipherment title="Bsc address" :str="obj.ethereum"></Encipherment>
         </div>
         <div class="item">
-          <Encipherment
-          title="Chequebook address" :str="obj.chequebookAddress"></Encipherment>
+          <Encipherment title="Chequebook address" :str="obj.chequebookAddress"></Encipherment>
         </div>
       </el-card>
     </Block>

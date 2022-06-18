@@ -9,6 +9,8 @@ onMounted(async() => {
   console.log(useAppModule)
   appModule.initAppConfig()
   appModule.getAppAddress()
+  appModule.getAppChequebookAddress()
+  appModule.fetgetTopology()
   appModule.getAppInfo()
 })
 </script>

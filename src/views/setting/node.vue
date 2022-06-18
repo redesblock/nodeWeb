@@ -52,14 +52,7 @@
   <Fold label="Chequebook Deployment & Funding" marginTop="20px">
     <div class="content">
       <div class="tips">Your chequebook is deployed and funded</div>
-      <!-- <Encipherment title="Chequebook Address" str="0x5128C5d8d9bb73037f335D26d7dee6DBDfB82efA"></Encipherment> -->
-      <div class="list-item">
-        <span>Chequebook Address</span>
-      </div>
-      <div class="list-item">
-        <span>0x5128C5d8d9bb73037f335D26d7dee6DBDfB82efA</span>
-        <el-icon><CopyDocument /></el-icon>
-      </div>
+      <Encipherment line title="Chequebook Address" :str="appModule.chequebookAddress"></Encipherment>
       <div style="margin-top: 10px;">
           <el-button type="primary">DEPOSIT</el-button>
       </div>
@@ -71,15 +64,15 @@
         <div class="tips"> You are connected to other Hop NODEs</div>
         <div class="list-item">
           <span>Overall Health Indicator</span>
-          <span>50%</span>
+          <span>{{appModule.percentageText}}</span>
         </div>
         <div class="list-item">
           <span>Connected Peers</span>
           <div>
-            65%
+            <span style="padding-right:10px ;">{{appModule.topology.connected.score}}</span>
             <el-tooltip
                 effect="dark"
-                content="Top Left prompts info"
+                :content="appModule.topology.connected.explanation"
               >
               <el-icon class="right"><Warning /></el-icon>
             </el-tooltip>
@@ -88,10 +81,10 @@
         <div class="list-item">
           <span>Population</span>
           <div>
-            65%
+            <span style="padding-right: 10px;">{{appModule.topology.population.score}}</span>
             <el-tooltip
                 effect="dark"
-                content="Top Left prompts info"
+                :content="appModule.topology.population.explanation"
               >
               <el-icon class="right"><Warning /></el-icon>
             </el-tooltip>
@@ -100,10 +93,10 @@
         <div class="list-item">
           <span>Depth</span>
           <div>
-            65%
+            <span style="padding-right: 10px;">{{appModule.topology.depth.score}}</span>
             <el-tooltip
                 effect="dark"
-                content="Top Left prompts info"
+                :content="appModule.topology.depth.explanation"
               >
               <el-icon class="right"><Warning /></el-icon>
             </el-tooltip>

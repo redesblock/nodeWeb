@@ -23,16 +23,16 @@
          <div>
            <h3>Overall Health Indicator</h3>
            <div>
-             <span class="number">{{percentageText}}</span>
+             <span class="number">{{appModule.percentageText}}</span>
            </div>
          </div>
          <div>
            <h3>Connected Peers</h3>
            <div>
-             <span class="number">{{topology.connected.score}}</span>
+             <span class="number">{{appModule.topology.connected.score}}</span>
               <el-tooltip
                 effect="dark"
-                :content="topology.connected.explanation"
+                :content="appModule.topology.connected.explanation"
               >
              <el-icon class="right"><Warning /></el-icon>
             </el-tooltip>
@@ -41,10 +41,10 @@
          <div>
            <h3>Population</h3>
            <div>
-             <span class="number">{{topology.population.score}}</span>
+             <span class="number">{{appModule.topology.population.score}}</span>
               <el-tooltip
                 effect="dark"
-                :content="topology.population.explanation"
+                :content="appModule.topology.population.explanation"
               >
              <el-icon class="right"><Warning /></el-icon>
             </el-tooltip>
@@ -53,10 +53,10 @@
          <div>
            <h3>Depth</h3>
            <div>
-             <span class="number">{{topology.depth.score}}</span>
+             <span class="number">{{appModule.topology.depth.score}}</span>
               <el-tooltip
                 effect="dark"
-                :content="topology.depth.explanation"
+                :content="appModule.topology.depth.explanation"
               >
              <el-icon class="right"><Warning /></el-icon>
             </el-tooltip>
@@ -72,7 +72,7 @@
           <Encipherment title="Bsc address" :str="appModule.address.ethereum"></Encipherment>
         </div>
         <div class="item">
-          <Encipherment title="Chequebook address" :str="obj.chequebookAddress"></Encipherment>
+          <Encipherment title="Chequebook address" :str="appModule.chequebookAddress"></Encipherment>
         </div>
       </el-card>
     </Block>
@@ -83,47 +83,10 @@
 import {
   Warning,
 } from '@element-plus/icons-vue'
-import { onMounted, reactive, ref } from "vue";
-import { getChequebookAddress, getTopology } from "@/apis/index";
 import { useAppModule } from "@/store/appModule";
 import Encipherment from "@/components/Encipherment.vue";
-import { pickThreshold } from "@/utils/data";
 const appModule = useAppModule();
 
-let obj = reactive({
-  chequebookAddress: '',
-})
-
-let topology = reactive({
-  depth: {},
-  population: {},
-  connected: {},
-})
-let percentageText = ref(null)
-
-const fetGetChequebookAddress = async () => {
-  let res = await getChequebookAddress()
-  if(res.status == 200) {
-    obj.chequebookAddress = res.data.chequebookAddress
-  }
-}
-
-const fetgetTopology = async () => {
-  let res = await getTopology()
-  if(res.status == 200) {
-    topology.depth = pickThreshold('depth', res.data.depth)
-    topology.population = pickThreshold('population', res.data.population)
-    topology.connected = pickThreshold('connected', res.data.connected)
-    const maximumTotalScore = Object.values(topology).reduce((sum, item) => sum + item.maximumScore, 0)
-    const actualTotalScore = Object.values(topology).reduce((sum, item) => sum + item.score, 0)
-    percentageText.value = Math.round((actualTotalScore / maximumTotalScore) * 100) + '%'
-  }
-}
-
-onMounted(async() => {
-  fetGetChequebookAddress()
-  fetgetTopology()
-})
 </script>
 
 <style scoped lang="scss">

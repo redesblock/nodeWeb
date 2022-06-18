@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
-import { getHealth, getAddress } from "@/apis/index";
+import { getHealth, getAddress, getChequebookAddress,getTopology } from "@/apis/index";
+import { pickThreshold } from "@/utils/data";
+
 import semver from "semver";
 export const useAppModule = defineStore('appModule', {
     state: () => {
@@ -18,6 +20,13 @@ export const useAppModule = defineStore('appModule', {
             publicKey: null,
             pssPublicKey: null,
         },
+        chequebookAddress: null,
+        topology: {
+            depth: {},
+            population: {},
+            connected: {},
+        },
+        percentageText: '',
         config: {
             api: sessionStorage.getItem('api') ?? import.meta.env.VITE_BASE_API,
             debugApi: sessionStorage.getItem('debug_api') ?? import.meta.env.VITE_BASE_DEBUG_API,
@@ -43,6 +52,23 @@ export const useAppModule = defineStore('appModule', {
             let res = await getAddress()
             if(res.status == 200) {
                 this.address = res.data
+            }
+        },
+        async getAppChequebookAddress() {
+            let res = await getChequebookAddress()
+            if(res.status == 200) {
+                this.chequebookAddress = res.data.chequebookAddress
+            }
+        },
+        async fetgetTopology(){
+            let res = await getTopology()
+            if(res.status == 200) {
+                this.topology.depth = pickThreshold('depth', res.data.depth)
+                this.topology.population = pickThreshold('population', res.data.population)
+                this.topology.connected = pickThreshold('connected', res.data.connected)
+                const maximumTotalScore = Object.values(this.topology).reduce((sum, item) => sum + item.maximumScore, 0)
+                const actualTotalScore = Object.values(this.topology).reduce((sum, item) => sum + item.score, 0)
+                this.percentageText = Math.round((actualTotalScore / maximumTotalScore) * 100) + '%'
             }
         },
         initAppConfig({api, debugApi} = {}) {

@@ -6,12 +6,16 @@ const appModule = useAppModule();
 
 
 onMounted(async() => {
-  console.log(useAppModule)
+  // 初始化数据
   appModule.initAppConfig()
+
+  // 请求
+  appModule.getAppConnected()
+  appModule.getAppHealth()
   appModule.getAppAddress()
   appModule.getAppChequebookAddress()
   appModule.fetgetTopology()
-  appModule.getAppInfo()
+  
 })
 </script>
 <template>

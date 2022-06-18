@@ -1,7 +1,10 @@
 
 <template>
   <div class="list-box" @click="unfoldHandle" :style="{'margin-top': marginTop}">
-    <span>{{label}}</span>
+    <div>
+      <span v-if="isShowStatus" :class="isHealth ? 'success' : 'error'"></span>
+      <span>{{label}}</span>
+    </div>
     <el-icon>
       <ArrowRightBold v-if="!showMore" />
       <ArrowDownBold v-else />
@@ -25,13 +28,22 @@ const props = defineProps({
     type: String,
     default: '1px'
   },
-  status: {
+  show: {
     type: Boolean,
     default: false
-  }
+  },
+  isShowStatus: {
+    type: Boolean,
+    default: false
+  },
+  isHealth: {
+    type: Boolean,
+    default: false
+  },
+
 })
 
-let showMore = ref(props.status)
+let showMore = ref(props.show)
 function unfoldHandle() {
   showMore.value = !showMore.value
 }

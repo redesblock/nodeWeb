@@ -1,6 +1,6 @@
 <template>
 <Page>
-  <Fold label="Connettion to Hop  API">
+  <Fold isShowStatus :isHealth="appModule.apiHealth"  label="Connettion to Hop  API">
     <div class="content">
         <div class="tips"> The connection to the Hop NODEs debug APIhas been successful</div>
         <h3>Hop  API</h3>
@@ -13,8 +13,7 @@
         </div>
     </div>
   </Fold>
-  
-  <Fold label="Connettion to Hop Debug API" marginTop="20px">
+  <Fold isShowStatus :isHealth="appModule.status =='ok'" label="Connettion to Hop Debug API" marginTop="20px">
     <div class="content">
         <div class="tips"> The connection to the Hop NODEs debug APIhas been successful</div>
         <h3>Hop  Debug  API</h3>
@@ -28,7 +27,7 @@
     </div>
   </Fold>
   
-  <Fold label="Hop Version" marginTop="20px">
+  <Fold isShowStatus :isHealth="appModule.status =='ok'"  label="Hop Version" marginTop="20px" >
     <div class="content">
         <div class="tips"> You are running the latest version of Hop.</div>
         <div class="list-item">
@@ -42,14 +41,14 @@
     </div>
   </Fold>
   
-  <Fold label="Connettion to Blockchain" marginTop="20px">
+  <Fold isShowStatus :isHealth="appModule.status =='ok'"  label="Connettion to Blockchain" marginTop="20px">
     <div class="content">
       <div class="tips">Your NODE is connected to the xDai blockchain</div>
       <Encipherment line v-if="appModule.address.ethereum" title="Ethereum Address" :str="appModule.address.ethereum"></Encipherment>
     </div>
   </Fold>
-  
-  <Fold label="Chequebook Deployment & Funding" marginTop="20px">
+
+  <Fold isShowStatus :isHealth="appModule.status =='ok'" label="Chequebook Deployment & Funding" marginTop="20px">
     <div class="content">
       <div class="tips">Your chequebook is deployed and funded</div>
       <Encipherment line title="Chequebook Address" :str="appModule.chequebookAddress"></Encipherment>
@@ -58,8 +57,8 @@
       </div>
     </div>
   </Fold>
-  
-  <Fold label="Connettion to Peers" marginTop="20px">
+
+  <Fold isShowStatus :isHealth="appModule.status =='ok'" label="Connettion to Peers" marginTop="20px">
     <div class="content">
         <div class="tips"> You are connected to other Hop NODEs</div>
         <div class="list-item">

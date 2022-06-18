@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia'
-import { getHealth, getAddress, getChequebookAddress,getTopology } from "@/apis/index";
+import { 
+    getHealth, 
+    getAddress, 
+    getChequebookAddress,
+    getTopology,
+    getConnected
+ } from "@/apis/index";
 import { pickThreshold } from "@/utils/data";
 
 import semver from "semver";
@@ -13,6 +19,7 @@ export const useAppModule = defineStore('appModule', {
             version: '',
             latestVersion: '',
         },
+        apiHealth: false,
         address: {
             overlay: '',
             underlay: [],
@@ -37,16 +44,31 @@ export const useAppModule = defineStore('appModule', {
     getters: {
         version: (state) => semver.coerce(state.app.version).version,
         latestVersion: (state) => state.app.latestVersion,
+        status: (state) => state.app.status,
         api: (state) => state.config.api,
         debugApi: (state) => state.config.debugApi,
         env: (state) => state.config.env,
     },
     actions: {
-        async getAppInfo() {
-            let res = await getHealth()
-            if(res.status == 200) {
-                this.app = res.data
-            }
+        getAppConnected() {
+            getConnected().then(res => {
+                if(res.status == 200) {
+                    this.apiHealth = true
+                }
+            }).catch(err => {
+                this.apiHealth = false
+            })
+            
+        },
+        getAppHealth() {
+            getHealth().then(res => {
+                if(res.status == 200) {
+                    this.app = res.data
+                }
+            }).catch(err => {
+                this.app.status = 'error'
+            })
+            
         },
         async getAppAddress() {
             let res = await getAddress()
@@ -74,6 +96,10 @@ export const useAppModule = defineStore('appModule', {
         initAppConfig({api, debugApi} = {}) {
             sessionStorage.setItem('api', api ?? import.meta.env.VITE_BASE_API)
             sessionStorage.setItem('debug_api', debugApi ?? import.meta.env.VITE_BASE_DEBUG_API)
+            console.log(api)
+            console.log(debugApi)
+            this.config.api = api ?? import.meta.env.VITE_BASE_API
+            this.config.debugApi = debugApi ?? import.meta.env.VITE_BASE_DEBUG_API
         }
     }
   })

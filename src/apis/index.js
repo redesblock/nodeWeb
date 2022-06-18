@@ -57,3 +57,10 @@ export function getHealth () {
         url: getApi() + '/health'
     })
 }
+// connected 
+export function getConnected () {
+    const store = useAppModule()
+    return request({
+        url: store.api + '/'
+    })
+}

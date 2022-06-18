@@ -10,6 +10,9 @@ export function useApiConfig() {
     }
     function saveApi() {
         sessionStorage.setItem('api', api.value)
+        store.initAppConfig({api: api.value})
+        store.getAppConnected()
+        store.getAppHealth()
     }
     function cancelDebugApi() {
         debugApi.value = sessionStorage.getItem('debug_api')
@@ -18,6 +21,8 @@ export function useApiConfig() {
     function saveDebugApi() {
         sessionStorage.setItem('debug_api', debugApi.value)
         store.initAppConfig({debugApi: debugApi.value})
+        store.getAppConnected()
+        store.getAppHealth()
     }
     return {
         api,

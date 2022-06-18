@@ -44,3 +44,22 @@
 .fade-leave-to {
   opacity: 0;
 }
+
+.success {
+    background-color: rgb(29, 230, 0);
+    height: 1rem;
+    width: 1rem;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 15px;
+}
+.error {
+    background-color: rgb(255, 58, 82);
+    height: 1rem;
+    width: 1rem;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 15px;
+}

@@ -20,7 +20,7 @@ const props = defineProps({
     default: false
   }
 })
-let status = ref(false)
+let show = ref(false)
 const spanText = computed(() => {
   const splitValues = split(props.str)
   const hasPrefix = isPrefixedHexString(props.str)
@@ -36,7 +36,7 @@ const normalStr = computed(() => {
 })
 
 function showInfoHandle() {
-  status.value = !status.value
+  show.value = !show.value
 }
 
 function copyText() {
@@ -49,12 +49,12 @@ function copyText() {
     <div :class="line ? 'line' : ''">
       <span class="label">{{title}}</span> 
       <el-icon :size="20" @click="showInfoHandle">
-        <View v-if="!status" />
+        <View v-if="!show" />
         <Hide v-else />
       </el-icon>
     </div>
     <p>
-      {{status ? normalStr : spanText}}
+      {{show ? normalStr : spanText}}
       <el-icon style="padding-left: 20px;" v-if="showCopy" class="right" :size="20" @click="copyText"><CopyDocument /></el-icon>
     </p>
 </template>

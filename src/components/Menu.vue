@@ -45,7 +45,11 @@
             <el-menu-item @click="openRouter" index="/setting/api">Api</el-menu-item>
             <el-menu-item @click="openRouter" index="/setting/node">Node</el-menu-item>
         </el-sub-menu>
-        
+      
+      <div class="app-status">
+        <span :class="isHealth ? 'success' : 'error'"></span>
+        {{isHealth ? 'NODE OK' : 'NODE ERROR'}} 
+      </div>
       </el-menu>
       
     </el-col>
@@ -64,6 +68,9 @@ import {
   Setting,
 } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
+import { computed } from "vue";
+import { useAppModule } from "@/store/appModule";
+const store = useAppModule()
 const router = useRouter()
 
 const handleOpen = (key, keyPath) => {
@@ -72,9 +79,11 @@ const handleOpen = (key, keyPath) => {
 const handleClose = (key, keyPath) => {
   console.log(key, keyPath)
 }
-
+const isHealth = computed(() => {
+  if(store.apiHealth && store.status == 'ok') return true
+  return false 
+})
 const openRouter = (item) => {
-  console.log(item)
   router.push({
     path: item.index
   })
@@ -95,5 +104,14 @@ const openRouter = (item) => {
 }
 .content-bar {
   height: 25px;
+}
+.app-status {
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  bottom: 100px;
+  left: 0;
+  color: white;
+  padding-left: calc(var(--el-menu-base-level-padding) + var(--el-menu-level) * var(--el-menu-level-padding));
 }
 </style>

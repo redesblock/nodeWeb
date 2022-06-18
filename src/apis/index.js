@@ -1,53 +1,59 @@
 import axios from "axios";
-const request = axios.create({
-    baseURL:'', // api的base_url
-  })
+import { useAppModule } from "@/store/appModule";
+const request = axios.create({})
+function getApi() {
+    const store = useAppModule()
+    if(store.env === "development") {
+        return store.debugApi
+    }
+    return store.api
 
+}
 export function getAddress () {
     return request({
-        url: 'http://207.148.71.27:1635/addresses'
+        url: getApi() + '/addresses'
     })
 }
 
 export function getChequebookAddress () {
     return request({
-        url: 'http://207.148.71.27:1635/chequebook/address'
+        url: getApi() + '/chequebook/address'
     })
 }
 
 export function getTopology () {
     return request({
-        url: 'http://207.148.71.27:1635/topology'
+        url: getApi() + '/topology'
     })
 }
 
 export function getBalance () {
     return request({
-        url: 'http://207.148.71.27:1635/chequebook/balance'
+        url: getApi() + '/chequebook/balance'
     })
 }
 
 export function getSettlements () {
     return request({
-        url: 'http://207.148.71.27:1635/settlements'
+        url: getApi() + '/settlements'
     })
 }
 
 export function getStamps () {
     return request({
-        url: 'http://207.148.71.27:1635/stamps'
+        url: getApi() + '/stamps'
     })
 }
 
 export function createStamps (params) {
     return request({
-        url: `http://207.148.71.27:1635/stamps/${params.Amount}/${params.Depth}?label=${params.Label}`,
+        url: getApi() + `/stamps/${params.Amount}/${params.Depth}?label=${params.Label}`,
         method: 'POST'
     })
 }
 // 
 export function getHealth () {
     return request({
-        url: 'http://207.148.71.27:1635/health'
+        url: getApi() + '/health'
     })
 }

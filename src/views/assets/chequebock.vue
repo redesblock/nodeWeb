@@ -31,7 +31,7 @@
          
     </div>
   </Block>
-    <Fold :label="PEERS" marginTop="50px">
+    <Fold :label="PEERS" marginTop="50px" status>
       <div class="list-total">
       <span>Uncashed Amount Total</span>
         <span>{{dataList.totalUncashed.toFixedDecimal()}} MOP</span>

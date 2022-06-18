@@ -7,13 +7,13 @@
           <div class="version">{{appModule.version}}</div>
         </template>
         <div class="item">
-          <Encipherment title="Publick Key" :str="obj.publicKey"></Encipherment>
+          <Encipherment title="Publick Key" :str="appModule.address.publicKey"></Encipherment>
         </div>
         <div class="item">
-          <Encipherment title="Pss Publick Key" :str="obj.pssPublicKey"></Encipherment>
+          <Encipherment title="Pss Publick Key" :str="appModule.address.pssPublicKey"></Encipherment>
         </div>
         <div class="item">
-          <Encipherment title="NODE Peer Id" :str="obj.overlay"></Encipherment>
+          <Encipherment title="NODE Peer Id" :str="appModule.address.overlay"></Encipherment>
         </div>
       </el-card>
     </Block>
@@ -69,7 +69,7 @@
     <Block title="Blockchain">
       <el-card shadow="never">
         <div class="item">
-          <Encipherment title="Bsc address" :str="obj.ethereum"></Encipherment>
+          <Encipherment title="Bsc address" :str="appModule.address.ethereum"></Encipherment>
         </div>
         <div class="item">
           <Encipherment title="Chequebook address" :str="obj.chequebookAddress"></Encipherment>
@@ -84,18 +84,13 @@ import {
   Warning,
 } from '@element-plus/icons-vue'
 import { onMounted, reactive, ref } from "vue";
-import { getAddress, getChequebookAddress, getTopology } from "@/apis/index";
+import { getChequebookAddress, getTopology } from "@/apis/index";
 import { useAppModule } from "@/store/appModule";
 import Encipherment from "@/components/Encipherment.vue";
 import { pickThreshold } from "@/utils/data";
 const appModule = useAppModule();
 
 let obj = reactive({
-  pssPublicKey: '',
-  publicKey: '',
-  overlay: '',
-  ethereum: '',
-  underlay: [],
   chequebookAddress: '',
 })
 
@@ -105,16 +100,6 @@ let topology = reactive({
   connected: {},
 })
 let percentageText = ref(null)
-
-
-const fetchGetAddress = async () => {
-  let res = await getAddress()
-  if(res.status == 200) {
-    Object.keys(res.data).forEach(k => {
-      obj[k] = res.data[k]
-    })
-  }
-}
 
 const fetGetChequebookAddress = async () => {
   let res = await getChequebookAddress()
@@ -136,7 +121,6 @@ const fetgetTopology = async () => {
 }
 
 onMounted(async() => {
-  fetchGetAddress()
   fetGetChequebookAddress()
   fetgetTopology()
 })

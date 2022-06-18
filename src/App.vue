@@ -8,6 +8,7 @@ const appModule = useAppModule();
 onMounted(async() => {
   console.log(useAppModule)
   appModule.initAppConfig()
+  appModule.getAppAddress()
   appModule.getAppInfo()
 })
 </script>

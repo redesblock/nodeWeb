@@ -14,6 +14,10 @@ const props = defineProps({
   showCopy: {
     type: Boolean,
     default: true
+  },
+  line: {
+    type: Boolean,
+    default: false
   }
 })
 let status = ref(false)
@@ -42,7 +46,7 @@ function copyText() {
 </script>
 
 <template>
-    <div>
+    <div :class="line ? 'line' : ''">
       <span class="label">{{title}}</span> 
       <el-icon :size="20" @click="showInfoHandle">
         <View v-if="!status" />
@@ -56,9 +60,15 @@ function copyText() {
 </template>
 
 <style scoped lang="scss">
+.line {
+  padding-top: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgb(239, 239, 239);
+}
 .label {
   display: inline-block;
   vertical-align: top;
   padding-right: 30px;
 }
+
 </style>

@@ -94,6 +94,6 @@ const openRouter = (item) => {
   overflow-y: scroll;
 }
 .content-bar {
-  height: 65px;
+  height: 25px;
 }
 </style>

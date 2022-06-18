@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getHealth } from "@/apis/index";
+import { getHealth, getAddress } from "@/apis/index";
 import semver from "semver";
 export const useAppModule = defineStore('appModule', {
     state: () => {
@@ -9,6 +9,14 @@ export const useAppModule = defineStore('appModule', {
             debugApiVersion: '',
             status: '',
             version: '',
+            latestVersion: '',
+        },
+        address: {
+            overlay: '',
+            underlay: [],
+            ethereum: null,
+            publicKey: null,
+            pssPublicKey: null,
         },
         config: {
             api: sessionStorage.getItem('api') ?? import.meta.env.VITE_BASE_API,
@@ -19,6 +27,7 @@ export const useAppModule = defineStore('appModule', {
     },
     getters: {
         version: (state) => semver.coerce(state.app.version).version,
+        latestVersion: (state) => state.app.latestVersion,
         api: (state) => state.config.api,
         debugApi: (state) => state.config.debugApi,
         env: (state) => state.config.env,
@@ -28,6 +37,12 @@ export const useAppModule = defineStore('appModule', {
             let res = await getHealth()
             if(res.status == 200) {
                 this.app = res.data
+            }
+        },
+        async getAppAddress() {
+            let res = await getAddress()
+            if(res.status == 200) {
+                this.address = res.data
             }
         },
         initAppConfig({api, debugApi} = {}) {

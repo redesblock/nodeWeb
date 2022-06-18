@@ -1,13 +1,20 @@
 <template>
  <el-dialog :title="title" v-model="stampModal" :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false" width="60%">
-    <h3>{{tips}}</h3>
+    <div class="tips">{{tips}}</div>
     <el-form
       ref="ruleFormRef"
       label-width="100px"
       :size="formSize"
     >
       <el-form-item label="amount" prop="amount">
-        <el-input v-model="ruleForm.amount" placeholder="amount" />
+        <el-input-number
+        v-model="ruleForm.amount"
+        :min="0"
+        :max="10"
+        placeholder="amount"
+        controls-position="right"
+        size="large"
+      />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -21,10 +28,17 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-defineProps({
+import { ElMessage } from 'element-plus'
+import Token from "@/utils/Token";
+
+const props = defineProps({
   stampModal: {
     type: Boolean,
     default: false
+  },
+  methodHandle: {
+    type: Function,
+    default: null
   },
   title: {
     type: String,
@@ -48,24 +62,33 @@ const cancelClick = () =>{
 }
 
 const confirmClick = async () => {
-  emit('confirm')
+  if(typeof props.methodHandle == 'function') {
+    try {
+      let res = await props.methodHandle({amount: new Token(ruleForm.amount).toBigInt})
+      if(res.status == 200) {
+        ElMessage({
+          message: 'Successful deposit.' + `Transaction ${res.data.transactionHash}`,
+          type: 'success',
+        })
+        emit('confirm')
+      }
+    } catch (error) {
+        ElMessage({
+          message: 'Error with depositing' + `Error: ${(error).message},`,
+          type: 'eerror',
+        })
+    }
+  }
 }
 
 
 </script>
 
 <style scoped lang="scss">
-.block {
-    box-sizing: border-box;
-    padding: 24px 21px 0 20px;
-    margin-top: 16px;
-    border-radius: 8px;
-    background-color: white;
-}
-.title-box {
-  font-weight: 600;
-  font-size: 20px; 
-  color: #6E4DFE;
-  margin-bottom: 20px;
+.tips {
+  margin-bottom: 15px;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding-left: 40px;
 }
 </style>

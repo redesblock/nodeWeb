@@ -45,6 +45,14 @@ export function getStamps () {
     })
 }
 
+export function postDeposit (data) {
+    return request({
+        url: getApi() + '/chequebook/deposit',
+        method: 'post',
+        params: data
+    })
+}
+
 export function createStamps (params) {
     return request({
         url: getApi() + `/stamps/${params.Amount}/${params.Depth}?label=${params.Label}`,

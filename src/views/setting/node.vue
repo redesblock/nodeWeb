@@ -53,7 +53,10 @@
       <div class="tips">Your chequebook is deployed and funded</div>
       <Encipherment line title="Chequebook Address" :str="appModule.chequebookAddress"></Encipherment>
       <div style="margin-top: 10px;">
-          <el-button type="primary">DEPOSIT</el-button>
+          <el-button type="primary" @click="showModalHandle">
+            <el-icon><Download /></el-icon>
+            DEPOSIT
+          </el-button>
       </div>
     </div>
   </Fold>
@@ -104,6 +107,14 @@
     </div>
   </Fold>
   
+   <Modal 
+    :stampModal="stampModal" 
+    @cancel="cancelHandle"
+    @confirm="cancelHandle"
+    :methodHandle="postDeposit"
+    title="Deposit" 
+    tips="Deposit Specify the anount of MOP you would like to deposit to your NODE." 
+    ></Modal>
 </Page>
 
 
@@ -111,16 +122,27 @@
 <script setup>
 import {
   Warning,
-  CopyDocument
+  Download
 } from '@element-plus/icons-vue'
-
+import Modal from "@/components/Modal.vue";
 import { ref } from 'vue'
 import Fold from "@/components/Fold.vue";
 import Encipherment from "@/components/Encipherment.vue";
 import { useApiConfig } from "@/store/api";
 import { useAppModule } from "@/store/appModule";
+import { postDeposit } from "@/apis/index";
 const appModule = useAppModule()
 const {api, debugApi, cancelApi, saveApi, cancelDebugApi, saveDebugApi} = useApiConfig()
+
+let stampModal = ref(false)
+
+function showModalHandle() {
+  stampModal.value = true
+}
+
+function cancelHandle() {
+  stampModal.value = false
+}
 </script>
 
 <style scoped lang="scss">

@@ -1,9 +1,8 @@
 
 <template>
 <Page>
-    <el-card shadow="never" class="actions">
-        <el-button type="primary"> + ADD FILE </el-button>
-        <el-button type="primary"> + ADD FOLDER</el-button>
+    <el-card shadow="never" class="card">
+        <Upload text="+ ADD FILE"></Upload>
     </el-card>
     <Block title="pload History">
     <PTable
@@ -18,6 +17,7 @@
 
 <script setup>
 import PTable from "@/components/PTable.vue";
+import Upload from "@/components/Upload.vue";
 import { reactive } from "vue";
 
 let dataList = reactive({
@@ -53,7 +53,7 @@ let pageOptions = reactive({
 
 
 <style scoped lang="scss">
-.actions {
-    text-align: center;
+.card {
+    padding-bottom: 10px;
 }
 </style>

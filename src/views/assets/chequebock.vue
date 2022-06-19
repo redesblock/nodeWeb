@@ -63,7 +63,7 @@
   :stampModal="stampModal1" 
   @cancel="cancelHandle"
   @confirm="cancelHandle"
-  :methodHandle="postWithdraw"
+  :methodHandle="withdrawTokens"
   successMessage="Successful withdraw."
   errorMessage="error withdraw."
   title="Withdraw" 
@@ -74,7 +74,7 @@
   @cancel="cancelHandle"
   @confirm="cancelHandle"
   :stampModal="stampModal2" 
-  :methodHandle="postDeposit"
+  :methodHandle="depositTokens"
   successMessage="Successful deposit."
   errorMessage="Error with depositing"
   title="Deposit" 
@@ -90,7 +90,7 @@ import {
 import Modal from "@/components/Modal.vue";
 import Fold from "@/components/Fold.vue";
 import Encipherment from "@/components/Encipherment.vue";
-import { getBalance, getSettlements, postWithdraw, postDeposit, getBalances, getChequebookCashout } from "@/apis/index";
+import { getChequebookBalance, getAllSettlements, withdrawTokens, depositTokens, getAllBalances, getLastCashoutAction } from "@/apis/index";
 import { makeRetriablePromise, unwrapPromiseSettlements, mergeAccounting } from "@/utils/index";
 import Token from "@/utils/Token";
 import { ref, onMounted, reactive, computed } from "vue";
@@ -129,47 +129,41 @@ let PEERS = computed(() => {
 
 
 async function fetchGetBalance() {
-  let res = await getBalance()
-  if(res.status == 200) {
-    cardObj.totalBalance = new Token(res.data.totalBalance)
-    cardObj.availableBalance = new Token(res.data.totalBalance)
-  }
+  let data = await getChequebookBalance()
+    cardObj.totalBalance = new Token(data.totalBalance)
+    cardObj.availableBalance = new Token(data.totalBalance)
 }
 
 async function fetchGetSettlements() {
-  let res = await getSettlements()
-  if(res.status == 200) {
-    cardObj.totalReceived = new Token(res.data.totalReceived)
-    cardObj.totalSent = new Token(res.data.totalSent)
-    dataList.settlements = res.data.settlements.map(item => {
-      return {
-        peer: item.peer,
-        received: new Token(item.received),
-        sent: new Token(item.sent),
-      }
-    })
+  let data = await getAllSettlements()
+  cardObj.totalReceived = new Token(data.totalReceived)
+  cardObj.totalSent = new Token(data.totalSent)
+  dataList.settlements = data.settlements.map(item => {
+    return {
+      peer: item.peer,
+      received: new Token(item.received),
+      sent: new Token(item.sent),
+    }
+  })
 
-    getLastCashoutAction(dataList)
-  }
+  fetchGetLastCashoutAction(dataList)
 }
 
 async function fetchGetBalances() {
-  let res = await getBalances()
-  if(res.status == 200) {
-    dataList.balances = res.data.balances.map(item => {
+    let data = await getAllBalances()
+    dataList.balances = data.balances.map(item => {
       return {
         peer: item.peer,
         balance: new Token(item.balance)
       }
     })
     fetchGetSettlements()
-  }
 }
 
-function getLastCashoutAction(settlements) {
+function fetchGetLastCashoutAction(settlements) {
     const promises = settlements.settlements
       .filter(({ received }) => received.toBigNumber.gt('0'))
-      .map(({ peer }) => makeRetriablePromise(() => getChequebookCashout(peer)))
+      .map(({ peer }) => makeRetriablePromise(() => getLastCashoutAction(peer)))
     Promise.allSettled(promises).then(settlements => {
       const results = unwrapPromiseSettlements(settlements)
       let uncashedAmounts = results.fulfilled

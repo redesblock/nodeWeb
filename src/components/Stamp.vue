@@ -36,8 +36,9 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { createStamps } from "@/apis/index";
-import { ElLoading } from 'element-plus'
+import { createPostageBatch } from "@/apis/index";
+import { ElLoading, ElMessage } from 'element-plus'
+
 defineProps({
   stampModal: {
     type: Boolean,
@@ -91,12 +92,21 @@ const confirmClick = async (formEl) => {
         text: 'Service Pending',
         background: 'rgba(0, 0, 0, 0.7)',
       })
-      let res = await createStamps(ruleForm)
-      console.log(res)
-      if(res.status == 200 || res.status == 201) {
+      let options = ruleForm.Label ? { label: ruleForm.Label } : undefined
+
+      createPostageBatch(ruleForm.Amount, ruleForm.Depth, options).then(data => {
+        ElMessage({
+          message: `create successful: batchID ${data}`,
+          type: 'success'
+        })
         loading.close()
         emit('confirm')
-      }
+      }).catch(err => {
+        ElMessage({
+          message: `ERROR: ${err.message}`,
+          type: 'error'
+        })
+      })
     }
   })
 }

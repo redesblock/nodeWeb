@@ -22,9 +22,13 @@ export default defineConfig({
     // https://cn.vitejs.dev/config/#server-proxy
     proxy: {}
   },
+  define: {
+    "global": {},
+  },
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src')
+      '@': resolve(__dirname, 'src'),
+      stream: 'stream-browserify',
     }
   },
 })

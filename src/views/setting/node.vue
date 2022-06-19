@@ -111,7 +111,7 @@
     :stampModal="stampModal" 
     @cancel="cancelHandle"
     @confirm="cancelHandle"
-    :methodHandle="postDeposit"
+    :methodHandle="depositTokens"
     successMessage="Successful deposit."
     errorMessage="Error with depositing"
     title="Deposit" 
@@ -132,7 +132,7 @@ import Fold from "@/components/Fold.vue";
 import Encipherment from "@/components/Encipherment.vue";
 import { useApiConfig } from "@/store/api";
 import { useAppModule } from "@/store/appModule";
-import { postDeposit } from "@/apis/index";
+import { depositTokens } from "@/apis/index";
 const appModule = useAppModule()
 const {api, debugApi, cancelApi, saveApi, cancelDebugApi, saveDebugApi} = useApiConfig()
 

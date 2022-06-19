@@ -72,14 +72,12 @@ const cancelClick = () =>{
 const confirmClick = async () => {
   if(typeof props.methodHandle == 'function') {
     try {
-      let res = await props.methodHandle({amount: new Token(ruleForm.amount).toBigInt})
-      if(res.status == 200) {
-        ElMessage({
-          message: `${props.successMessage} Transaction ${res.data.transactionHash}`,
-          type: 'success',
-        })
-        emit('confirm')
-      }
+      let data = await props.methodHandle({amount: new Token(ruleForm.amount).toBigInt})
+      ElMessage({
+        message: `${props.successMessage} Transaction ${data}`,
+        type: 'success',
+      })
+      emit('confirm')
     } catch (error) {
         ElMessage({
           message: `${props.errorMessage} Error: ${(error).message},`,

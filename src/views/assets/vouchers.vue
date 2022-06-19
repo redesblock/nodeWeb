@@ -26,7 +26,7 @@
 
 <script setup>
 import Stamp from "@/components/Stamp.vue";
-import { getStamps } from "@/apis/index";
+import { getAllPostageBatch } from "@/apis/index";
 import { getHumanReadableFileSize } from "@/utils/file";
 import Encipherment from "@/components/Encipherment.vue";
 import {
@@ -64,11 +64,11 @@ function enrichStamp(postageBatch) {
 }
 
 async function fetchGetStamps() {
-  let res = await getStamps()
-  if(res.status == 200 ){
-    dataList.list = res.data.stamps.map(enrichStamp)
+  getAllPostageBatch().then(data => {
+    dataList.list = data.map(enrichStamp)
     dataList.total = dataList.list.length
-  }
+  })
+  
 }
 
 onMounted(() => {

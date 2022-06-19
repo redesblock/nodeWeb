@@ -39,6 +39,18 @@ export function getSettlements () {
     })
 }
 
+export function getChequebookCashout(address) {
+    return request({
+        url: getApi() + '/chequebook/cashout/' + address
+    })
+}
+
+export function getBalances() {
+    return request({
+        url: getApi() + '/balances'
+    })
+}
+
 export function getStamps () {
     return request({
         url: getApi() + '/stamps'

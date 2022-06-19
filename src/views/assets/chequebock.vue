@@ -36,13 +36,13 @@
     <span>Uncashed Amount Total</span>
       <span>{{dataList.totalUncashed.toFixedDecimal()}} MOP</span>
     </div>
-    <Fold :label="'peer ' + item.peer.slice(0, 8) + '[…]'" v-for="item in dataList.settlements">
+    <Fold :label="'peer ' + item.peer.slice(0, 8) + '[…]'" v-for="item in dataList.accounting">
       <div class="list-item">
         <Encipherment title="Peer ID" :str="item.peer"></Encipherment>
       </div>
       <div class="list-item">
         <span>Outstanding Balance</span>
-        <span>0.0000000 MOP</span>
+        <span>{{item.balance.toFixedDecimal()}} MOP</span>
       </div>
       <div class="list-item">
         <span>Settlements Sent / Received</span>
@@ -50,11 +50,11 @@
       </div>
       <div class="list-item">
         <span>Total</span>
-        <span>0.0000000 MOP</span>
+        <span>{{item.total.toFixedDecimal()}} MOP</span>
       </div>
       <div class="list-item">
         <span>Uncashed Amount</span>
-        <span>0.0000000 MOP</span>
+        <span>{{item.uncashedAmount.toFixedDecimal()}} MOP</span>
       </div>
     </Fold>
   </Fold>
@@ -90,7 +90,8 @@ import {
 import Modal from "@/components/Modal.vue";
 import Fold from "@/components/Fold.vue";
 import Encipherment from "@/components/Encipherment.vue";
-import { getBalance, getSettlements, postWithdraw, postDeposit } from "@/apis/index";
+import { getBalance, getSettlements, postWithdraw, postDeposit, getBalances, getChequebookCashout } from "@/apis/index";
+import { makeRetriablePromise, unwrapPromiseSettlements, mergeAccounting } from "@/utils/index";
 import Token from "@/utils/Token";
 import { ref, onMounted, reactive, computed } from "vue";
 let stampModal1 = ref(false)
@@ -118,7 +119,10 @@ let cardObj = reactive({
 let dataList = reactive({
   totalUncashed: new Token(0),
   settlements: [],
+  balances: [],
+  accounting: []
 })
+
 let PEERS = computed(() => {
   return `PEERS(${dataList.settlements.length})`
 })
@@ -144,12 +148,43 @@ async function fetchGetSettlements() {
         sent: new Token(item.sent),
       }
     })
+
+    getLastCashoutAction(dataList)
   }
 }
 
+async function fetchGetBalances() {
+  let res = await getBalances()
+  if(res.status == 200) {
+    dataList.balances = res.data.balances.map(item => {
+      return {
+        peer: item.peer,
+        balance: new Token(item.balance)
+      }
+    })
+    fetchGetSettlements()
+  }
+}
+
+function getLastCashoutAction(settlements) {
+    const promises = settlements.settlements
+      .filter(({ received }) => received.toBigNumber.gt('0'))
+      .map(({ peer }) => makeRetriablePromise(() => getChequebookCashout(peer)))
+    Promise.allSettled(promises).then(settlements => {
+      const results = unwrapPromiseSettlements(settlements)
+      let uncashedAmounts = results.fulfilled
+      let accounting = mergeAccounting(dataList.balances, dataList.settlements, uncashedAmounts)
+
+      accounting?.forEach(
+          ({ uncashedAmount }) => (dataList.totalUncashed = new Token(dataList.totalUncashed.toBigNumber.plus(uncashedAmount.toBigNumber))),
+      )
+      dataList.accounting = accounting
+    })
+}
+
 onMounted(() => {
+  fetchGetBalances()
   fetchGetBalance()
-  fetchGetSettlements()
 })
 </script>
 

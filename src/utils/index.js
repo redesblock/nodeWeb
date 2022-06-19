@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import Token from "@/utils/Token";
+import { BZZ_LINK_DOMAIN } from "./data";
 export const lengthWithoutPrefix = (s) => s.replace(/^0x/i, '').length;
 
 export const isPrefixedHexString = (s) =>{
@@ -21,20 +22,20 @@ export const split = (s) => {
  *
  * @returns True if the passed in value is integer
  */
- export function isInteger(value){
-    return (BigNumber.isBigNumber(value) && value.isInteger()) || typeof value === 'bigint'
-  }
+export function isInteger(value){
+  return (BigNumber.isBigNumber(value) && value.isInteger()) || typeof value === 'bigint'
+}
   
-  /**
-   *Convert value into a BigNumber if not already
-   *
-   * @param value Value to be converted
-   *
-   * @throws {TypeError} if the value is not convertible to a BigNumber
-   *
-   * @returns BigNumber - but it may still be NaN or Infinite
-   */
-  export function makeBigNumber(value){
+/**
+ *Convert value into a BigNumber if not already
+  *
+  * @param value Value to be converted
+  *
+  * @throws {TypeError} if the value is not convertible to a BigNumber
+  *
+  * @returns BigNumber - but it may still be NaN or Infinite
+  */
+export function makeBigNumber(value){
     if (BigNumber.isBigNumber(value)) return value
   
     if (typeof value === 'string') return new BigNumber(value)
@@ -45,32 +46,8 @@ export const split = (s) => {
     if (typeof value === 'number' /* && Number.isSafeInteger(value)*/) return new BigNumber(value)
   
     throw new TypeError(`Not a BigNumber or BigNumber convertible value. Type: ${typeof value} value: ${value}`)
-  }
+}
 
-
-  export function getHumanReadableFileSize(bytes) {
-    if (bytes >= 1e15) {
-      return (bytes / 1e15).toFixed(2) + ' PB'
-    }
-  
-    if (bytes >= 1e12) {
-      return (bytes / 1e12).toFixed(2) + ' TB'
-    }
-  
-    if (bytes >= 1e9) {
-      return (bytes / 1e9).toFixed(2) + ' GB'
-    }
-  
-    if (bytes >= 1e6) {
-      return (bytes / 1e6).toFixed(2) + ' MB'
-    }
-  
-    if (bytes >= 1e3) {
-      return (bytes / 1e3).toFixed(2) + ' kB'
-    }
-  
-    return bytes + ' bytes'
-  }
 
 export function mapPromiseSettlements(promises) {
     const fulfilled = promises.filter(promise => promise.status === 'fulfilled');
@@ -154,4 +131,138 @@ export function mergeAccounting( balances, settlements, uncashedAmounts){
 
     return a.peer < b.peer ? -1 : 1
   })
+}
+
+const regexpMatchHash = /(?:^|[^a-f0-9]+)([a-f0-9]{64}|[a-f0-9]{128})(?:$|[^a-f0-9]+)/i
+
+export function extractSwarmHash(string){
+  const matches = string.match(regexpMatchHash)
+
+  return (matches && matches[1]) || undefined
+}
+
+// Matches the CID from bzz-link subdomain
+const regexpMatchCID = new RegExp(`https://(bah5acgza[a-z0-9]{52})\\.${BZZ_LINK_DOMAIN}`, 'i')
+
+export function extractSwarmCid(s){
+  const matches = s.match(regexpMatchCID)
+
+  if (!matches || !matches[1]) {
+    return
+  }
+
+  const cid = matches[1]
+  try {
+    const decodeResult = decodeCid(cid)
+
+    if (!decodeResult.type) {
+      return
+    }
+
+    return decodeResult.reference
+  } catch (e) {
+    return
+  }
+}
+
+// Matches any number of subdomain with .eth
+// e.g. this.is.just-a-test.eth
+export const regexpEns = /((?:(?:[^-./?:\s][^./?:\s]{0,61}[^-./?:\s]|[^-./?:\s]{1,2})\.)+eth)(?:$|[/?:#].*)/i
+
+export function extractEns(value){
+  const matches = value.match(regexpEns)
+
+  return (matches && matches[1]) || undefined
+}
+
+export function recognizeEnsOrSwarmHash(value) {
+  return extractEns(value) || extractSwarmHash(value) || extractSwarmCid(value) || value
+}
+
+export function uuidV4() {
+  const pattern = '10000000-1000-4000-8000-100000000000'
+
+  return pattern.replace(/[018]/g, (s) => {
+    const c = parseInt(s, 10)
+
+    return (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+  })
+}
+
+export function formatEnum(string) {
+  return (string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()).replaceAll('_', ' ')
+}
+
+export function secondsToTimeString(seconds) {
+  let unit = seconds
+
+  if (unit < 120) {
+    return `${seconds} seconds`
+  }
+  unit /= 60
+
+  if (unit < 120) {
+    return `${Math.round(unit)} minutes`
+  }
+  unit /= 60
+
+  if (unit < 48) {
+    return `${Math.round(unit)} hours`
+  }
+  unit /= 24
+
+  if (unit < 14) {
+    return `${Math.round(unit)} days`
+  }
+  unit /= 7
+
+  if (unit < 52) {
+    return `${Math.round(unit)} weeks`
+  }
+  unit /= 52
+
+  return `${unit.toFixed(1)} years`
+}
+
+export function convertDepthToBytes(depth) {
+  return 2 ** depth * 4096
+}
+
+export function convertAmountToSeconds(amount, pricePerBlock) {
+  // TODO: blocktime should come directly from the blockchain as it may differ between different networks
+  const blockTime = 5 // On mainnet there is 5 seconds between blocks
+
+  // See https://github.com/ethersphere/bee/blob/66f079930d739182c4c79eb6008784afeeba1096/pkg/debugapi/postage.go#L410-L413
+  return (amount * blockTime) / pricePerBlock
+}
+
+export function calculateStampPrice(depth, amount) {
+  // See https://github.com/ethersphere/bee/blob/66f079930d739182c4c79eb6008784afeeba1096/pkg/debugapi/postage.go#L410-L413
+  return new Token(amount * BigInt(2 ** depth)) // FIXME: the 2 ** depth should be performed on bigint already
+}
+
+export function shortenText(text, length = 20, separator = '[…]') {
+  if (text.length <= length * 2 + separator.length) {
+    return text
+  }
+
+  return `${text.slice(0, length)}${separator}${text.slice(-length)}`
+}
+
+const DEFAULT_POLLING_FREQUENCY = 1_000
+const DEFAULT_STAMP_USABLE_TIMEOUT = 120_000
+
+
+export async function waitUntilStampUsable(batchId,beeDebug,options){
+  const timeout = options?.timeout || DEFAULT_STAMP_USABLE_TIMEOUT
+  const pollingFrequency = options?.pollingFrequency || DEFAULT_POLLING_FREQUENCY
+
+  for (let i = 0; i < timeout; i += pollingFrequency) {
+    const stamp = await beeDebug.getPostageBatch(batchId)
+
+    if (stamp.usable) return stamp
+    await sleepMs(pollingFrequency)
+  }
+
+  throw new Error('Wait until stamp usable timeout has been reached')
 }

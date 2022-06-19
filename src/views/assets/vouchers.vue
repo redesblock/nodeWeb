@@ -27,7 +27,7 @@
 <script setup>
 import Stamp from "@/components/Stamp.vue";
 import { getStamps } from "@/apis/index";
-import { getHumanReadableFileSize } from "@/utils/index";
+import { getHumanReadableFileSize } from "@/utils/file";
 import Encipherment from "@/components/Encipherment.vue";
 import {
   Plus,

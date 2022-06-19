@@ -8,6 +8,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ethersphere/bee-js": "^4.1.1",
+    "@ethersphere/manifest-js": "^1.2.1",
+    "@ethersphere/swarm-cid": "^0.1.0",
     "axios": "^0.27.2",
     "bignumber.js": "^9.0.2",
     "copy-to-clipboard": "^3.3.1",

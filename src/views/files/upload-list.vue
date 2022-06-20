@@ -11,6 +11,9 @@
       :columns="columns" 
       :dataList="dataList"
       :pageOptions="pageOptions">
+        <template #hash="scope">{{scope.row.hash}}</template>
+        <template #createdAt="scope">{{getPrettyDateString(new Date(scope.row.createdAt))}}</template>
+
       </PTable>
     </Block>
 </template>
@@ -18,7 +21,8 @@
 <script setup>
 import PTable from "@/components/PTable.vue";
 import Upload from "@/components/Upload.vue";
-import { reactive, ref } from "vue";
+import { getPrettyDateString } from "@/utils/index";
+import { reactive, ref, onMounted } from "vue";
 const emit = defineEmits(['changeUpload','back'])
 defineProps({
   fileList: Array
@@ -31,7 +35,7 @@ let dataList = reactive({
     total: 0,
 })
 
-dataList.total = dataList.list.length
+
 let columns = reactive([{
   type: 'index',
   label: 'Number',  
@@ -41,14 +45,16 @@ let columns = reactive([{
     prop: 'name',
     label: 'File Name',
     align: 'center',
+    width: '300',
 },{
-    prop: 'age',
+    prop: 'hash',
     label: 'File Hash',
     align: 'center',
 },{
-    prop:'address',
+    prop:'createdAt',
     label: 'Upload Time',
     align: 'center',
+    width: '240',
 }])
 
 let pageOptions = reactive({
@@ -64,6 +70,13 @@ function onChange({file,fileList,event}) {
     emit('changeUpload', {file,fileList,event})
 }
 
+onMounted(() => {
+   let str = localStorage.getItem('UPLOAD_HISTORY')
+   if(str) {
+       dataList.list = JSON.parse(str) || []
+       dataList.total = dataList.list.length || 0
+   }
+})
 </script>
 
 

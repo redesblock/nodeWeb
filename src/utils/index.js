@@ -266,3 +266,9 @@ export async function waitUntilStampUsable(batchId,beeDebug,options){
 
   throw new Error('Wait until stamp usable timeout has been reached')
 }
+
+export function getPrettyDateString(date) {
+  const string = date.toString()
+
+  return string.split('GMT')[0].trim()
+}

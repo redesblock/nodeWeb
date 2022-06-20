@@ -10,7 +10,6 @@ import UploadList from "./upload-list.vue";
 import UploadPreview from "./upload-preview.vue";
 import { reactive, ref, computed } from "vue";
 
-let upload = ref(null)
 let fileLists = ref([])
 
 let component = computed(() => {
@@ -22,8 +21,6 @@ let component = computed(() => {
 })
 
 function onChange({file,fileList,event}) {
-    console.log(file)
-    console.log(fileList)
     fileLists.value = fileList
 }
 

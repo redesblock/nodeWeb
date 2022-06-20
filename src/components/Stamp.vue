@@ -100,8 +100,10 @@ const confirmClick = async (formEl) => {
           type: 'success'
         })
         loading.close()
-        emit('confirm')
+        emit('confirm', data)
       }).catch(err => {
+        loading.close()
+
         ElMessage({
           message: `ERROR: ${err.message}`,
           type: 'error'

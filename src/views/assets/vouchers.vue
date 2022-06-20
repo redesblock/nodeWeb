@@ -63,7 +63,7 @@ function enrichStamp(postageBatch) {
   }
 }
 
-async function fetchGetStamps() {
+function fetchGetStamps() {
   getAllPostageBatch().then(data => {
     dataList.list = data.map(enrichStamp)
     dataList.total = dataList.list.length

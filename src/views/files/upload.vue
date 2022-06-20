@@ -1,59 +1,39 @@
 
 <template>
 <Page>
-    <el-card shadow="never" class="card">
-        <Upload text="+ ADD FILE"></Upload>
-    </el-card>
-    <Block title="pload History">
-    <PTable
-    border
-    :columns="columns" 
-    :dataList="dataList"
-    :pageOptions="pageOptions">
-    </PTable>
-    </Block>
+   <component :is="component" @changeUpload="onChange" @back="onBack" :fileList="fileLists"></component>
 </Page>
 </template>
 
 <script setup>
-import PTable from "@/components/PTable.vue";
-import Upload from "@/components/Upload.vue";
-import { reactive } from "vue";
+import UploadList from "./upload-list.vue";
+import UploadPreview from "./upload-preview.vue";
+import { reactive, ref, computed } from "vue";
 
-let dataList = reactive({
-    list: [],
-    total: 0,
-})
-dataList.total = dataList.list.length
-let columns = reactive([{
-  type: 'index',
-  label: 'Number',  
-  width: '120',
-  align: 'center',
-},{
-    prop: 'name',
-    label: 'File Name',
-    align: 'center',
-},{
-    prop: 'age',
-    label: 'File Hash',
-    align: 'center',
-},{
-    prop:'address',
-    label: 'Upload Time',
-    align: 'center',
-}])
+let upload = ref(null)
+let fileLists = ref([])
 
-let pageOptions = reactive({
-    pageNum: 1,
-    pageSize: 10
+let component = computed(() => {
+    if(fileLists.value.length === 0) {
+        return UploadList
+    }else {
+        return UploadPreview
+    }
 })
+
+function onChange({file,fileList,event}) {
+    console.log(file)
+    console.log(fileList)
+    fileLists.value = fileList
+}
+
+function onBack() {
+    fileLists.value = []
+}
 
 </script>
 
 
 <style scoped lang="scss">
-.card {
-    padding-bottom: 10px;
-}
+
 </style>

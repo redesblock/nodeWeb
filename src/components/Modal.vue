@@ -77,7 +77,7 @@ const confirmClick = async () => {
         message: `${props.successMessage} Transaction ${data}`,
         type: 'success',
       })
-      emit('confirm')
+      emit('confirm', data)
     } catch (error) {
         ElMessage({
           message: `${props.errorMessage} Error: ${(error).message},`,

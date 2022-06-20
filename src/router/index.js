@@ -6,6 +6,7 @@ const routerInstance = createRouter({
         { path: '/', component: () => import('@/views/home.vue') },
         { path: '/home', component: () => import('@/views/home.vue') },
         { path: '/files/upload', component: () => import('@/views/files/upload.vue') },
+        { path: '/files/upload/:hash', component: () => import('@/views/files/upload-success.vue') },
         { path: '/files/download', component: () => import('@/views/files/download.vue') },
         { path: '/assets/chequebock', component: () => import('@/views/assets/chequebock.vue') },
         { path: '/assets/vouchers', component: () => import('@/views/assets/vouchers.vue') },

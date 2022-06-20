@@ -79,3 +79,15 @@ export const META_FILE_NAME = '.swarmgatewaymeta.json'
 export const PREVIEW_FILE_NAME = '.swarmgatewaypreview.jpeg'
 export const PREVIEW_DIMENSIONS = { maxWidth: 250, maxHeight: 175 }
 export const BZZ_LINK_DOMAIN = import.meta.env.VITE_BASE_BZZ_LINK_DOMAIN || 'bzz.link'
+
+
+export const config = {
+    BEE_API_HOST: sessionStorage.getItem('api') ?? import.meta.env.VITE_BASE_API ?? 'http://localhost:1633',
+    SENTRY_KEY: import.meta.env.REACT_APP_SENTRY_KEY,
+    BEE_DEBUG_API_HOST: sessionStorage.getItem('debug_api') ?? import.meta.env.VITE_BASE_DEBUG_API ?? 'http://localhost:1635',
+    BLOCKCHAIN_EXPLORER_URL: import.meta.env.REACT_APP_BLOCKCHAIN_EXPLORER_URL ?? 'https://blockscout.com/xdai/mainnet',
+    BEE_DOCS_HOST: import.meta.env.REACT_APP_BEE_DOCS_HOST ?? 'https://docs.ethswarm.org/docs/',
+    BEE_DISCORD_HOST: import.meta.env.REACT_APP_BEE_DISCORD_HOST ?? 'https://discord.gg/eKr9XPv7',
+    GITHUB_REPO_URL: import.meta.env.REACT_APP_BEE_GITHUB_REPO_URL ?? 'https://api.github.com/repos/ethersphere/bee',
+    BEE_DESKTOP_URL: import.meta.env.REACT_APP_BEE_DESKTOP_URL ?? window.location.origin,
+}

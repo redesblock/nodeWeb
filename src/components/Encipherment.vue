@@ -6,7 +6,8 @@ import copy from 'copy-to-clipboard';
 import {
   View,
   Hide,
-  CopyDocument
+  CopyDocument,
+  Share
 } from '@element-plus/icons-vue'
 const props = defineProps({
   title: String,
@@ -16,6 +17,10 @@ const props = defineProps({
     default: true
   },
   line: {
+    type: Boolean,
+    default: false
+  },
+  share: {
     type: Boolean,
     default: false
   }
@@ -43,6 +48,10 @@ function copyText() {
   copy(props.str)
 }
 
+function shareHandle() {
+  window.open(props.str)
+}
+
 </script>
 
 <template>
@@ -53,7 +62,12 @@ function copyText() {
         <Hide v-else />
       </el-icon>
     </div>
-    <p>
+    <p v-if="share">
+      {{show ? str : spanText}}
+      <Share @click="shareHandle" class="right" style="cursor:pointer;width: 1em; height: 1em; margin-right: 8px" />
+      <el-icon style="padding-left: 20px;margin-right: 8px" v-if="showCopy" class="right" :size="20" @click="copyText"><CopyDocument /></el-icon>
+    </p>
+    <p v-else>
       {{show ? normalStr : spanText}}
       <el-icon style="padding-left: 20px;" v-if="showCopy" class="right" :size="20" @click="copyText"><CopyDocument /></el-icon>
     </p>

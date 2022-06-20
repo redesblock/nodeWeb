@@ -1,10 +1,6 @@
 <template>
   <Page>
     <div class="block">
-        <div class="title-box" @click="goBack">
-            <el-icon size="31px"><Back /></el-icon>
-            <span>Upload</span>
-        </div>
         <el-card shadow="never">
           <div class="file-box">
               <div class="img">
@@ -14,6 +10,7 @@
                   <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
               </div>
               <div>
+                  <p v-if="metadata.hash">Swarm Hash: {{shortenHash(metadata.hash)}}</p>
                   <p v-if="metadata.name">{{metadata?.type === 'folder' ? 'Folder Name' : 'Filename'}}: {{shortenText(metadata?.name)}}</p>
                   <p>Kind: {{metadata.type}}</p>
                   <p v-if="metadata.size">Size: {{getHumanReadableFileSize(metadata.size)}}</p>
@@ -23,137 +20,149 @@
         </el-card>
 
         <div>
-            <h3>You need a postage vouchers to upload.</h3>
-            <el-card shadow="never">
-              <el-select v-model="batchID" class="m-2" placeholder="Select">
-                  <el-option
-                      v-for="item in stapmList"
-                      :key="item.batchID"
-                      :value="item.batchID"
-                      :label="item.batchID.slice(0, 8)"
-                      @on-change="selectChange(item)"
-                  >{{item.batchID.slice(0, 8)}}</el-option>
-              </el-select>
-
-              <el-button class="mgl20" type="primary" @click="addStampHandle">
-                  <el-icon><Plus /></el-icon> 
-                  Buy Vouchers
-              </el-button>
-            </el-card>
-
             <el-card shadow="never" style="margin-top: 10px;">
-              <h3>Associated postage vouchers:</h3>
-              <h4>{{batchID && batchID.slice(0, 8)}}</h4>
+              <Encipherment line title="Hop Hash：" :str="metadata.hash"></Encipherment>
             </el-card>
+            <div class="list">
+              <Encipherment share title="Share on Hop Gateway" :str="'https://gateway.ethswarm.org/access/'+metadata.hash"></Encipherment>
+            </div>
+
             <div class="mgt20">
-                <el-button type="primary" @click="uploadFiles">       
-                  <el-icon><Select /></el-icon> 
-                  UPLOAD TO YOUR NODE
+                <el-button type="primary" @click="download">       
+                  <el-icon><Download /></el-icon> 
+                  WODNLOAD
                 </el-button>
                 <el-button @click="goBack">
                   <el-icon><CloseBold /></el-icon>
-                    CANCEL
+                    Close
                 </el-button>
             </div>
         </div>
 
-        <Stamp 
-          :stampModal="stampModal"
-          @cancel="cancelHandle"
-          @confirm="confirmHandle"
-        ></Stamp>
     </div>
   </Page>
 </template>
 <script setup>
 import { ref, onMounted, reactive } from "vue";
-import { getMetadata, getHumanReadableFileSize } from "@/utils/file";
-import Stamp from "@/components/Stamp.vue";
-import { shortenText,  } from "@/utils/index";
-import { resize,  } from "@/utils/image";
-import { PREVIEW_DIMENSIONS } from "@/utils/data";
-import { getAllPostageBatch } from "@/apis/index";
+import { beeApi, beeDebugApi } from "@/apis/Bee";
+import { getMetadata, getHumanReadableFileSize, packageFile, detectIndexHtml, getAssetNameFromFiles } from "@/utils/file";
+import Encipherment from "@/components/Encipherment.vue";
+import { shortenText  } from "@/utils/index";
+import { config, META_FILE_NAME, PREVIEW_FILE_NAME } from "@/utils/data";
+import { putHistory, HISTORY_KEYS, shortenHash, determineHistoryName } from "@/utils/storage";
+import { ElMessage } from 'element-plus'
+import { ManifestJs } from '@ethersphere/manifest-js'
+import { saveAs } from 'file-saver'
+import JSZip from 'jszip'
+import { useAppModule } from "@/store/appModule";
+
 import {
-  Back,
-  Plus,
   CloseBold,
-  Select,
+  Download
 } from '@element-plus/icons-vue'
-const props = defineProps({
-  fileList: Array
-})
+import { useRoute, useRouter } from 'vue-router'
+const route = useRoute()
+const router = useRouter()
+const store = useAppModule()
+
 const emit = defineEmits(['back', 'changeUpload'])
-let metadata = ref({})
+let metadata = ref({
+  hash: ''
+})
 let previewUri = ref('')
-let previewBlob = ref(null)
+let swarmEntries = ref({})
 
 let uploadOrigin = { origin: 'UPLOAD' }
 
-function enrichStamp(postageBatch) {
-  const { depth, bucketDepth, utilization } = postageBatch
+async function getDetail(reference) {
+  const manifestJs = new ManifestJs(beeApi)
+  const isManifest = await manifestJs.isManifest(reference)
 
-  const usage = utilization / Math.pow(2, depth - bucketDepth)
-  const usageText = `${Math.ceil(usage * 100)}%`
-  const capacity = `${getHumanReadableFileSize(2 ** depth * 4096 * usage)} / ${getHumanReadableFileSize(2 ** depth * 4096)}`
-  return {
-    ...postageBatch,
-    usage,
-    usageText,
-    capacity
+  if (!isManifest) {
+    ElMessage({
+      message: 'The specified hash does not contain valid content.',
+      type: 'error'
+    })
+    return
   }
-}
-let stapmList = ref([])
-let batchID = ref(null)
-let stapm = ref({})
-let stampModal = ref(false)
-function addStampHandle() {
-  stampModal.value = true
-}
-function cancelHandle() {
-  stampModal.value = false
-}
-function confirmHandle(val) {
-  console.log(val)
-  stampModal.value = false
-  batchID.value = val
-  fetchGetStamps()
-}
 
-function selectChange(item) {
-    stapm.value = item
-}
-function fetchGetStamps() {
-  getAllPostageBatch().then(data => {
-    stapmList.value = data.map(enrichStamp)
-  })
+  const entries = await manifestJs.getHashes(reference)
+  const indexDocument = await manifestJs.getIndexDocumentPath(reference)
+  console.log(indexDocument)
+
+  const previewFile = entries[PREVIEW_FILE_NAME]
+
+  delete entries[META_FILE_NAME]
+  delete entries[PREVIEW_FILE_NAME]
+  swarmEntries.value = entries
+
+  const count = Object.keys(entries).length
+
+  metadata.value ={
+    hash: reference,
+    size: 0,
+    type: count > 1 ? 'folder' : 'unknown',
+    name: reference,
+    isWebsite: Boolean(indexDocument) && count > 1,
+    count,
+    indexDocument
+  }
+
+  try {
+    const mtdt = await beeApi.downloadFile(reference, META_FILE_NAME)
+    const remoteMetadata = mtdt.data.text()
+    metadata.value = { ...metadata.value, ...(JSON.parse(remoteMetadata)) }
+  } catch (e) {} // eslint-disable-line no-empty
+
+  if (previewFile) {
+    previewUri.value = (`${config.BEE_API_HOST}/bzz/${reference}/${PREVIEW_FILE_NAME}`)
+  }
   
+  console.log(metadata.value)
+
 }
 
 onMounted(() => {
-    console.log(props.fileList)
-    let files = props.fileList.map(item => item.file)
-    metadata.value = getMetadata(files)
-
-    if (files.length !== 1 || !files[0].type.startsWith('image')) return
-
-    resize(files[0], PREVIEW_DIMENSIONS.maxWidth, PREVIEW_DIMENSIONS.maxHeight).then(blob => {
-      previewUri.value = URL.createObjectURL(blob) // NOTE: Until it is cleared with URL.revokeObjectURL, the file stays allocated in memory
-      previewBlob.vaule = blob
-    })
-    fetchGetStamps()
-    console.log(metadata)
+  getDetail(route.params.hash)
+  // console.log(route.params.hash)
 })
 
-function uploadFiles() {
-    
-}
 
+async function download() {
+  if (!beeApi) {
+    return
+  }
+  const {hash: reference, indexDocument} = metadata.value
+  putHistory(HISTORY_KEYS.DOWNLOAD_HISTORY, reference, determineHistoryName(reference, indexDocument))
+  if (Object.keys(swarmEntries.value).length === 1) {
+    window.open(`${store.api}/bzz/${reference}/`, '_blank')
+  } else {
+    const zip = new JSZip()
+    for (const [path, hash] of Object.entries(swarmEntries.value)) {
+      zip.file(path, await beeApi.downloadData(hash))
+    }
+    const content = await zip.generateAsync({ type: 'blob' })
+    saveAs(content, reference + '.zip')
+  }
+}
 function goBack() {
-    emit('back')
+    router.push({
+      path: '/files/upload'
+    })
 }
 </script>
 
 <style scoped lang="scss">
+@mixin baseStyle() {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin-top: 10px;
+  height: 70px;
+  align-items: center;
+  background-color: white;
+}
 .block {
     box-sizing: border-box;
     // padding: 24px 21px 0 20px;
@@ -186,5 +195,8 @@ function goBack() {
 }
 h3 {
     margin: 5px 0;
+}
+.list {
+  @include baseStyle()
 }
 </style>

@@ -140,7 +140,7 @@ function fetchGetStamps() {
 }
 
 onMounted(() => {
-    console.log(props.fileList)
+    fetchGetStamps()
     let files = props.fileList.map(item => item.file)
     metadata.value = getMetadata(files)
 
@@ -151,8 +151,6 @@ onMounted(() => {
       previewUri.value = URL.createObjectURL(blob) // NOTE: Until it is cleared with URL.revokeObjectURL, the file stays allocated in memory
       previewBlob = blob
     })
-    fetchGetStamps()
-    console.log(metadata)
 })
 
 async function uploadFiles() {

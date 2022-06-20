@@ -11,7 +11,8 @@
         @close="handleClose"
       >
         <div class="logo-box">
-          <img src="../assets/img/logo.svg" alt="">
+          <img class="logo" src="../assets/img/logo.ico" alt="">
+          <span class="text"> Welcome Back Dashboard</span>
         </div>
         <el-menu-item @click="openRouter" index="/home">
           <template #title>
@@ -45,11 +46,17 @@
             <el-menu-item @click="openRouter" index="/setting/api">Api</el-menu-item>
             <el-menu-item @click="openRouter" index="/setting/node">Node</el-menu-item>
         </el-sub-menu>
+        <el-menu-item>
+          <template #title>
+            <span :class="isHealth ? 'success' : 'error'"></span>
+          {{isHealth ? 'NODE OK' : 'NODE ERROR'}} 
+          </template>
+        </el-menu-item>
       
-      <div class="app-status">
+      <!-- <div class="app-status">
         <span :class="isHealth ? 'success' : 'error'"></span>
         {{isHealth ? 'NODE OK' : 'NODE ERROR'}} 
-      </div>
+      </div> -->
       </el-menu>
       
     </el-col>
@@ -94,6 +101,7 @@ const openRouter = (item) => {
   height: 100%;
 }
 .logo-box {
+  display: flex;
   padding-left: calc(var(--el-menu-base-level-padding) + var(--el-menu-level) * var(--el-menu-level-padding));
   padding-top: 30px;
 }
@@ -113,5 +121,14 @@ const openRouter = (item) => {
   left: 0;
   color: white;
   padding-left: calc(var(--el-menu-base-level-padding) + var(--el-menu-level) * var(--el-menu-level-padding));
+}
+.logo {
+  width: 38px;
+}
+.text {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  padding-left: 10px;
 }
 </style>

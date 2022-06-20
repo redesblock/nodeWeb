@@ -5,7 +5,7 @@
         ref="upload"
         @change="onChange"></Upload>
     </el-card>
-    <Block title="pload History">
+    <Block title="Upload History">
       <PTable
       border
       :columns="columns" 

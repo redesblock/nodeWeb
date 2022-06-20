@@ -50,7 +50,7 @@ import Encipherment from "@/components/Encipherment.vue";
 import { shortenText  } from "@/utils/index";
 import { config, META_FILE_NAME, PREVIEW_FILE_NAME } from "@/utils/data";
 import { putHistory, HISTORY_KEYS, shortenHash, determineHistoryName } from "@/utils/storage";
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 import { ManifestJs } from '@ethersphere/manifest-js'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
@@ -75,50 +75,56 @@ let swarmEntries = ref({})
 let uploadOrigin = { origin: 'UPLOAD' }
 
 async function getDetail(reference) {
-  const manifestJs = new ManifestJs(beeApi)
-  const isManifest = await manifestJs.isManifest(reference)
-
-  if (!isManifest) {
-    ElMessage({
-      message: 'The specified hash does not contain valid content.',
-      type: 'error'
-    })
-    return
-  }
-
-  const entries = await manifestJs.getHashes(reference)
-  const indexDocument = await manifestJs.getIndexDocumentPath(reference)
-  console.log(indexDocument)
-
-  const previewFile = entries[PREVIEW_FILE_NAME]
-
-  delete entries[META_FILE_NAME]
-  delete entries[PREVIEW_FILE_NAME]
-  swarmEntries.value = entries
-
-  const count = Object.keys(entries).length
-
-  metadata.value ={
-    hash: reference,
-    size: 0,
-    type: count > 1 ? 'folder' : 'unknown',
-    name: reference,
-    isWebsite: Boolean(indexDocument) && count > 1,
-    count,
-    indexDocument
-  }
-
+  const loading = ElLoading.service({
+      lock: true,
+      text: 'Service Pending',
+      background: 'rgba(0, 0, 0, 0.7)',
+  })
   try {
+    const manifestJs = new ManifestJs(beeApi)
+    const isManifest = await manifestJs.isManifest(reference)
+
+    if (!isManifest) {
+      ElMessage({
+        message: 'The specified hash does not contain valid content.',
+        type: 'error'
+      })
+      return
+    }
+
+    const entries = await manifestJs.getHashes(reference)
+    const indexDocument = await manifestJs.getIndexDocumentPath(reference)
+    // console.log(indexDocument)
+
+    const previewFile = entries[PREVIEW_FILE_NAME]
+
+    delete entries[META_FILE_NAME]
+    delete entries[PREVIEW_FILE_NAME]
+    swarmEntries.value = entries
+
+    const count = Object.keys(entries).length
+
+    metadata.value ={
+      hash: reference,
+      size: 0,
+      type: count > 1 ? 'folder' : 'unknown',
+      name: reference,
+      isWebsite: Boolean(indexDocument) && count > 1,
+      count,
+      indexDocument
+    }
+  
     const mtdt = await beeApi.downloadFile(reference, META_FILE_NAME)
     const remoteMetadata = mtdt.data.text()
     metadata.value = { ...metadata.value, ...(JSON.parse(remoteMetadata)) }
-  } catch (e) {} // eslint-disable-line no-empty
-
-  if (previewFile) {
-    previewUri.value = (`${config.BEE_API_HOST}/bzz/${reference}/${PREVIEW_FILE_NAME}`)
-  }
-  
-  console.log(metadata.value)
+    loading.close()
+    
+    if (previewFile) {
+      previewUri.value = (`${config.BEE_API_HOST}/bzz/${reference}/${PREVIEW_FILE_NAME}`)
+    }
+  } catch (e) {
+    loading.close()
+  } // eslint-disable-line no-empty
 
 }
 
@@ -129,21 +135,32 @@ onMounted(() => {
 
 
 async function download() {
-  if (!beeApi) {
-    return
-  }
-  const {hash: reference, indexDocument} = metadata.value
-  putHistory(HISTORY_KEYS.DOWNLOAD_HISTORY, reference, determineHistoryName(reference, indexDocument))
-  if (Object.keys(swarmEntries.value).length === 1) {
-    window.open(`${store.api}/bzz/${reference}/`, '_blank')
-  } else {
-    const zip = new JSZip()
-    for (const [path, hash] of Object.entries(swarmEntries.value)) {
-      zip.file(path, await beeApi.downloadData(hash))
+  const loading = ElLoading.service({
+      lock: true,
+      text: 'Service Pending',
+      background: 'rgba(0, 0, 0, 0.7)',
+  })
+  try {
+    if (!beeApi) {
+      return
     }
-    const content = await zip.generateAsync({ type: 'blob' })
-    saveAs(content, reference + '.zip')
+    const {hash: reference, indexDocument} = metadata.value
+    putHistory(HISTORY_KEYS.DOWNLOAD_HISTORY, reference, determineHistoryName(reference, indexDocument))
+    if (Object.keys(swarmEntries.value).length === 1) {
+      window.open(`${store.api}/bzz/${reference}/`, '_blank')
+    } else {
+      const zip = new JSZip()
+      for (const [path, hash] of Object.entries(swarmEntries.value)) {
+        zip.file(path, await beeApi.downloadData(hash))
+      }
+      const content = await zip.generateAsync({ type: 'blob' })
+      saveAs(content, reference + '.zip')
+    }
+    loading.close()
+  } catch (error) {
+    loading.close()
   }
+  
 }
 function goBack() {
     router.push({

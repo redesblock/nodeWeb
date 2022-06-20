@@ -76,7 +76,7 @@ import { resize,  } from "@/utils/image";
 import { PREVIEW_DIMENSIONS, META_FILE_NAME, PREVIEW_FILE_NAME } from "@/utils/data";
 import { getAllPostageBatch } from "@/apis/index";
 import { putHistory, HISTORY_KEYS } from "@/utils/storage";
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 
 import {
   Back,
@@ -121,7 +121,7 @@ function cancelHandle() {
   stampModal.value = false
 }
 function confirmHandle(val) {
-  console.log(val)
+  // console.log(val)
   stampModal.value = false
   batchID.value = val
   fetchGetStamps()
@@ -129,7 +129,7 @@ function confirmHandle(val) {
 
 function selectChange(item) {
     stamp.value = stampList.value.find(stamp => stamp.batchID == item)
-    console.log(stamp)
+    // console.log(stamp)
 
 }
 function fetchGetStamps() {
@@ -147,7 +147,7 @@ onMounted(() => {
     if (files.length !== 1 || !files[0].type.startsWith('image')) return
 
     resize(files[0], PREVIEW_DIMENSIONS.maxWidth, PREVIEW_DIMENSIONS.maxHeight).then(blob => {
-      console.log(blob)
+      // console.log(blob)
       previewUri.value = URL.createObjectURL(blob) // NOTE: Until it is cleared with URL.revokeObjectURL, the file stays allocated in memory
       previewBlob = blob
     })
@@ -186,7 +186,7 @@ async function uploadFiles() {
       name: metadata.value.name,
       size: metadata.value.size,
     }
-    console.log(mtd)
+    // console.log(mtd)
     // Type of the file only makes sense for a single file
     if (files.length === 1) mtd.type = metadata.value.type
 
@@ -196,7 +196,7 @@ async function uploadFiles() {
     })
     fls.push(packageFile(metafile))
 
-    console.log(previewBlob)
+    // console.log(previewBlob)
 
     if (previewBlob) {
       const previewFile = new File([previewBlob], PREVIEW_FILE_NAME, {
@@ -206,31 +206,40 @@ async function uploadFiles() {
       fls.push(packageFile(previewFile))
     }
 
-    if (beeDebugApi) {
-      await waitUntilStampUsable(stamp.value.batchID, beeDebugApi)
-    }
+    const loading = ElLoading.service({
+        lock: true,
+        text: 'Service Pending',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
 
-    console.log(fls)
-    console.log(indexDocument)
+    try {
+      if (beeDebugApi) {
+        await waitUntilStampUsable(stamp.value.batchID, beeDebugApi)
+      }
 
-    beeApi
+      beeApi
       .uploadFiles(stamp.value.batchID, fls, { indexDocument })
       .then(hash => {
-        console.log(hash)
+        // console.log(hash)
         putHistory(HISTORY_KEYS.UPLOAD_HISTORY, hash.reference, getAssetNameFromFiles(files))
         if (uploadOrigin.origin === 'UPLOAD') {
             router.push({
                 path: '/files/upload/' + hash.reference,
             })
         }
+        loading.close()
       })
       .catch(e => {
         ElMessage({
             message: `Error uploading: ${e.message}`,
             type: 'error'
         })
+        loading.close()
       })
-    
+
+    } catch (error) {
+        loading.close()
+    }
 
 }
 

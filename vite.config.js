@@ -23,7 +23,7 @@ export default defineConfig({
     proxy: {}
   },
   define: {
-    "global": {},
+    // "global": {},
   },
   resolve: {
     alias: {

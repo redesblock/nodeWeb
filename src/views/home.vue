@@ -30,36 +30,39 @@
            <h3>Connected Peers</h3>
            <div>
              <span class="number">{{appModule.topology.connected.score}}</span>
-              <el-tooltip
-                effect="dark"
+              <Icon
+                class="right"
+                placement="bottom"
                 :content="appModule.topology.connected.explanation"
               >
-             <el-icon class="right"><Warning /></el-icon>
-            </el-tooltip>
+              <Warning />
+            </Icon>
            </div>
          </div>
          <div>
            <h3>Population</h3>
            <div>
              <span class="number">{{appModule.topology.population.score}}</span>
-              <el-tooltip
-                effect="dark"
+              <Icon
+                class="right"
+                placement="bottom"
                 :content="appModule.topology.population.explanation"
               >
-             <el-icon class="right"><Warning /></el-icon>
-            </el-tooltip>
+              <Warning />
+            </Icon>
            </div>
          </div>
          <div>
            <h3>Depth</h3>
            <div>
              <span class="number">{{appModule.topology.depth.score}}</span>
-              <el-tooltip
-                effect="dark"
+              <Icon
+                class="right"
+                placement="bottom"
                 :content="appModule.topology.depth.explanation"
               >
-             <el-icon class="right"><Warning /></el-icon>
-            </el-tooltip>
+              <Warning />
+            </Icon>
            </div>
          </div>
          
@@ -69,10 +72,10 @@
     <Block title="Blockchain">
       <el-card shadow="never">
         <div class="item">
-          <Encipherment title="Bsc address" :str="appModule.address.ethereum"></Encipherment>
+          <Encipherment @click="sharehandle" share title="Bsc address" :str="appModule.address.ethereum"></Encipherment>
         </div>
         <div class="item">
-          <Encipherment title="Chequebook address" :str="appModule.chequebookAddress"></Encipherment>
+          <Encipherment share title="Chequebook address" :str="appModule.chequebookAddress"></Encipherment>
         </div>
       </el-card>
     </Block>
@@ -83,10 +86,16 @@
 import {
   Warning,
 } from '@element-plus/icons-vue'
+import Icon from "@/components/Icon.vue";
 import { useAppModule } from "@/store/appModule";
 import Encipherment from "@/components/Encipherment.vue";
 const appModule = useAppModule();
 
+
+
+function sharehandle(reference) {
+  window.open(`${appModule.api}/bzz/${reference}/`, '_blank')
+}
 </script>
 
 <style scoped lang="scss">

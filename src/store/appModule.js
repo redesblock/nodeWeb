@@ -23,11 +23,11 @@ export const useAppModule = defineStore('appModule', {
         address: {
             overlay: '',
             underlay: [],
-            ethereum: null,
-            publicKey: null,
-            pssPublicKey: null,
+            ethereum: '',
+            publicKey: '',
+            pssPublicKey: '',
         },
-        chequebookAddress: null,
+        chequebookAddress: '',
         topology: {
             depth: {},
             population: {},
@@ -43,7 +43,7 @@ export const useAppModule = defineStore('appModule', {
      }
     },
     getters: {
-        version: (state) => semver.coerce(state.app.version).version,
+        version: (state) => semver.coerce(state.app.version)?.version,
         latestVersion: (state) => state.app.latestVersion,
         status: (state) => state.app.status,
         api: (state) => state.config.api,

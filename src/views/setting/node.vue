@@ -72,36 +72,36 @@
           <span>Connected Peers</span>
           <div>
             <span style="padding-right:10px ;">{{appModule.topology.connected.score}}</span>
-            <el-tooltip
-                effect="dark"
-                :content="appModule.topology.connected.explanation"
+            <Icon
+              class="right"
+              :content="appModule.topology.connected.explanation"
               >
-              <el-icon class="right"><Warning /></el-icon>
-            </el-tooltip>
+              <Warning />
+            </Icon>
           </div>
         </div>
         <div class="list-item">
           <span>Population</span>
           <div>
             <span style="padding-right: 10px;">{{appModule.topology.population.score}}</span>
-            <el-tooltip
-                effect="dark"
-                :content="appModule.topology.population.explanation"
+            <Icon
+              class="right"
+              :content="appModule.topology.population.explanation"
               >
-              <el-icon class="right"><Warning /></el-icon>
-            </el-tooltip>
+              <Warning />
+            </Icon>
           </div>
         </div>
         <div class="list-item">
           <span>Depth</span>
           <div>
             <span style="padding-right: 10px;">{{appModule.topology.depth.score}}</span>
-            <el-tooltip
-                effect="dark"
-                :content="appModule.topology.depth.explanation"
+            <Icon
+              class="right"
+              :content="appModule.topology.depth.explanation"
               >
-              <el-icon class="right"><Warning /></el-icon>
-            </el-tooltip>
+              <Warning />
+            </Icon>
           </div>
         </div>
     </div>

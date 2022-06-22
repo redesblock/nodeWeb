@@ -3,12 +3,15 @@
 import { ref, computed } from "vue";
 import { split, isPrefixedHexString } from "@/utils/index";
 import copy from 'copy-to-clipboard';
+import Icon from "./Icon.vue";
 import {
   View,
   Hide,
   CopyDocument,
   Share
 } from '@element-plus/icons-vue'
+const emit = defineEmits(['click'])
+
 const props = defineProps({
   title: String,
   str: String,
@@ -25,7 +28,9 @@ const props = defineProps({
     default: false
   }
 })
+
 let show = ref(false)
+
 const spanText = computed(() => {
   const splitValues = split(props.str)
   const hasPrefix = isPrefixedHexString(props.str)
@@ -40,6 +45,11 @@ const normalStr = computed(() => {
   return splitValues.join(" ")
 })
 
+const content = computed(() => {
+    if(show.value) return 'click hide content'
+     return 'click show content'
+})
+
 function showInfoHandle() {
   show.value = !show.value
 }
@@ -48,8 +58,8 @@ function copyText() {
   copy(props.str)
 }
 
-function shareHandle() {
-  window.open(props.str)
+function shareHandle(params) {
+  emit('click', params)
 }
 
 </script>
@@ -57,19 +67,23 @@ function shareHandle() {
 <template>
     <div :class="line ? 'line' : ''">
       <span class="label">{{title}}</span> 
-      <el-icon :size="20" @click="showInfoHandle">
+      <Icon @click="showInfoHandle" :content="content">
         <View v-if="!show" />
         <Hide v-else />
-      </el-icon>
+      </Icon>
+      <Icon v-if="share && showCopy" style="padding-left: 20px;" content="Copy" @click="copyText"><CopyDocument /></Icon>
     </div>
+
     <p v-if="share">
-      {{show ? str : spanText}}
-      <Share @click="shareHandle" class="right" style="cursor:pointer;width: 1em; height: 1em; margin-right: 8px" />
-      <el-icon style="padding-left: 20px;margin-right: 8px" v-if="showCopy" class="right" :size="20" @click="copyText"><CopyDocument /></el-icon>
+      {{show ? normalStr : spanText}}
+      <Icon class="right" content="Share">
+          <Share @click="shareHandle(str)"  />
+      </Icon>
     </p>
+
     <p v-else>
       {{show ? normalStr : spanText}}
-      <el-icon style="padding-left: 20px;" v-if="showCopy" class="right" :size="20" @click="copyText"><CopyDocument /></el-icon>
+      <Icon content="Copy" style="padding-left: 20px;" v-if="showCopy" class="right" @click="copyText"><CopyDocument /></Icon>
     </p>
 </template>
 

@@ -238,7 +238,11 @@ async function uploadFiles() {
       })
 
     } catch (error) {
-        loading.close()
+      ElMessage({
+            message: `Error uploading: ${error.message}`,
+            type: 'error'
+        })
+      loading.close()
     }
 
 }

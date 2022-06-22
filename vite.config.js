@@ -29,6 +29,28 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, 'src'),
       stream: 'stream-browserify',
+      "safe-buffer": "buffer",
+      fs: "memfs",
+      path: "path-browserify",
+      crypto: "crypto-browserify",
+      "readable-stream": "readable-stream-no-circular",
+      timers: "timers-browserify",
+      os: "os-browserify",
+      tty: "tty-browserify",
+      readline: "EMPTY",
+      fsevents: "EMPTY",
+      chokidar: "EMPTY",
+      readdirp: "EMPTY",
+      consolidate: "EMPTY",
+      pnpapi: "EMPTY"
     }
   },
+  build:{
+    // terserOptions: {
+    //     compress: {
+    //       drop_console: true,
+    //       drop_debugger: true
+    //     }
+    // }
+  }
 })

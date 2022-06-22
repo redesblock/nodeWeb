@@ -123,6 +123,7 @@ async function getDetail(reference) {
       previewUri.value = (`${config.BEE_API_HOST}/bzz/${reference}/${PREVIEW_FILE_NAME}`)
     }
   } catch (e) {
+    console.log(e)
     loading.close()
   } // eslint-disable-line no-empty
 

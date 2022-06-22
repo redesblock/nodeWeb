@@ -20,7 +20,7 @@
                 <p>WithDraw  Rewards</p>
                 <p class="amount">200  Mop</p>
               </div>
-              <el-button type="primary">WithDraw</el-button>
+              <el-button @click="showModal" type="primary">WithDraw</el-button>
             </div>
           </el-card>
         </el-col>
@@ -29,11 +29,11 @@
     <Block title="Transation" class="container">
       <div class="list">
         <span>03ef42927e896883ec2666cb1f0b6d758136c7f08eebd8e620a44a820ea86d2fda</span>
-        <Share style="cursor:pointer;width: 1em; height: 1em; margin-right: 8px" />
+        <Icon content="Share" @click="shareHandle"> <Share /></Icon>
       </div>
       <div class="list">
         <span>03ef42927e896883ec2666cb1f0b6d758136c7f08eebd8e620a44a820ea86d2fda</span>
-        <Share style="cursor:pointer;width: 1em; height: 1em; margin-right: 8px" />
+        <Icon content="Share" @click="shareHandle"> <Share /></Icon>
       </div>
       <Pagination
       :pageOptions="pageOptions"
@@ -41,6 +41,15 @@
       @onPageChange="onPageChange"
       />
     </Block>
+
+  <Token
+  @cancel="cancelHandle"
+  @confirm="cancelHandle"
+  :tokenModal="tokenModal" 
+  :methodHandle="withDrawHandle"
+  successMessage="Successful WithDraw."
+  errorMessage="Error with WithDraw"
+  tips="WithDraw  Storage Rewards"></Token>
   </Page>
 </template>
 
@@ -49,9 +58,12 @@ import {
   Share,
 } from '@element-plus/icons-vue'
 import Pagination from "@/components/pagination.vue";
+import Token from "@/components/Token.vue";
 import { ref, reactive } from "vue";
+import { withDrawHandle } from "@/apis/index";
 
 let total = ref(0)
+let tokenModal = ref(false)
 let pageOptions = reactive({
     pageNum: 1,
     pageSize: 10
@@ -60,6 +72,18 @@ let pageOptions = reactive({
 const onPageChange = (page) => {
   console.log(page)
   pageOptions = page
+}
+
+function shareHandle(params) {
+  
+}
+
+
+function cancelHandle(params) {
+  tokenModal.value = false
+}
+function showModal(params) {
+  tokenModal.value = true
 }
 </script>
 

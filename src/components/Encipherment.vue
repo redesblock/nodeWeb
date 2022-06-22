@@ -76,14 +76,14 @@ function shareHandle(params) {
 
     <p v-if="share">
       {{show ? normalStr : spanText}}
-      <Icon class="right" content="Share">
+      <Icon style="margin-left: 18px;" class="right" content="Share">
           <Share @click="shareHandle(str)"  />
       </Icon>
     </p>
 
     <p v-else>
       {{show ? normalStr : spanText}}
-      <Icon content="Copy" style="padding-left: 20px;" v-if="showCopy" class="right" @click="copyText"><CopyDocument /></Icon>
+      <Icon style="margin-left: 18px;" content="Copy" v-if="showCopy" class="right" @click="copyText"><CopyDocument /></Icon>
     </p>
 </template>
 

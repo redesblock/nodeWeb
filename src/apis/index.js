@@ -135,3 +135,8 @@ export function cashoutLastCheque(peerId) {
     return beeDebugApi.cashoutLastCheque(peerId)
 }
 
+
+export function withDrawHandle(peerId) {
+    return beeDebugApi.cashoutLastCheque(peerId)
+}
+

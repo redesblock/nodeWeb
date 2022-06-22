@@ -2,8 +2,8 @@
   <Page>
     <Block title="Pledge">
       <div style="text-align: right;" class="mgb20">
-        <el-button type="primary">PLEDGE </el-button>
-        <el-button type="primary">REPLACE</el-button>
+        <el-button type="primary" @click="showPledgeHandle">PLEDGE </el-button>
+        <el-button type="primary" @click="showReplaceHandle">REPLACE</el-button>
       </div>
       <el-row>
         <el-col :span="11">
@@ -23,11 +23,11 @@
   <Block title="Transation">
     <div class="list">
       <span>03ef42927e896883ec2666cb1f0b6d758136c7f08eebd8e620a44a820ea86d2fda</span>
-      <Share style="cursor:pointer;width: 1em; height: 1em; margin-right: 8px" />
+      <Icon content="Share" @click="shareHandle()"> <Share /></Icon>
     </div>
     <div class="list">
       <span>03ef42927e896883ec2666cb1f0b6d758136c7f08eebd8e620a44a820ea86d2fda</span>
-      <Share style="cursor:pointer;width: 1em; height: 1em; margin-right: 8px" />
+      <Icon content="Share" @click="shareHandle()"> <Share /></Icon>
     </div>
     <Pagination
       :pageOptions="pageOptions"
@@ -35,6 +35,25 @@
       @onPageChange="onPageChange"
     />
   </Block>
+
+
+  <Token
+  @cancel="cancelHandle"
+  @confirm="cancelHandle"
+  :tokenModal="showPledgeModal" 
+  :methodHandle="withDrawHandle"
+  successMessage="Successful Pledge  Amount."
+  errorMessage="Error with Pledge  Amount"
+  tips="Pledge Amount"></Token>
+
+  <Token
+  @cancel="cancelHandle"
+  @confirm="cancelHandle"
+  :tokenModal="showReplaceModal" 
+  :methodHandle="withDrawHandle"
+  successMessage="Successful Release Amount."
+  errorMessage="Error with Release Amount"
+  tips="Release Amount"></Token>
   </Page>
 </template>
 
@@ -44,8 +63,12 @@ import {
 } from '@element-plus/icons-vue'
 import Pagination from "@/components/pagination.vue";
 import { ref, reactive } from "vue";
+import { withDrawHandle } from "@/apis/index";
+import Token from "@/components/Token.vue";
 
 let total = ref(0)
+let showPledgeModal = ref(false)
+let showReplaceModal = ref(false)
 let pageOptions = reactive({
     pageNum: 1,
     pageSize: 10
@@ -54,6 +77,21 @@ let pageOptions = reactive({
 const onPageChange = (page) => {
   console.log(page)
   pageOptions = page
+}
+
+function shareHandle() {
+  
+}
+
+function cancelHandle() {
+    showPledgeModal.value = false
+    showReplaceModal.value = false
+}
+function showPledgeHandle() {
+    showPledgeModal.value = true
+}
+function showReplaceHandle() {
+    showReplaceModal.value = true
 }
 </script>
 

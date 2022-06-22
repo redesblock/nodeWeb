@@ -89,6 +89,7 @@ async function getDetail(reference) {
         message: 'The specified hash does not contain valid content.',
         type: 'error'
       })
+      loading.close()
       return
     }
 

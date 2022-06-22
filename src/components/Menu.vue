@@ -52,11 +52,6 @@
           {{isHealth ? 'NODE OK' : 'NODE ERROR'}} 
           </template>
         </el-menu-item>
-      
-      <!-- <div class="app-status">
-        <span :class="isHealth ? 'success' : 'error'"></span>
-        {{isHealth ? 'NODE OK' : 'NODE ERROR'}} 
-      </div> -->
       </el-menu>
       
     </el-col>
@@ -104,6 +99,7 @@ const openRouter = (item) => {
   display: flex;
   padding-left: calc(var(--el-menu-base-level-padding) + var(--el-menu-level) * var(--el-menu-level-padding));
   padding-top: 30px;
+  margin-bottom: 20px;
 }
 .page-content {
   height: 100vh;
@@ -113,22 +109,16 @@ const openRouter = (item) => {
 .content-bar {
   height: 25px;
 }
-.app-status {
-  position: absolute;
-  width: 100%;
-  height: 100px;
-  bottom: 100px;
-  left: 0;
-  color: white;
-  padding-left: calc(var(--el-menu-base-level-padding) + var(--el-menu-level) * var(--el-menu-level-padding));
-}
+
 .logo {
   width: 38px;
+  height: 57px;
 }
 .text {
   font-size: 18px;
   font-weight: bold;
   color: white;
   padding-left: 10px;
+  line-height: 28px;
 }
 </style>

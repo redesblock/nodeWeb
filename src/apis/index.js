@@ -1,12 +1,3 @@
-
-// function getApi() {
-//    const store = useAppModule()
-   
-//    return {
-//     beeApi: store.beeApi,
-//     beeDebugApi: store.beeDebugApi,
-//    }
-// }
 import { beeApi, beeDebugApi } from "./Bee";
 
 // connected 
@@ -136,7 +127,7 @@ export function cashoutLastCheque(peerId) {
 }
 
 
-export function withDrawHandle(peerId) {
-    return beeDebugApi.cashoutLastCheque(peerId)
-}
+// export function withDrawHandle(peerId) {
+//     return beeDebugApi.cashoutLastCheque(peerId)
+// }
 

@@ -24,7 +24,7 @@
               <Encipherment line title="Hop Hash：" :str="metadata.hash"></Encipherment>
             </el-card>
             <div class="list">
-              <Encipherment share title="Share on Hop Gateway" :str="'https://gateway.ethswarm.org/access/'+metadata.hash"></Encipherment>
+              <Encipherment @click="shareHandle" share title="Share on Hop Gateway" :str="'https://gateway.ethswarm.org/access/'+metadata.hash"></Encipherment>
             </div>
 
             <div class="mgt20">
@@ -167,6 +167,9 @@ function goBack() {
     router.push({
       path: '/files/upload'
     })
+}
+function shareHandle(url) {
+  window.open(url, '_blank')
 }
 </script>
 

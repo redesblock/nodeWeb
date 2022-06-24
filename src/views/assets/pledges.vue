@@ -8,52 +8,50 @@
       <el-row>
         <el-col :span="11">
           <el-card shadow="never">
-            <span>System Rewards</span>
-            <h3>1000  Hop</h3>
+            <span>Total Balance</span>
+            <h3>{{pledges.cashBalance.toFixedDecimal()}}  Hop</h3>
           </el-card>
         </el-col>
         <el-col :span="11" :offset="2">
           <el-card shadow="never">
-            <span>System Rewards</span>
-            <h3>1000  Hop</h3>
+            <span>Pledged  Amount</span>
+            <h3>{{pledges.unCashBalance.toFixedDecimal()}}  Hop</h3>
           </el-card>
         </el-col>
       </el-row>
     </Block>
   <Block title="Transation">
-    <div class="list">
+    <div class="list" v-for="item in dataList.list">
+      <span>{{item}}</span>
+      <Icon content="Share" @click="shareHandle(item)"> <Share /></Icon>
+    </div>
+    <!-- <div class="list">
       <span>03ef42927e896883ec2666cb1f0b6d758136c7f08eebd8e620a44a820ea86d2fda</span>
       <Icon content="Share" @click="shareHandle()"> <Share /></Icon>
-    </div>
-    <div class="list">
-      <span>03ef42927e896883ec2666cb1f0b6d758136c7f08eebd8e620a44a820ea86d2fda</span>
-      <Icon content="Share" @click="shareHandle()"> <Share /></Icon>
-    </div>
+    </div> -->
     <Pagination
       :pageOptions="pageOptions"
-      :total="total"
+      :total="dataList.total"
       @onPageChange="onPageChange"
     />
   </Block>
 
 
-  <Token
+  <PToken
   @cancel="cancelHandle"
   @confirm="cancelHandle"
   :tokenModal="showPledgeModal" 
-  :methodHandle="withDrawHandle"
   successMessage="Successful Pledge  Amount."
   errorMessage="Error with Pledge  Amount"
-  tips="Pledge Amount"></Token>
+  tips="Pledge Amount"></PToken>
 
-  <Token
+  <PToken
   @cancel="cancelHandle"
   @confirm="cancelHandle"
   :tokenModal="showReplaceModal" 
-  :methodHandle="withDrawHandle"
   successMessage="Successful Release Amount."
   errorMessage="Error with Release Amount"
-  tips="Release Amount"></Token>
+  tips="Release Amount"></PToken>
   </Page>
 </template>
 
@@ -62,11 +60,25 @@ import {
   Share,
 } from '@element-plus/icons-vue'
 import Pagination from "@/components/pagination.vue";
-import { ref, reactive } from "vue";
-import { withDrawHandle } from "@/apis/index";
-import Token from "@/components/Token.vue";
+import { ref, reactive, onMounted } from "vue";
+import PToken from "@/components/Token.vue";
+import { getPledge, getPledgeTransations } from "@/apis/http";
+import Token from "@/utils/Token";
+import { useAppModule } from "@/store/appModule";
 
-let total = ref(0)
+
+const appModule = useAppModule();
+
+let dataList = reactive({
+  list: [],
+  total: 0
+})
+
+let pledges = reactive({
+  cashBalance: new Token('0'),
+  unCashBalance: new Token('0')
+})
+
 let showPledgeModal = ref(false)
 let showReplaceModal = ref(false)
 let pageOptions = reactive({
@@ -75,12 +87,11 @@ let pageOptions = reactive({
 })
 
 const onPageChange = (page) => {
-  console.log(page)
   pageOptions = page
 }
 
-function shareHandle() {
-  
+function shareHandle(reference) {
+  window.open(`${appModule.api}/bzz/${reference}/`, '_blank')
 }
 
 function cancelHandle() {
@@ -93,6 +104,27 @@ function showPledgeHandle() {
 function showReplaceHandle() {
     showReplaceModal.value = true
 }
+
+async function fetchPledge() {
+  let res = await getPledge()
+  if(res.status == 200) {
+    pledges.cashBalance = new Token(res.data.cashBalance) 
+    pledges.unCashBalance = new Token(res.data.unCashBalance) 
+  }
+}
+
+async function fetchPledgeTransations() {
+  let res = await getPledgeTransations()
+  if(res.status == 200) {
+    dataList.list = res.data.txs || []
+    dataList.total = dataList.list.length || 0
+    console.log(res)
+  }
+}
+onMounted(() => {
+  fetchPledge()
+  fetchPledgeTransations()
+})
 </script>
 
 <style scoped lang="scss">

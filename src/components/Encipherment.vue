@@ -26,6 +26,14 @@ const props = defineProps({
   share: {
     type: Boolean,
     default: false
+  },
+  showAmount: {
+    type: Boolean,
+    default: false
+  },
+  amount: {
+    type: [Number, String],
+    default: 0
   }
 })
 
@@ -41,8 +49,12 @@ const spanText = computed(() => {
 })
 
 const normalStr = computed(() => {
-  const splitValues = split(props.str)
-  return splitValues.join(" ")
+  if (props.str.startsWith('http')) {
+    return props.str
+  }else {
+    const splitValues = split(props.str)
+    return splitValues.join(" ")
+  }
 })
 
 const content = computed(() => {
@@ -72,6 +84,7 @@ function shareHandle(params) {
         <Hide v-else />
       </Icon>
       <Icon v-if="share && showCopy" style="padding-left: 20px;" content="Copy" @click="copyText"><CopyDocument /></Icon>
+      <span v-if="showAmount" class="right amount">Amount: {{amount}}</span>
     </div>
 
     <p v-if="share">
@@ -98,5 +111,7 @@ function shareHandle(params) {
   vertical-align: top;
   padding-right: 30px;
 }
-
+.amount {
+  font-weight: bold;
+}
 </style>

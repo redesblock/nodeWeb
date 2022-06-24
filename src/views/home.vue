@@ -72,10 +72,10 @@
     <Block title="Blockchain">
       <el-card shadow="never">
         <div class="item">
-          <Encipherment @click="sharehandle" share title="Bsc address" :str="appModule.address.ethereum"></Encipherment>
+          <Encipherment showAmount :amount="bscAmount.toFixedDecimal()" @click="sharehandle" share title="Bsc address" :str="appModule.address.ethereum"></Encipherment>
         </div>
         <div class="item">
-          <Encipherment share title="Chequebook address" :str="appModule.chequebookAddress"></Encipherment>
+          <Encipherment showAmount :amount="chequebookAmount.toFixedDecimal()" share title="Chequebook address" :str="appModule.chequebookAddress"></Encipherment>
         </div>
       </el-card>
     </Block>
@@ -89,13 +89,38 @@ import {
 import Icon from "@/components/Icon.vue";
 import { useAppModule } from "@/store/appModule";
 import Encipherment from "@/components/Encipherment.vue";
+import { getAddresseAmount, getChequebookAmount } from "@/apis/http";
+import { onMounted, ref } from "vue";
+import Token from "@/utils/Token";
+
 const appModule = useAppModule();
 
+const bscAmount = ref(new Token('0'))
+const chequebookAmount = ref(new Token('0'))
 
 
 function sharehandle(reference) {
   window.open(`${appModule.api}/bzz/${reference}/`, '_blank')
 }
+
+async function fetchAddresseAmount() {
+  let res = await getAddresseAmount()
+  if(res.status == 200){
+    bscAmount.value = new Token(res.data.balance)
+  }
+}
+
+async function fetchChequebookAmount() {
+  let res = await getChequebookAmount()
+  if(res.status == 200) {
+    chequebookAmount.value = new Token(res.data.totalBalance)
+  }
+}
+
+onMounted(() => {
+  fetchAddresseAmount()
+  fetchChequebookAmount()
+})
 </script>
 
 <style scoped lang="scss">

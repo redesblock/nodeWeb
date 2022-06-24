@@ -3,9 +3,9 @@
     <Block title="Rewards">
       <el-row>
         <el-col :span="7">
-          <el-card shadow="never" style="height: 164px;">
+          <el-card shadow="never" style="height: 164px;box-sizing:border-box; padding-top: 39px;">
             <span>System Rewards</span>
-            <h3>1000  Hop</h3>
+            <h3>{{reward.systemBalance.toFixedDecimal()}}  Hop</h3>
           </el-card>
         </el-col>
         <el-col :span="14" :offset="3">
@@ -14,11 +14,11 @@
             <div class="content">
               <div>
                 <p>WithDraw  Rewards</p>
-                <p class="amount">200  Mop</p>
+                <p class="amount">{{reward.cashBalance.toFixedDecimal()}}  Mop</p>
               </div>
               <div>
-                <p>WithDraw  Rewards</p>
-                <p class="amount">200  Mop</p>
+                <p>Uncash  Rewards</p>
+                <p class="amount">{{reward.unCashBalance.toFixedDecimal()}}  Mop</p>
               </div>
               <el-button @click="showModal" type="primary">WithDraw</el-button>
             </div>
@@ -27,29 +27,28 @@
       </el-row>
     </Block>
     <Block title="Transation" class="container">
-      <div class="list">
-        <span>03ef42927e896883ec2666cb1f0b6d758136c7f08eebd8e620a44a820ea86d2fda</span>
-        <Icon content="Share" @click="shareHandle"> <Share /></Icon>
+      <div class="list" v-for="item in dataList.list">
+        <span>{{item}}</span>
+        <Icon content="Share" @click="shareHandle(item)"> <Share /></Icon>
       </div>
-      <div class="list">
-        <span>03ef42927e896883ec2666cb1f0b6d758136c7f08eebd8e620a44a820ea86d2fda</span>
-        <Icon content="Share" @click="shareHandle"> <Share /></Icon>
-      </div>
+      <!-- <div class="list">
+        <span>{{item}}</span>
+        <Icon content="Share" @click="shareHandle(item)"> <Share /></Icon>
+      </div> -->
       <Pagination
       :pageOptions="pageOptions"
-      :total="total"
+      :total="dataList.total"
       @onPageChange="onPageChange"
       />
     </Block>
 
-  <Token
+  <PToken
   @cancel="cancelHandle"
   @confirm="cancelHandle"
   :tokenModal="tokenModal" 
-  :methodHandle="withDrawHandle"
   successMessage="Successful WithDraw."
   errorMessage="Error with WithDraw"
-  tips="WithDraw  Storage Rewards"></Token>
+  tips="WithDraw  Storage Rewards"></PToken>
   </Page>
 </template>
 
@@ -58,15 +57,29 @@ import {
   Share,
 } from '@element-plus/icons-vue'
 import Pagination from "@/components/pagination.vue";
-import Token from "@/components/Token.vue";
-import { ref, reactive } from "vue";
-import { withDrawHandle } from "@/apis/index";
+import PToken from "@/components/Token.vue";
+import { ref, reactive, onMounted } from "vue";
+import { getReward, getRewardTransation } from "@/apis/http";
+import Token from "@/utils/Token";
+import { useAppModule } from "@/store/appModule";
 
-let total = ref(0)
+const appModule = useAppModule();
+
+
+let dataList = reactive({
+  list: [],
+  total: 0
+})
 let tokenModal = ref(false)
 let pageOptions = reactive({
     pageNum: 1,
     pageSize: 10
+})
+
+let reward = reactive({
+  cashBalance: new Token('0'),
+  systemBalance: new Token('0'),
+  unCashBalance: new Token('0'),
 })
 
 const onPageChange = (page) => {
@@ -74,10 +87,9 @@ const onPageChange = (page) => {
   pageOptions = page
 }
 
-function shareHandle(params) {
-  
+function shareHandle(reference) {
+  window.open(`${appModule.api}/bzz/${reference}/`, '_blank')
 }
-
 
 function cancelHandle(params) {
   tokenModal.value = false
@@ -85,6 +97,29 @@ function cancelHandle(params) {
 function showModal(params) {
   tokenModal.value = true
 }
+
+async function fetchReward() {
+  let res = await getReward()
+  if(res.status == 200) {
+    reward.cashBalance = new Token(res.data.cashBalance) 
+    reward.systemBalance = new Token(res.data.systemBalance) 
+    reward.unCashBalance = new Token(res.data.unCashBalance) 
+  }
+}
+
+async function fetchRewardTransation() {
+  let res = await getRewardTransation()
+  if(res.status == 200) {
+    dataList.list  = res.data.txs || []
+    dataList.total = dataList.list.length || 0
+  }
+}
+
+
+onMounted(() => {
+  fetchReward()
+  fetchRewardTransation()
+})
 </script>
 
 <style scoped lang="scss">

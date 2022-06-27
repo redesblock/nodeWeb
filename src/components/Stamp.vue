@@ -1,5 +1,8 @@
 <template>
-    <el-drawer title="Buy new Vouchers" v-model="stampModal" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" size="70%">
+    <el-drawer v-model="stampModal" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :size="700">
+      <template #header>
+        <span class="header">Buy New Vouchers</span>
+      </template>
       <template #default>
         <el-form
           ref="ruleFormRef"
@@ -10,18 +13,31 @@
           :size="formSize"
           status-icon
         >
-          <el-form-item label="Size" prop="Depth">
+          <el-form-item label="Storage Size" prop="Depth">
             <!-- <el-input v-model.number="ruleForm.Depth" /> -->
             <el-input-number
             v-model="ruleForm.Depth"
             controls-position="right"
+            style="width: 600px;"
           />
+          <div style="width:600px;">
+            <span>Corresponding file size:</span>
+            <span class="right">{{getFileSize(ruleForm.Depth)}}</span>
+          </div>
           </el-form-item>
-          <el-form-item label="TTL" prop="Amount">
-            <el-input v-model="ruleForm.Amount" />
+          <el-form-item label="Storage TTL" prop="Amount">
+            <el-input v-model="ruleForm.Amount" style="width: 600px;"  />
+            <div style="width: 600px;">
+              <span>Corresponding TTL (Time to live)</span>
+              <span class="right">{{getTtl(ruleForm.Amount)}}</span>
+            </div>
           </el-form-item>
-          <el-form-item label="Label" prop="Label">
-            <el-input v-model="ruleForm.Label" />
+          <el-form-item label="Storage Label" prop="Label">
+            <el-input v-model="ruleForm.Label" style="width: 600px;" />
+            <div style="width: 600px;">
+              <span>Indicative Price</span>
+              <span class="right">{{ ruleForm.Depth && ruleForm.Amount && getPrice(ruleForm.Depth, BigInt(ruleForm.Amount))}}</span>
+            </div>
           </el-form-item>
         </el-form>
       </template>
@@ -35,16 +51,54 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import { createPostageBatch } from "@/apis/index";
 import { ElLoading, ElMessage } from 'element-plus'
+import { calculateStampPrice, convertAmountToSeconds, convertDepthToBytes, secondsToTimeString } from "@/utils/index";
+import { getHumanReadableFileSize } from "@/utils/file";
+import {useAppModule} from "@/store/appModule";
 
+const store = useAppModule()
 defineProps({
   stampModal: {
     type: Boolean,
     default: false
   }
 })
+
+  function getFileSize(depth) {
+    if (isNaN(depth) || depth < 16 || depth > 255) {
+      return '-'
+    }
+
+    return `~${getHumanReadableFileSize(convertDepthToBytes(depth))}`
+  }
+
+    function getTtl(amount) {
+    const isCurrentPriceAvailable = store.chainState && store.chainState.currentPrice
+
+    if (amount <= 0 || !isCurrentPriceAvailable) {
+      return '-'
+    }
+
+    const pricePerBlock = Number.parseInt(store.chainState.currentPrice, 10)
+
+    return `${secondsToTimeString(
+      convertAmountToSeconds(amount, pricePerBlock),
+    )} (with price of ${pricePerBlock.toFixed(0)} per block)`
+  }
+
+  function getPrice(depth, amount) {
+    const hasInvalidInput = amount <= 0 || isNaN(depth) || depth < 17 || depth > 255
+
+    if (hasInvalidInput) {
+      return '-'
+    }
+
+    const price = calculateStampPrice(depth, amount)
+
+    return `${price.toSignificantDigits()} HOP`
+  }
 
 const emit = defineEmits(['cancel', 'confirm'])
 
@@ -113,7 +167,6 @@ const confirmClick = async (formEl) => {
   })
 }
 
-
 </script>
 
 <style scoped lang="scss">
@@ -129,5 +182,23 @@ const confirmClick = async (formEl) => {
   font-size: 20px; 
   color: #6E4DFE;
   margin-bottom: 20px;
+}
+.header{
+  position: relative;
+  padding-left: 20px;
+  color: rgb(43, 43, 43);
+  font-weight: bold;
+}
+.header::before {
+  content: "";
+    position: absolute;
+    left: 6px;
+    height: 16px;
+    width: 4px;
+    background-color: rgb(65, 124, 246);
+    top: 1px;
+}
+:deep(.el-input-number .el-input__inner) {
+text-align: left;
 }
 </style>

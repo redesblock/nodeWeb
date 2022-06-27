@@ -250,7 +250,8 @@ export function shortenText(text, length = 20, separator = '[…]') {
 }
 
 const DEFAULT_POLLING_FREQUENCY = 1_000
-const DEFAULT_STAMP_USABLE_TIMEOUT = 120_000
+// const DEFAULT_STAMP_USABLE_TIMEOUT = 120_000
+const DEFAULT_STAMP_USABLE_TIMEOUT = 5_000
 
 
 export async function waitUntilStampUsable(batchId,beeDebug,options){

@@ -100,7 +100,7 @@ const chequebookAmount = ref(new Token('0'))
 
 
 function sharehandle(reference) {
-  window.open(`${appModule.api}/bzz/${reference}/`, '_blank')
+  window.open(`http://www.bsc.com/${reference}`, '_blank')
 }
 
 async function fetchAddresseAmount() {

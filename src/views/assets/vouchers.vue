@@ -1,10 +1,12 @@
 <template>
   <Page>
     <Block title="Vouchers">
-      <el-button type="primary" class="right mgb20" @click="addStampHandle"> 
-        <el-icon><Plus /></el-icon> 
+      <template #button>
+        <el-button type="primary" class="right mgb20" @click="addStampHandle"> 
+        +
         Buy Vouchers
-      </el-button>
+       </el-button>
+      </template>
       <el-table border :data="dataList.list" style="width: 100%">
         <el-table-column prop="batchID" label="Voucher ID">
           <template #default="scope">

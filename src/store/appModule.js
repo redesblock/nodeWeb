@@ -4,7 +4,8 @@ import {
     getNodeAddresses, 
     getChequebookAddress,
     getTopology,
-    isConnected
+    isConnected,
+    getChainState
  } from "@/apis/index";
 import { pickThreshold } from "@/utils/data";
 import { useBeeApi } from "@/apis/Bee";
@@ -39,6 +40,12 @@ export const useAppModule = defineStore('appModule', {
             debugApi: sessionStorage.getItem('debug_api') ?? import.meta.env.VITE_BASE_DEBUG_API,
             env: import.meta.env.VITE_BASE_ENVIRONMENT || 'production'
         },
+        chainState: {
+            block: null,
+            chainTip: null,
+            currentPrice: "",
+            totalAmount: "",
+        }
         
      }
     },
@@ -74,6 +81,13 @@ export const useAppModule = defineStore('appModule', {
         async getAppChequebookAddress() {
             let data = await getChequebookAddress()
             this.chequebookAddress = data.chequebookAddress
+        },
+        async fetchChainState() {
+            let data = await getChainState()
+            this.chainState.block = data.block
+            this.chainState.chainTip = data.chainTip
+            this.chainState.currentPrice = data.currentPrice
+            this.chainState.totalAmount = data.totalAmount
         },
         async fetgetTopology(){
             let data = await getTopology()

@@ -1,5 +1,8 @@
 <template>
  <el-dialog v-model="tokenModal" :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false" width="400px">
+    <!-- <template #header>
+      <span class="header">{{title}}</span>
+    </template> -->
     <div class="tips">{{tips}}</div>
     <el-form
       ref="ruleFormRef"

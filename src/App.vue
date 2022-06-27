@@ -15,6 +15,7 @@ onMounted(async() => {
   appModule.getAppAddress()
   appModule.getAppChequebookAddress()
   appModule.fetgetTopology()
+  appModule.fetchChainState()
   
 })
 </script>

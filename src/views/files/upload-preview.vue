@@ -33,8 +33,8 @@
                     v-for="item in stampList"
                     :key="item.batchID"
                     :value="item.batchID"
-                    :label="item.batchID.slice(0, 8)"
-                >{{item.batchID.slice(0, 8)}}</el-option>
+                    :label="item.batchID.slice(0, 8) + '-' + item.label"
+                >{{item.batchID.slice(0, 8)}} - {{item.label}}</el-option>
             </el-select>
 
             <el-button class="mgl20" type="primary" @click="addStampHandle">

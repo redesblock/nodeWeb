@@ -1,5 +1,8 @@
 <template>
- <el-dialog :title="title" v-model="stampModal" :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false" width="60%">
+ <el-dialog v-model="stampModal" :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false" width="700px">
+    <template #header>
+      <span class="header">{{title}}</span>
+    </template>
     <div class="tips">{{tips}}</div>
     <el-form
       ref="ruleFormRef"
@@ -96,5 +99,21 @@ const confirmClick = async () => {
   font-weight: bold;
   font-size: 1.1em;
   padding-left: 40px;
+}
+
+.header{
+  position: relative;
+  padding-left: 20px;
+  color: rgb(43, 43, 43);
+  font-weight: bold;
+}
+.header::before {
+  content: "";
+    position: absolute;
+    left: 6px;
+    height: 16px;
+    width: 4px;
+    background-color: rgb(65, 124, 246);
+  top: 1px;
 }
 </style>

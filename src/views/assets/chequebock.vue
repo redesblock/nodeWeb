@@ -1,16 +1,18 @@
 <template>
 <Page>
    <Block title="Chequebook">
-    <div class="mgb20" style="text-align: right;">
-      <el-button type="primary" @click="showWithdrawHandle">
-        <el-icon><Upload /></el-icon>
-         WITHDRAW
-      </el-button>
-      <el-button type="primary" @click="showDepositHandle"> 
-        <el-icon><Download /></el-icon>
-        DEPOSIT
-      </el-button>
-    </div>
+    <template #button>
+      <div>
+        <el-button type="primary" @click="showWithdrawHandle">
+          <el-icon><Upload /></el-icon>
+          WITHDRAW
+        </el-button>
+        <el-button type="primary" @click="showDepositHandle"> 
+          <el-icon><Download /></el-icon>
+          DEPOSIT
+        </el-button>
+      </div>
+    </template>
     <div class="board-card">
          <div>
            <div class="label">Total Balance</div>

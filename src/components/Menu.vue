@@ -111,8 +111,8 @@ const openRouter = (item) => {
 }
 
 .logo {
-  width: 38px;
-  height: 57px;
+  width: 48px;
+  height: 48px;
 }
 .text {
   font-size: 18px;

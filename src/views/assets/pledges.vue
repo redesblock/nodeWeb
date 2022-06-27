@@ -1,10 +1,12 @@
 <template>
   <Page>
     <Block title="Pledge">
-      <div style="text-align: right;" class="mgb20">
-        <el-button type="primary" @click="showPledgeHandle">PLEDGE </el-button>
-        <el-button type="primary" @click="showReplaceHandle">REPLACE</el-button>
-      </div>
+      <template #button>
+        <div>
+          <el-button type="primary" @click="showPledgeHandle">PLEDGE </el-button>
+          <el-button type="primary" @click="showReplaceHandle">REPLACE</el-button>
+        </div>
+      </template>
       <el-row>
         <el-col :span="11">
           <el-card shadow="never">

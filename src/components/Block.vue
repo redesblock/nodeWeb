@@ -9,6 +9,10 @@ defineProps({
   <div class="block">
       <div class="title-box">
           {{title}}
+
+      <div class="right">
+        <slot name="button"></slot>
+      </div>
       </div>
       <slot></slot>
   </div>

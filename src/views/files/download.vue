@@ -6,10 +6,10 @@
         <el-input clearable style="width: calc(100% - 400px); margin-left: 18px;" placeholder="place input file hash" v-model.trim="input"></el-input>
         <div style="display: inline-block;" class="mgl20">
         <el-button type="primary" @click="downloadHandle"> 
-             <el-icon><Search /></el-icon>
+             <el-icon style="font-size:15px ;"><Search /></el-icon>
              SEARCH</el-button>
         <el-button @click="cancelHandle"> 
-            <el-icon><Close /></el-icon>
+            <el-icon style="font-size:15px ;"><Close /></el-icon>
              CANCEL</el-button>
         </div>
     </el-card>

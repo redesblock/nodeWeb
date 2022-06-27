@@ -1,3 +1,4 @@
+import 'element-plus/dist/index.css'
 import "normalize.css"
 import "@/assets/style/index.scss";
 
@@ -12,7 +13,6 @@ import {
     NUploadDragger
   } from 'naive-ui'
 
-import 'element-plus/dist/index.css'
 import App from './App.vue'
 import initRouter from "./router/index";
 import initComponent from "./components/index"

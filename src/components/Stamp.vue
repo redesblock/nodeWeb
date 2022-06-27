@@ -89,7 +89,7 @@ defineProps({
   }
 
   function getPrice(depth, amount) {
-    const hasInvalidInput = amount <= 0 || isNaN(depth) || depth < 17 || depth > 255
+    const hasInvalidInput = amount <= 0 || isNaN(depth) || depth < 16 || depth > 255
 
     if (hasInvalidInput) {
       return '-'

@@ -29,12 +29,10 @@
     <Block title="Transation" class="container">
       <div class="list" v-for="item in dataList.list">
         <span>{{item}}</span>
-        <Icon content="Share" @click="shareHandle(item)"> <Share /></Icon>
+        <Icon content="Share">
+          <svg  @click="shareHandle(item)" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 19H5V5h7V3H3v18h18v-9h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+        </Icon>
       </div>
-      <!-- <div class="list">
-        <span>{{item}}</span>
-        <Icon content="Share" @click="shareHandle(item)"> <Share /></Icon>
-      </div> -->
       <Pagination
       :pageOptions="pageOptions"
       :total="dataList.total"

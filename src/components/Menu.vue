@@ -1,6 +1,7 @@
 <template>
-  <el-row>
-    <el-col :span="4">
+  <div>
+    <el-row>
+    <el-col :span="4" class="menu-box">
       <el-menu
         active-text-color="#ffd04b"
         background-color="#545c64"
@@ -46,20 +47,37 @@
             <el-menu-item @click="openRouter" index="/setting/api">Api</el-menu-item>
             <el-menu-item @click="openRouter" index="/setting/node">Node</el-menu-item>
         </el-sub-menu>
-        <el-menu-item>
+        <!-- <el-menu-item>
           <template #title>
             <span :class="isHealth ? 'success' : 'error'"></span>
           {{isHealth ? 'NODE OK' : 'NODE ERROR'}} 
           </template>
-        </el-menu-item>
+        </el-menu-item> -->
       </el-menu>
-      
+      <div class="status-box">
+        <div class="status-text">
+          <span :class="isHealth ? 'success' : 'error'"></span>
+          {{isHealth ? 'NODE status: normal' : 'NODE status: error'}} 
+        </div>
+        <div class="status-env">
+          <el-select v-model="val" style="width: 80px;" size="small">
+            <el-option :value="1" label="TestNet">TestNet</el-option>
+          </el-select>
+          <div>
+            <span>#5232a17</span>
+            <Icon content="Open" style="vertical-align:middle;">
+              <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 19H5V5h7V3H3v18h18v-9h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+            </Icon>
+          </div>
+        </div>
+      </div>
     </el-col>
     <el-col :span="20" class="page-content">
       <div class="content-bar"> </div>
       <router-view></router-view>
     </el-col>
   </el-row>
+  </div>
 </template>
 
 <script setup>
@@ -70,11 +88,12 @@ import {
   Setting,
 } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useAppModule } from "@/store/appModule";
 const store = useAppModule()
 const router = useRouter()
 
+let val = ref(1)
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath)
 }
@@ -92,6 +111,9 @@ const openRouter = (item) => {
 }
 </script>
 <style scoped lang="scss">
+:deep(.el-row) {
+  flex-wrap: nowrap;
+}
 .el-menu-vertical {
   height: 100%;
 }
@@ -120,5 +142,24 @@ const openRouter = (item) => {
   color: white;
   padding-left: 10px;
   line-height: 28px;
+}
+.menu-box {
+  position: relative;
+  min-width: 220px;
+}
+.status-box {
+  position: fixed;
+  bottom: 40px;
+  left: 20px;
+  .status-text {
+    color: white;
+    margin-bottom: 10px;
+  }
+  .status-env {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    color: white;
+  }
 }
 </style>

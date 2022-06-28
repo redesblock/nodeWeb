@@ -1,16 +1,19 @@
 <template>
-  <Page>
+  <Page class="main">
     <Block title="Rewards">
       <el-row>
-        <el-col :span="7">
+        <el-col :span="9">
           <el-card shadow="never" style="height: 164px;box-sizing:border-box; padding-top: 39px;">
             <span>System Rewards</span>
             <h3>{{reward.systemBalance.toFixedDecimal()}}  Hop</h3>
           </el-card>
         </el-col>
-        <el-col :span="14" :offset="3">
+        <el-col :span="15">
           <el-card shadow="never">
-            <div class="title">Storage  Rewards</div>
+            <div class="title">
+              Storage  Rewards
+              <el-button class="right btn" @click="showModal" type="primary">WithDraw</el-button>
+            </div>
             <div class="content">
               <div>
                 <p>WithDraw  Rewards</p>
@@ -20,7 +23,6 @@
                 <p>Uncash  Rewards</p>
                 <p class="amount">{{reward.unCashBalance.toFixedDecimal()}}  Mop</p>
               </div>
-              <el-button @click="showModal" type="primary">WithDraw</el-button>
             </div>
           </el-card>
         </el-col>
@@ -51,9 +53,7 @@
 </template>
 
 <script setup>
-import {
-  Share,
-} from '@element-plus/icons-vue'
+
 import Pagination from "@/components/pagination.vue";
 import PToken from "@/components/Token.vue";
 import { ref, reactive, onMounted } from "vue";
@@ -86,7 +86,7 @@ const onPageChange = (page) => {
 }
 
 function shareHandle(reference) {
-  window.open(`https://www.bscscan.com/tx/${reference}/`, '_blank')
+  window.open(`https://www.bscscan.com/tx/${reference}`, '_blank')
 }
 
 function cancelHandle(params) {
@@ -121,6 +121,12 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.main {
+  width: 70%;
+  min-width: 850px;
+  margin: 0 auto;
+  margin-top: 80px;
+}
 @mixin baseStyle() {
   display: flex;
   justify-content: space-between;
@@ -141,6 +147,7 @@ onMounted(() => {
   display: flex;
   align-content: space-between;
   align-items: baseline;
+  text-align: center;
   div {
     flex: 1 1 0;
   }
@@ -151,5 +158,8 @@ onMounted(() => {
 
 .list {
   @include baseStyle()
+}
+.btn {
+  margin-top: -7px;
 }
 </style>

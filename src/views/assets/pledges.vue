@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page class="main">
     <Block title="Pledge">
       <template #button>
         <div>
@@ -8,13 +8,13 @@
         </div>
       </template>
       <el-row>
-        <el-col :span="11">
+        <el-col :span="12">
           <el-card shadow="never">
             <span>Total Balance</span>
             <h3>{{pledges.cashBalance.toFixedDecimal()}}  Hop</h3>
           </el-card>
         </el-col>
-        <el-col :span="11" :offset="2">
+        <el-col :span="12">
           <el-card shadow="never">
             <span>Pledged  Amount</span>
             <h3>{{pledges.unCashBalance.toFixedDecimal()}}  Hop</h3>
@@ -91,7 +91,7 @@ const onPageChange = (page) => {
 }
 
 function shareHandle(reference) {
-  window.open(`https://www.bscscan.com/tx/${reference}/`, '_blank')
+  window.open(`https://www.bscscan.com/tx/${reference}`, '_blank')
 }
 
 function cancelHandle() {
@@ -128,6 +128,12 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.main {
+  width: 70%;
+  min-width: 850px;
+  margin: 0 auto;
+  margin-top: 80px;
+}
 @mixin baseStyle() {
   display: flex;
   justify-content: space-between;

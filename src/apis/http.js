@@ -13,7 +13,8 @@ export function getAddresseAmount () {
 }
 export function getChequebookAmount () {
     return request({
-        url: getApi().debugApi + '/chequebook/transactions'
+        url: getApi().debugApi + '/chequebook/balance'
+        // url: getApi().debugApi + '/chequebook/transactions'
     })
 }
 

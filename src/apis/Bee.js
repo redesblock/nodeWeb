@@ -1,4 +1,5 @@
-import { Bee, BeeDebug } from '@ethersphere/bee-js'
+// import { Bee, BeeDebug } from '@ethersphere/bee-js'
+import { Bee, BeeDebug } from 'han-hop-js'
 
 export let beeApi = new Bee(sessionStorage.getItem('api') ?? import.meta.env.VITE_BASE_API)
 export let beeDebugApi = new BeeDebug(sessionStorage.getItem('debug_api') ?? import.meta.env.VITE_BASE_DEBUG_API)

@@ -11,6 +11,7 @@
       <el-form-item class="label" label="HOP Token:" prop="token">
         <el-input
         v-model.trim="ruleForm.token"
+        type="number"
         placeholder="place input token"
         controls-position="right"
         size="large"
@@ -28,8 +29,9 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 import Token from "@/utils/Token";
+import { BigNumber } from "bignumber.js";
 
 const props = defineProps({
   tokenModal: {
@@ -55,34 +57,76 @@ const props = defineProps({
   confirmText: {
     type: String,
     default: 'Confirm'
+  },
+  amount: {
+    type: Object,
+    default: () =>{}
+  },
+  compare: {
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits(['cancel', 'confirm'])
 
 const ruleForm = reactive({
-  amount: null,
+  token: null,
 })
 
 const formSize = ref('default')
 
 const cancelClick = () =>{
+  ruleForm.token = null
   emit('cancel')
 }
 
 const confirmClick = async () => {
+  
+  
+  if(props.compare) {
+    if(ruleForm.token === '' || ruleForm.token === null) {
+      return ElMessage({
+        message: `${props.tips} Error: ${(props.tips)} can't is null`,
+        type: 'error',
+      })
+    }
+
+    if(ruleForm.token < 0) {
+      return ElMessage({
+        message: `${props.tips} Error: ${(props.tips)} can't less than 0`,
+        type: 'error',
+      })
+    }
+    if(ruleForm.token !==0 && BigNumber(ruleForm.token).isGreaterThan(props.amount.toBigInt)){
+      return ElMessage({
+        message: `${props.tips} Error: ${(props.tips)} can't greater than ${props.amount.toBigInt}`,
+        type: 'error',
+      })
+    }
+  }
+
   if(typeof props.methodHandle == 'function') {
+    const loading = ElLoading.service({
+        lock: true,
+        text: 'Service Pending',
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
     try {
-      let data = await props.methodHandle({amount: new Token(ruleForm.amount).toBigInt})
+      let data = await props.methodHandle({amount: new Token(ruleForm.token).toBigInt})
       ElMessage({
-        message: `${props.successMessage} Token: ${data}`,
+        message: `${props.successMessage} Token: ${data.data.transactionHash}`,
         type: 'success',
       })
+      loading.close()
       emit('confirm', data)
+      ruleForm.token = null
     } catch (error) {
+        const message = error?.response?.data?.message || error.message
         ElMessage({
-          message: `${props.errorMessage} Error: ${(error).message},`,
-          type: 'eerror',
+          message: `${props.errorMessage} Error: ${(message)},`,
+          type: 'error',
         })
+      loading.close()
     }
   }
 }

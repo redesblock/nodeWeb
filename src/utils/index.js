@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import Token from "@/utils/Token";
-import { BZZ_LINK_DOMAIN } from "./data";
+import { HOP_LINK_DOMAIN } from "./data";
 export const lengthWithoutPrefix = (s) => s.replace(/^0x/i, '').length;
 
 export const isPrefixedHexString = (s) =>{
@@ -141,8 +141,8 @@ export function extractSwarmHash(string){
   return (matches && matches[1]) || undefined
 }
 
-// Matches the CID from bzz-link subdomain
-const regexpMatchCID = new RegExp(`https://(bah5acgza[a-z0-9]{52})\\.${BZZ_LINK_DOMAIN}`, 'i')
+// Matches the CID from hop-link subdomain
+const regexpMatchCID = new RegExp(`https://(bah5acgza[a-z0-9]{52})\\.${HOP_LINK_DOMAIN}`, 'i')
 
 export function extractSwarmCid(s){
   const matches = s.match(regexpMatchCID)

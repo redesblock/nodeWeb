@@ -75,7 +75,7 @@
           <Encipherment showAmount :amount="bscAmount.toFixedDecimal()" @click="sharehandle" share title="Bsc address" :str="appModule.address.ethereum"></Encipherment>
         </div>
         <div class="item">
-          <Encipherment showAmount :amount="chequebookAmount.toFixedDecimal()" share title="Chequebook address" :str="appModule.chequebookAddress"></Encipherment>
+          <Encipherment showAmount :amount="chequebookAmount.toFixedDecimal()" @click="sharehandle" share title="Chequebook address" :str="appModule.chequebookAddress"></Encipherment>
         </div>
       </el-card>
     </Block>

@@ -121,7 +121,7 @@ async function getDetail(reference) {
     loading.close()
     
     if (previewFile) {
-      previewUri.value = (`${config.BEE_API_HOST}/bzz/${reference}/${PREVIEW_FILE_NAME}`)
+      previewUri.value = (`${config.BEE_API_HOST}/hop/${reference}/${PREVIEW_FILE_NAME}`)
     }
   } catch (e) {
     console.log(e)
@@ -149,7 +149,7 @@ async function download() {
     const {hash: reference, indexDocument} = metadata.value
     putHistory(HISTORY_KEYS.DOWNLOAD_HISTORY, reference, determineHistoryName(reference, indexDocument))
     if (Object.keys(swarmEntries.value).length === 1) {
-      window.open(`${store.api}/bzz/${reference}/`, '_blank')
+      window.open(`${store.api}/hop/${reference}/`, '_blank')
     } else {
       const zip = new JSZip()
       for (const [path, hash] of Object.entries(swarmEntries.value)) {

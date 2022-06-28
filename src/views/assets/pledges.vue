@@ -11,13 +11,13 @@
         <el-col :span="12">
           <el-card shadow="never">
             <span>Total Balance</span>
-            <h3>{{pledges.cashBalance.toFixedDecimal()}}  Hop</h3>
+            <h3>{{pledges.totalPledgedBalance.toFixedDecimal()}}  Hop</h3>
           </el-card>
         </el-col>
         <el-col :span="12">
           <el-card shadow="never">
             <span>Pledged  Amount</span>
-            <h3>{{pledges.unCashBalance.toFixedDecimal()}}  Hop</h3>
+            <h3>{{pledges.pledgedBalance.toFixedDecimal()}}  Hop</h3>
           </el-card>
         </el-col>
       </el-row>
@@ -39,16 +39,20 @@
 
   <PToken
   @cancel="cancelHandle"
-  @confirm="cancelHandle"
+  @confirm="confirmHandle"
   :tokenModal="showPledgeModal" 
+  :methodHandle="postPledgeStake" 
   successMessage="Successful Pledge  Amount."
   errorMessage="Error with Pledge  Amount"
   tips="Pledge Amount"></PToken>
 
   <PToken
   @cancel="cancelHandle"
-  @confirm="cancelHandle"
+  @confirm="confirmHandle"
   :tokenModal="showReplaceModal" 
+  :methodHandle="postPledgeUnstake" 
+  compare
+  :amount="pledges.pledgedBalance"
   successMessage="Successful Release Amount."
   errorMessage="Error with Release Amount"
   tips="Release Amount"></PToken>
@@ -56,13 +60,11 @@
 </template>
 
 <script setup>
-import {
-  Share,
-} from '@element-plus/icons-vue'
+
 import Pagination from "@/components/pagination.vue";
 import { ref, reactive, onMounted } from "vue";
 import PToken from "@/components/Token.vue";
-import { getPledge, getPledgeTransations } from "@/apis/http";
+import { getPledge, getPledgeTransations, postPledgeStake, postPledgeUnstake } from "@/apis/http";
 import Token from "@/utils/Token";
 import { useAppModule } from "@/store/appModule";
 
@@ -75,8 +77,8 @@ let dataList = reactive({
 })
 
 let pledges = reactive({
-  cashBalance: new Token('0'),
-  unCashBalance: new Token('0')
+  totalPledgedBalance: new Token('0'),
+  pledgedBalance: new Token('0')
 })
 
 let showPledgeModal = ref(false)
@@ -98,6 +100,13 @@ function cancelHandle() {
     showPledgeModal.value = false
     showReplaceModal.value = false
 }
+
+function confirmHandle() {
+    showPledgeModal.value = false
+    showReplaceModal.value = false
+    fetchPledge()
+    fetchPledgeTransations()
+}
 function showPledgeHandle() {
     showPledgeModal.value = true
 }
@@ -108,8 +117,8 @@ function showReplaceHandle() {
 async function fetchPledge() {
   let res = await getPledge()
   if(res.status == 200) {
-    pledges.cashBalance = new Token(res.data.cashBalance) 
-    pledges.unCashBalance = new Token(res.data.unCashBalance) 
+    pledges.totalPledgedBalance = new Token(res.data.totalPledgedBalance) 
+    pledges.pledgedBalance = new Token(res.data.pledgedBalance) 
   }
 }
 

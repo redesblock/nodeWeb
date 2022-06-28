@@ -8,7 +8,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ethersphere/bee-js": "^4.1.1",
     "@ethersphere/manifest-js": "^1.2.1",
     "@ethersphere/swarm-cid": "^0.1.0",
     "axios": "^0.27.2",
@@ -18,6 +17,7 @@
     "crypto-browserify": "^3.12.0",
     "element-plus": "^2.2.5",
     "file-saver": "^2.0.5",
+    "han-hop-js": "^1.0.0",
     "jszip": "^3.10.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.3",

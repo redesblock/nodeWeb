@@ -44,8 +44,9 @@
 
   <PToken
   @cancel="cancelHandle"
-  @confirm="cancelHandle"
-  :tokenModal="tokenModal" 
+  @confirm="confirmHandle"
+  :tokenModal="tokenModal"
+  :methodHandle="postRewardCash" 
   successMessage="Successful WithDraw."
   errorMessage="Error with WithDraw"
   tips="WithDraw  Storage Rewards"></PToken>
@@ -57,7 +58,7 @@
 import Pagination from "@/components/pagination.vue";
 import PToken from "@/components/Token.vue";
 import { ref, reactive, onMounted } from "vue";
-import { getReward, getRewardTransation } from "@/apis/http";
+import { getReward, getRewardTransation, postRewardCash } from "@/apis/http";
 import Token from "@/utils/Token";
 import { useAppModule } from "@/store/appModule";
 
@@ -91,6 +92,11 @@ function shareHandle(reference) {
 
 function cancelHandle(params) {
   tokenModal.value = false
+}
+function confirmHandle(params) {
+  tokenModal.value = false
+  fetchReward()
+  fetchRewardTransation()
 }
 function showModal(params) {
   tokenModal.value = true

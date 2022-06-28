@@ -13,26 +13,57 @@ export function getAddresseAmount () {
 }
 export function getChequebookAmount () {
     return request({
-        url: getApi().debugApi + '/chequebook/balance'
+        url: getApi().debugApi + '/chequebook/transactions'
     })
 }
-export function getReward () {
-    return request({
-        url: getApi().debugApi + '/node/storage'
-    })
-}
-export function getRewardTransation () {
-    return request({
-        url: getApi().debugApi + '/node/storage/transaction'
-    })
-}
+
+
 export function getPledge () {
     return request({
-        url: getApi().debugApi + '/node/pledge'
+        url: getApi().debugApi + '/pledge/balance'
     })
 }
 export function getPledgeTransations () {
     return request({
-        url: getApi().debugApi + '/node/pledge/transaction'
+        url: getApi().debugApi + '/pledge/transactions'
+    })
+}
+
+export function postPledgeStake (data) {
+    return request({
+        method: 'post',
+        url: getApi().debugApi + '/pledge/stake/'+ data.amount
+    })
+}
+
+export function postPledgeUnstake (data) {
+    return request({
+        method: 'post',
+        url: getApi().debugApi + '/pledge/unstake/'+ data.amount
+    })
+}
+
+/**
+ * 
+ * @param {*} account 
+ * @returns 
+ */
+export function postRewardCash (data) {
+    console.log(data)
+    return request({
+        method: 'post',
+        url: getApi().debugApi + '/reward/cash/' + data.amount
+    })
+}
+
+export function getReward () {
+    return request({
+        url: getApi().debugApi + '/reward/balance'
+    })
+}
+
+export function getRewardTransation () {
+    return request({
+        url: getApi().debugApi + '/reward/transactions'
     })
 }

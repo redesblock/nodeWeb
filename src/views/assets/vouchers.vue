@@ -10,12 +10,12 @@
       <el-table border :data="dataList.list" style="width: 100%">
         <el-table-column prop="batchID" label="Voucher ID">
           <template #default="scope">
-            <Encipherment title="Voucher ID" :str="scope.row.batchID"></Encipherment>
+            <div style="height: 50px;"><Encipherment title="Voucher ID" :str="scope.row.batchID"></Encipherment></div>
           </template>
         </el-table-column>
-        <el-table-column prop="capacity" label="Vouchers Capacity" width="220"/>
-        <el-table-column prop="amount" label="Vouchers TTL" width="160" />
-        <el-table-column prop="blockNumber" label="Voucher Block" width="160" />
+        <el-table-column prop="capacity" label="Vouchers Capacity" width="260"/>
+        <el-table-column prop="amount" label="Vouchers TTL" width="180" />
+        <el-table-column prop="blockNumber" label="Voucher Block" width="200" />
       </el-table>
     </Block>
   </Page>

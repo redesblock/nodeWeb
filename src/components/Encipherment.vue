@@ -87,18 +87,18 @@ function shareHandle(params) {
       <span v-if="showAmount" class="right amount">Amount: {{amount}}</span>
     </div>
 
-    <p v-if="share">
+    <div v-if="share" :class="line ? 'line-str' : ''">
       {{show ? normalStr : spanText}}
       <Icon style="margin-left: 18px;" class="right" content="Share">
           <!-- <Share  /> -->
           <svg  @click="shareHandle(str)" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 19H5V5h7V3H3v18h18v-9h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
       </Icon>
-    </p>
+    </div>
 
-    <p v-else>
+    <div v-else :class="line ? 'line-str' : ''">
       {{show ? normalStr : spanText}}
       <Icon style="margin-left: 18px;" content="Copy" v-if="showCopy" class="right" @click="copyText"><CopyDocument /></Icon>
-    </p>
+    </div>
 </template>
 
 <style scoped lang="scss">
@@ -106,6 +106,10 @@ function shareHandle(params) {
   padding-top: 20px;
   padding-bottom: 14px;
   border-bottom: 1px solid rgb(239, 239, 239);
+}
+.line-str {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .label {
   display: inline-block;

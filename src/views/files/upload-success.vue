@@ -10,7 +10,7 @@
                   <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
               </div>
               <div>
-                  <p v-if="metadata.hash">Swarm Hash: {{shortenHash(metadata.hash)}}</p>
+                  <p v-if="metadata.hash">Hop Hash: {{shortenHash(metadata.hash)}}</p>
                   <p v-if="metadata.name">{{metadata?.type === 'folder' ? 'Folder Name' : 'Filename'}}: {{shortenText(metadata?.name)}}</p>
                   <p>Kind: {{metadata.type}}</p>
                   <p v-if="metadata.size">Size: {{getHumanReadableFileSize(metadata.size)}}</p>
@@ -24,7 +24,7 @@
               <Encipherment line title="Hop Hash：" :str="metadata.hash"></Encipherment>
             </el-card>
             <div class="list">
-              <Encipherment @click="shareHandle" share title="Share on Hop Gateway" :str="'https://gateway.ethswarm.org/access/'+metadata.hash"></Encipherment>
+              <Encipherment @click="shareHandle" share title="Share on Hop Gateway" :str="'https://gateway.hop.org/access/'+metadata.hash"></Encipherment>
             </div>
 
             <div class="mgt20">

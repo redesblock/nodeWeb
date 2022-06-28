@@ -86,7 +86,7 @@ const onPageChange = (page) => {
 }
 
 function shareHandle(reference) {
-  window.open(`${appModule.api}/bzz/${reference}/`, '_blank')
+  window.open(`https://www.bscscan.com/tx/${reference}/`, '_blank')
 }
 
 function cancelHandle(params) {

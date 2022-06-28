@@ -100,7 +100,7 @@ const chequebookAmount = ref(new Token('0'))
 
 
 function sharehandle(reference) {
-  window.open(`http://www.bsc.com/${reference}`, '_blank')
+  window.open(`http://www.bscscan.com/address/${reference}`, '_blank')
 }
 
 async function fetchAddresseAmount() {
@@ -132,6 +132,12 @@ onMounted(() => {
 .item + .item {
   border-top: 1px solid var(--el-card-border-color);
   padding-top: 20px;
+}
+.item {
+  padding-bottom: 20px;
+}
+.item:last-child {
+  padding-bottom: 0px;
 }
 .board-card {
   display: flex;

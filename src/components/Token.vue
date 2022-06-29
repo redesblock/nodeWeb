@@ -97,7 +97,7 @@ const confirmClick = async () => {
         type: 'error',
       })
     }
-    if(ruleForm.token !==0 && BigNumber(ruleForm.token).isGreaterThan(props.amount.toBigInt)){
+    if(ruleForm.token !==0 && Token.fromDecimal(ruleForm.token).amount.isGreaterThan(props.amount.toBigInt)){
       return ElMessage({
         message: `${props.tips} Error: ${(props.tips)} can't greater than ${props.amount.toBigInt}`,
         type: 'error',
@@ -111,8 +111,9 @@ const confirmClick = async () => {
         text: 'Service Pending',
         background: 'rgba(0, 0, 0, 0.7)',
       })
+      // console.log(Token.fromDecimal(ruleForm.token).amount)
     try {
-      let data = await props.methodHandle({amount: new Token(ruleForm.token).toBigInt})
+      let data = await props.methodHandle({amount: Token.fromDecimal(ruleForm.token).amount})
       ElMessage({
         message: `${props.successMessage} Token: ${data.data.transactionHash}`,
         type: 'success',

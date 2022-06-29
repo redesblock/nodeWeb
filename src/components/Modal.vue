@@ -13,9 +13,8 @@
         <el-input-number
         v-model="ruleForm.amount"
         :min="0"
-        :max="10"
         placeholder="amount"
-        controls-position="right"
+        :controls="false"
         size="large"
       />
       </el-form-item>
@@ -31,11 +30,19 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 import Token from "@/utils/Token";
 
 const props = defineProps({
   stampModal: {
+    type: Boolean,
+    default: false
+  },
+  amount: {
+    type: Object,
+    default: () =>{}
+  },
+  compare: {
     type: Boolean,
     default: false
   },
@@ -73,19 +80,48 @@ const cancelClick = () =>{
 }
 
 const confirmClick = async () => {
+  if(props.compare) {
+    if(ruleForm.amount === '' || ruleForm.amount === null) {
+      return ElMessage({
+        message: `${props.title} Error: ${(props.title)} can't is null`,
+        type: 'error',
+      })
+    }
+
+    if(ruleForm.amount < 0) {
+      return ElMessage({
+        message: `${props.title} Error: ${(props.title)} can't less than 0`,
+        type: 'error',
+      })
+    }
+    if(ruleForm.amount !==0 && Token.fromDecimal(ruleForm.amount).amount.isGreaterThan(props.amount.toBigInt)){
+      return ElMessage({
+        message: `${props.title} Error: ${(props.title)} can't greater than ${props.amount.toFixedDecimal()}`,
+        type: 'error',
+      })
+    }
+  }
   if(typeof props.methodHandle == 'function') {
+    const loading = ElLoading.service({
+        lock: true,
+        text: 'Service Pending',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     try {
-      let data = await props.methodHandle({amount: new Token(ruleForm.amount).toBigInt})
+      let data = await props.methodHandle({amount: Token.fromDecimal(ruleForm.amount).amount})
       ElMessage({
         message: `${props.successMessage} Transaction ${data}`,
         type: 'success',
       })
+      ruleForm.amount = null
       emit('confirm', data)
+      loading.close()
     } catch (error) {
         ElMessage({
           message: `${props.errorMessage} Error: ${(error).message},`,
           type: 'eerror',
         })
+        loading.close()
     }
   }
 }

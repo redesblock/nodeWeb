@@ -64,8 +64,10 @@
   <Modal 
   :stampModal="stampModal1" 
   @cancel="cancelHandle"
-  @confirm="cancelHandle"
+  @confirm="confirmHandle"
   :methodHandle="withdrawTokens"
+  compare
+  :amount="cardObj.availableBalance"
   successMessage="Successful withdraw."
   errorMessage="error withdraw."
   title="Withdraw" 
@@ -74,9 +76,11 @@
 
   <Modal 
   @cancel="cancelHandle"
-  @confirm="cancelHandle"
+  @confirm="confirmHandle"
   :stampModal="stampModal2" 
   :methodHandle="depositTokens"
+  compare
+  :amount="cardObj.mopBalance"
   successMessage="Successful deposit."
   errorMessage="Error with depositing"
   title="Deposit" 
@@ -93,6 +97,7 @@ import Modal from "@/components/Modal.vue";
 import Fold from "@/components/Fold.vue";
 import Encipherment from "@/components/Encipherment.vue";
 import { getChequebookBalance, getAllSettlements, withdrawTokens, depositTokens, getAllBalances, getLastCashoutAction } from "@/apis/index";
+import { getAddresseAmount } from "@/apis/http";
 import { makeRetriablePromise, unwrapPromiseSettlements, mergeAccounting } from "@/utils/index";
 import Token from "@/utils/Token";
 import { ref, onMounted, reactive, computed } from "vue";
@@ -111,11 +116,20 @@ function cancelHandle() {
   stampModal2.value = false
 }
 
+function confirmHandle() {
+  stampModal1.value = false
+  stampModal2.value = false
+  fetchGetBalances()
+  fetchGetBalance()
+  fetchAddresseAmount()
+}
+
 let cardObj = reactive({
   availableBalance: new Token(0),
   totalBalance:  new Token(0),
   totalReceived:  new Token(0),
   totalSent:  new Token(0),
+  mopBalance:  new Token(0),
 })
 
 let dataList = reactive({
@@ -178,9 +192,17 @@ function fetchGetLastCashoutAction(settlements) {
     })
 }
 
+async function fetchAddresseAmount() {
+  let res = await getAddresseAmount()
+  if(res.status == 200) {
+    cardObj.mopBalance = new Token(res.data.mopBalance) 
+  }
+}
+
 onMounted(() => {
   fetchGetBalances()
   fetchGetBalance()
+  fetchAddresseAmount()
 })
 </script>
 

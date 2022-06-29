@@ -9,11 +9,11 @@
       :size="formSize"
     >
       <el-form-item class="label" label="HOP Token:" prop="token">
-        <el-input
-        v-model.trim="ruleForm.token"
-        type="number"
+        <el-input-number
+        v-model="ruleForm.token"
+        :max="0.1"
         placeholder="place input token"
-        controls-position="right"
+        :controls="false"
         size="large"
       />
       </el-form-item>
@@ -31,7 +31,6 @@
 import { ref, reactive } from "vue";
 import { ElMessage, ElLoading } from 'element-plus'
 import Token from "@/utils/Token";
-import { BigNumber } from "bignumber.js";
 
 const props = defineProps({
   tokenModal: {

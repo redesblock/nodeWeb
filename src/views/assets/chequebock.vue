@@ -126,7 +126,7 @@ let dataList = reactive({
 })
 
 let PEERS = computed(() => {
-  return `PEERS(${dataList.settlements.length})`
+  return `PEERS(${dataList.accounting.length})`
 })
 
 

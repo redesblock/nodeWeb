@@ -99,7 +99,7 @@ const confirmClick = async () => {
     }
     if(ruleForm.token !==0 && Token.fromDecimal(ruleForm.token).amount.isGreaterThan(props.amount.toBigInt)){
       return ElMessage({
-        message: `${props.tips} Error: ${(props.tips)} can't greater than ${props.amount.toBigInt}`,
+        message: `${props.tips} Error: ${(props.tips)} can't greater than ${props.amount.toFixedDecimal()}`,
         type: 'error',
       })
     }

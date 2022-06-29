@@ -1,5 +1,5 @@
 <template>
-  <Page class="main">
+  <Page>
     <Block title="Pledge">
       <template #button>
         <div>
@@ -11,7 +11,7 @@
         <el-col :span="12">
           <el-card shadow="never">
             <span>Total Balance</span>
-            <h3>{{pledges.totalPledgedBalance.toFixedDecimal()}}  Hop</h3>
+            <h3>{{pledges.availablePledgedBalance.toFixedDecimal()}}  Hop</h3>
           </el-card>
         </el-col>
         <el-col :span="12">
@@ -42,6 +42,8 @@
   @confirm="confirmHandle"
   :tokenModal="showPledgeModal" 
   :methodHandle="postPledgeStake" 
+  :amount="pledges.availablePledgedBalance" 
+  compare
   successMessage="Successful Pledge  Amount."
   errorMessage="Error with Pledge  Amount"
   tips="Pledge Amount"></PToken>
@@ -66,10 +68,7 @@ import { ref, reactive, onMounted } from "vue";
 import PToken from "@/components/Token.vue";
 import { getPledge, getPledgeTransations, postPledgeStake, postPledgeUnstake } from "@/apis/http";
 import Token from "@/utils/Token";
-import { useAppModule } from "@/store/appModule";
-
-
-const appModule = useAppModule();
+import { HOP_LINK_ORIGIN } from "@/utils/data";
 
 let dataList = reactive({
   list: [],
@@ -77,7 +76,7 @@ let dataList = reactive({
 })
 
 let pledges = reactive({
-  totalPledgedBalance: new Token('0'),
+  availablePledgedBalance: new Token('0'),
   pledgedBalance: new Token('0')
 })
 
@@ -93,7 +92,7 @@ const onPageChange = (page) => {
 }
 
 function shareHandle(reference) {
-  window.open(`https://www.bscscan.com/tx/${reference}`, '_blank')
+  window.open(`${HOP_LINK_ORIGIN}/tx/${reference}`, '_blank')
 }
 
 function cancelHandle() {
@@ -117,7 +116,7 @@ function showReplaceHandle() {
 async function fetchPledge() {
   let res = await getPledge()
   if(res.status == 200) {
-    pledges.totalPledgedBalance = new Token(res.data.totalPledgedBalance) 
+    pledges.availablePledgedBalance = new Token(res.data.availablePledgedBalance) 
     pledges.pledgedBalance = new Token(res.data.pledgedBalance) 
   }
 }

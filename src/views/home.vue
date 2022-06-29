@@ -92,6 +92,7 @@ import Encipherment from "@/components/Encipherment.vue";
 import { getAddresseAmount, getChequebookAmount } from "@/apis/http";
 import { onMounted, ref } from "vue";
 import Token from "@/utils/Token";
+import { HOP_LINK_ORIGIN } from "@/utils/data";
 
 const appModule = useAppModule();
 
@@ -100,7 +101,7 @@ const chequebookAmount = ref(new Token('0'))
 
 
 function sharehandle(reference) {
-  window.open(`http://www.bscscan.com/address/${reference}`, '_blank')
+  window.open(`${HOP_LINK_ORIGIN}/address/${reference}`, '_blank')
 }
 
 async function fetchAddresseAmount() {

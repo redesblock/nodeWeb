@@ -97,7 +97,7 @@ defineProps({
 
     const price = calculateStampPrice(depth, amount)
 
-    return `${price.toSignificantDigits()} HOP`
+    return `${price.toSignificantDigits()} Mop`
   }
 
 const emit = defineEmits(['cancel', 'confirm'])

@@ -81,6 +81,9 @@ export const PREVIEW_DIMENSIONS = { maxWidth: 250, maxHeight: 175 }
 export const HOP_LINK_DOMAIN = import.meta.env.VITE_BASE_HOP_LINK_DOMAIN || 'hop.link'
 
 
+export const HOP_LINK_ORIGIN =  import.meta.env.VITE_BASE_ENVIRONMENT == 'production' ? 'https://bscscan.com' : 'https://testnet.bscscan.com'
+
+
 export const config = {
     BEE_API_HOST: sessionStorage.getItem('api') ?? import.meta.env.VITE_BASE_API ?? 'http://localhost:1633',
     SENTRY_KEY: import.meta.env.REACT_APP_SENTRY_KEY,

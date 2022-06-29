@@ -1,29 +1,30 @@
 <template>
-  <Page class="main">
+  <Page>
     <Block title="Rewards">
       <el-row>
-        <el-col :span="9">
-          <el-card shadow="never" style="height: 164px;box-sizing:border-box; padding-top: 39px;">
-            <span>System Rewards</span>
-            <h3>{{reward.systemBalance.toFixedDecimal()}}  Hop</h3>
+        <el-col :span="6">
+          <el-card shadow="never" class="content">
+            <span>Available Balance</span>
+            <h3>{{reward.mopBalance.toFixedDecimal()}}  MOP</h3>
           </el-card>
         </el-col>
-        <el-col :span="15">
-          <el-card shadow="never">
-            <div class="title">
-              Storage  Rewards
-              <el-button class="right btn" @click="showModal" type="primary">WithDraw</el-button>
-            </div>
-            <div class="content">
-              <div>
-                <p>WithDraw  Rewards</p>
-                <p class="amount">{{reward.cashBalance.toFixedDecimal()}}  Mop</p>
-              </div>
-              <div>
-                <p>Uncash  Rewards</p>
-                <p class="amount">{{reward.unCashBalance.toFixedDecimal()}}  Mop</p>
-              </div>
-            </div>
+        <el-col :span="6">
+          <el-card shadow="never" class="content">
+            <span>System Rewards</span>
+            <h3>{{reward.systemBalance.toFixedDecimal()}}  MOP</h3>
+          </el-card>
+        </el-col>
+        <el-col :span="6">
+          <el-card shadow="never" class="content">
+            <span>WithDraw Rewards</span>
+            <h3>{{reward.cashBalance.toFixedDecimal()}}  MOP</h3>
+          </el-card>
+        </el-col>
+        <el-col :span="6">
+          <el-card shadow="never" class="content">
+            <el-button class="btn" @click="showModal" type="primary">WithDraw</el-button>
+            <span>Uncash Rewards</span>
+            <h3>{{reward.unCashBalance.toFixedDecimal()}}  MOP</h3>
           </el-card>
         </el-col>
       </el-row>
@@ -58,12 +59,9 @@
 import Pagination from "@/components/pagination.vue";
 import PToken from "@/components/Token.vue";
 import { ref, reactive, onMounted } from "vue";
-import { getReward, getRewardTransation, postRewardCash } from "@/apis/http";
+import { getReward, getRewardTransation, postRewardCash, getAddresseAmount } from "@/apis/http";
 import Token from "@/utils/Token";
-import { useAppModule } from "@/store/appModule";
-
-const appModule = useAppModule();
-
+import { HOP_LINK_ORIGIN } from "@/utils/data";
 
 let dataList = reactive({
   list: [],
@@ -76,6 +74,7 @@ let pageOptions = reactive({
 })
 
 let reward = reactive({
+  mopBalance: new Token('0'),
   cashBalance: new Token('0'),
   systemBalance: new Token('0'),
   unCashBalance: new Token('0'),
@@ -87,7 +86,7 @@ const onPageChange = (page) => {
 }
 
 function shareHandle(reference) {
-  window.open(`https://www.bscscan.com/tx/${reference}`, '_blank')
+  window.open(`${HOP_LINK_ORIGIN}/tx/${reference}`, '_blank')
 }
 
 function cancelHandle(params) {
@@ -119,9 +118,17 @@ async function fetchRewardTransation() {
   }
 }
 
+async function fetchAddresseAmount() {
+  let res = await getAddresseAmount()
+  if(res.status == 200) {
+    reward.mopBalance = new Token(res.data.mopBalance) 
+  }
+}
+
 
 onMounted(() => {
   fetchReward()
+  fetchAddresseAmount()
   fetchRewardTransation()
 })
 </script>
@@ -150,13 +157,11 @@ onMounted(() => {
   padding-bottom: 20px;
 }
 .content {
-  display: flex;
-  align-content: space-between;
-  align-items: baseline;
+  height: 164px;
+  box-sizing:border-box; 
+  padding-top: 39px;
   text-align: center;
-  div {
-    flex: 1 1 0;
-  }
+  position: relative;
 }
 .amount {
   font-weight: bold;
@@ -166,6 +171,10 @@ onMounted(() => {
   @include baseStyle()
 }
 .btn {
-  margin-top: -7px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 5px;
+  margin-right: 10px;
 }
 </style>

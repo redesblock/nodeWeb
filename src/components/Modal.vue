@@ -119,7 +119,7 @@ const confirmClick = async () => {
     } catch (error) {
         ElMessage({
           message: `${props.errorMessage} Error: ${(error).message},`,
-          type: 'eerror',
+          type: 'error',
         })
         loading.close()
     }

@@ -11,7 +11,7 @@
         <el-col :span="6">
           <el-card shadow="never" class="content">
             <span>System Rewards</span>
-            <h3>{{reward.systemBalance.toFixedDecimal()}}  MOP</h3>
+            <h3>{{reward.systemBalance.toFixedDecimal()}}  HOP</h3>
           </el-card>
         </el-col>
         <el-col :span="6">

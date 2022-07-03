@@ -121,10 +121,14 @@ async function getDetail(reference) {
     loading.close()
     
     if (previewFile) {
-      previewUri.value = (`${config.BEE_API_HOST}/hop/${reference}/${PREVIEW_FILE_NAME}`)
+      previewUri.value = (`${store.api}/hop/${reference}/${PREVIEW_FILE_NAME}`)
     }
   } catch (e) {
-    console.log(e)
+    // console.log(e.message)
+    ElMessage({
+        message: e.message,
+        type: 'error'
+      })
     loading.close()
   } // eslint-disable-line no-empty
 

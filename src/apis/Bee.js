@@ -5,6 +5,8 @@ export let beeApi = new Bee(sessionStorage.getItem('api') ?? import.meta.env.VIT
 export let beeDebugApi = new BeeDebug(sessionStorage.getItem('debug_api') ?? import.meta.env.VITE_BASE_DEBUG_API)
 
 export function useBeeApi({api, debugApi} ={}) {
-    beeApi = new Bee(api ?? import.meta.env.VITE_BASE_API)
-    beeDebugApi = new BeeDebug(debugApi ?? import.meta.env.VITE_BASE_DEBUG_API)
+    let s_api = sessionStorage.getItem('api')
+    let s_debug_api = sessionStorage.getItem('debug_api')
+    beeApi = new Bee(api ?? s_api ?? import.meta.env.VITE_BASE_API)
+    beeDebugApi = new BeeDebug(debugApi ?? s_debug_api ?? import.meta.env.VITE_BASE_DEBUG_API)
 }

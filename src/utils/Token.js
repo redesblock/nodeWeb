@@ -7,7 +7,7 @@ const HOP_DECIMALS = 18
 
 export default class Token {
 
-  constructor(amount , decimals = HOP_DECIMALS) {
+  constructor(amount = '0' , decimals = HOP_DECIMALS) {
     const a = makeBigNumber(amount)
 
     if (!isInteger(a) || !POSSIBLE_DECIMALS.includes(decimals)) {

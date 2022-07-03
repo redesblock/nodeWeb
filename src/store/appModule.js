@@ -60,7 +60,7 @@ export const useAppModule = defineStore('appModule', {
     actions: {
         getAppConnected() {
             isConnected().then(res => {
-                    this.apiHealth = res
+                this.apiHealth = res
             }).catch(err => {
                 this.apiHealth = false
             })
@@ -76,7 +76,7 @@ export const useAppModule = defineStore('appModule', {
         },
         async getAppAddress() {
             let data = await getNodeAddresses()
-                this.address = data
+            this.address = data
         },
         async getAppChequebookAddress() {
             let data = await getChequebookAddress()
@@ -99,10 +99,14 @@ export const useAppModule = defineStore('appModule', {
             this.percentageText = Math.round((actualTotalScore / maximumTotalScore) * 100) + '%'
         },
         initAppConfig({api, debugApi} = {}) {
-            sessionStorage.setItem('api', api ?? import.meta.env.VITE_BASE_API)
-            sessionStorage.setItem('debug_api', debugApi ?? import.meta.env.VITE_BASE_DEBUG_API)
-            this.config.api = api ?? import.meta.env.VITE_BASE_API
-            this.config.debugApi = debugApi ?? import.meta.env.VITE_BASE_DEBUG_API
+            console.log(api)
+            console.log(debugApi)
+            let s_api = sessionStorage.getItem('api')
+            let s_debug_api = sessionStorage.getItem('debug_api')
+            sessionStorage.setItem('api', api ?? s_api ?? import.meta.env.VITE_BASE_API)
+            sessionStorage.setItem('debug_api', debugApi ?? s_debug_api ?? import.meta.env.VITE_BASE_DEBUG_API)
+            this.config.api = api ?? s_api ?? import.meta.env.VITE_BASE_API
+            this.config.debugApi = debugApi ?? s_debug_api ?? import.meta.env.VITE_BASE_DEBUG_API
             
             useBeeApi({api, debugApi})
         }

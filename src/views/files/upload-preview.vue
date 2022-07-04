@@ -33,6 +33,7 @@
                     v-for="item in stampList"
                     :key="item.batchID"
                     :value="item.batchID"
+                    :disabled="!item.usable"
                     :label="item.batchID.slice(0, 8) + '-' + item.label"
                 >{{item.batchID.slice(0, 8)}} - {{item.label}}</el-option>
             </el-select>
@@ -48,7 +49,7 @@
             <h4>{{batchID && batchID.slice(0, 8)}}</h4>
           </el-card>
           <div class="mgt20">
-              <el-button type="primary" @click="uploadFiles">       
+              <el-button type="primary" @click="uploadFiles" :disabled="!disabled">       
                 <el-icon><Select /></el-icon> 
                 UPLOAD TO YOUR NODE
               </el-button>
@@ -67,7 +68,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, computed } from "vue";
 import { beeApi, beeDebugApi } from "@/apis/Bee";
 import { getMetadata, getHumanReadableFileSize, packageFile, detectIndexHtml, getAssetNameFromFiles } from "@/utils/file";
 import Stamp from "@/components/Stamp.vue";
@@ -134,11 +135,13 @@ function selectChange(item) {
 }
 function fetchGetStamps() {
   getAllPostageBatch().then(data => {
-    stampList.value = data.map(enrichStamp).filter(item => item.usable)
+    stampList.value = data.map(enrichStamp)
   })
   
 }
-
+const disabled = computed(() => {
+  return !!batchID.value
+})
 onMounted(() => {
     fetchGetStamps()
     let files = props.fileList.map(item => item.file)

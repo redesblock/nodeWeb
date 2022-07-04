@@ -12,7 +12,7 @@
         @close="handleClose"
       >
         <div class="logo-box">
-          <img class="logo" src="../assets/img/logo.ico" alt="">
+          <img class="logo" src="../assets/img/logo.png" alt="">
           <span class="text"> Welcome Back Dashboard</span>
         </div>
         <el-menu-item @click="openRouter" index="/home">
@@ -134,7 +134,6 @@ const openRouter = (item) => {
 
 .logo {
   width: 48px;
-  height: 48px;
 }
 .text {
   font-size: 18px;

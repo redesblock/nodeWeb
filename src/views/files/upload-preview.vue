@@ -134,7 +134,7 @@ function selectChange(item) {
 }
 function fetchGetStamps() {
   getAllPostageBatch().then(data => {
-    stampList.value = data.map(enrichStamp)
+    stampList.value = data.map(enrichStamp).filter(item => item.usable)
   })
   
 }

@@ -30,7 +30,7 @@
             <div class="mgt20">
                 <el-button type="primary" @click="download">       
                   <el-icon><Download /></el-icon> 
-                  WODNLOAD
+                  DOWNLOAD
                 </el-button>
                 <el-button @click="goBack">
                   <el-icon><CloseBold /></el-icon>

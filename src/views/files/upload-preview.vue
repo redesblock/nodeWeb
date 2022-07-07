@@ -217,11 +217,11 @@ async function uploadFiles() {
 
     try {
       if (beeDebugApi) {
-        await waitUntilStampUsable(stamp.value.batchID, beeDebugApi)
+        await waitUntilStampUsable(batchID.value, beeDebugApi)
       }
 
       beeApi
-      .uploadFiles(stamp.value.batchID, fls, { indexDocument })
+      .uploadFiles(batchID.value, fls, { indexDocument })
       .then(hash => {
         // console.log(hash)
         putHistory(HISTORY_KEYS.UPLOAD_HISTORY, hash.reference, getAssetNameFromFiles(files))

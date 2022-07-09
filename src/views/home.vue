@@ -29,7 +29,7 @@
          <div>
            <h3>Connected Peers</h3>
            <div>
-             <span class="number">{{appModule.topology.connected.score}}</span>
+             <span class="number">{{appModule.topology_data.connected}}</span>
               <Icon
                 class="right"
                 placement="bottom"
@@ -42,7 +42,7 @@
          <div>
            <h3>Population</h3>
            <div>
-             <span class="number">{{appModule.topology.population.score}}</span>
+             <span class="number">{{appModule.topology_data.population}}</span>
               <Icon
                 class="right"
                 placement="bottom"
@@ -55,7 +55,7 @@
          <div>
            <h3>Depth</h3>
            <div>
-             <span class="number">{{appModule.topology.depth.score}}</span>
+             <span class="number">{{appModule.topology_data.depth}}</span>
               <Icon
                 class="right"
                 placement="bottom"

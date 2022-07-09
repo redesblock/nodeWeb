@@ -1,6 +1,6 @@
 <template>
 <Page>
-  <Fold isShowStatus :isHealth="appModule.apiHealth"  label="Connettion to Hop  API">
+  <Fold isShowStatus :isHealth="appModule.apiHealth"  label="Connection to Hop  API">
     <div class="content">
         <div class="tips"> The connection to the Hop NODEs debug APIhas been successful</div>
         <h3>Hop  API</h3>
@@ -13,7 +13,7 @@
         </div>
     </div>
   </Fold>
-  <Fold isShowStatus :isHealth="appModule.status =='ok'" label="Connettion to Hop Debug API" marginTop="20px">
+  <Fold isShowStatus :isHealth="appModule.status =='ok'" label="Connection to Hop Debug API" marginTop="20px">
     <div class="content">
         <div class="tips"> The connection to the Hop NODEs debug APIhas been successful</div>
         <h3>Hop  Debug  API</h3>
@@ -41,7 +41,7 @@
     </div>
   </Fold>
   
-  <Fold isShowStatus :isHealth="appModule.status =='ok'"  label="Connettion to Blockchain" marginTop="20px">
+  <Fold isShowStatus :isHealth="appModule.status =='ok'"  label="Connection to Blockchain" marginTop="20px">
     <div class="content">
       <div class="tips">Your NODE is connected to the xDai blockchain</div>
       <Encipherment line v-if="appModule.address.ethereum" title="Ethereum Address" :str="appModule.address.ethereum"></Encipherment>
@@ -61,7 +61,7 @@
     </div>
   </Fold>
 
-  <Fold isShowStatus :isHealth="appModule.status =='ok'" label="Connettion to Peers" marginTop="20px">
+  <Fold isShowStatus :isHealth="appModule.status =='ok'" label="Connection to Peers" marginTop="20px">
     <div class="content">
         <div class="tips"> You are connected to other Hop NODEs</div>
         <div class="list-item">
@@ -71,7 +71,7 @@
         <div class="list-item">
           <span>Connected Peers</span>
           <div>
-            <span style="padding-right:10px ;">{{appModule.topology.connected.score}}</span>
+            <span style="padding-right:10px ;">{{appModule.topology_data.connected}}</span>
             <Icon
               class="right"
               :content="appModule.topology.connected.explanation"
@@ -83,7 +83,7 @@
         <div class="list-item">
           <span>Population</span>
           <div>
-            <span style="padding-right: 10px;">{{appModule.topology.population.score}}</span>
+            <span style="padding-right: 10px;">{{appModule.topology_data.population}}</span>
             <Icon
               class="right"
               :content="appModule.topology.population.explanation"
@@ -95,7 +95,7 @@
         <div class="list-item">
           <span>Depth</span>
           <div>
-            <span style="padding-right: 10px;">{{appModule.topology.depth.score}}</span>
+            <span style="padding-right: 10px;">{{appModule.topology_data.depth}}</span>
             <Icon
               class="right"
               :content="appModule.topology.depth.explanation"

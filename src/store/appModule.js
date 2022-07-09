@@ -34,6 +34,11 @@ export const useAppModule = defineStore('appModule', {
             population: {},
             connected: {},
         },
+        topology_data: {
+            depth: 0,
+            population: 0,
+            connected: 0,
+        },
         percentageText: '',
         config: {
             api: sessionStorage.getItem('api') ?? import.meta.env.VITE_BASE_API,
@@ -91,12 +96,16 @@ export const useAppModule = defineStore('appModule', {
         },
         async fetgetTopology(){
             let data = await getTopology()
+            console.log(data)
             this.topology.depth = pickThreshold('depth', data.depth)
             this.topology.population = pickThreshold('population', data.population)
             this.topology.connected = pickThreshold('connected', data.connected)
             const maximumTotalScore = Object.values(this.topology).reduce((sum, item) => sum + item.maximumScore, 0)
             const actualTotalScore = Object.values(this.topology).reduce((sum, item) => sum + item.score, 0)
             this.percentageText = Math.round((actualTotalScore / maximumTotalScore) * 100) + '%'
+            this.topology_data.depth = data.depth
+            this.topology_data.population = data.population
+            this.topology_data.connected = data.connected
         },
         initAppConfig({api, debugApi} = {}) {
             console.log(api)

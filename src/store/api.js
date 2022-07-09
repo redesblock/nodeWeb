@@ -16,7 +16,6 @@ export function useApiConfig() {
     }
     function cancelDebugApi() {
         debugApi.value = sessionStorage.getItem('debug_api')
-        store.initAppConfig({api: api.value})
     }
     function saveDebugApi() {
         sessionStorage.setItem('debug_api', debugApi.value)

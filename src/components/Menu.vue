@@ -44,7 +44,7 @@
             <el-icon><Setting /></el-icon>
             <span>Setting</span>
           </template>
-            <el-menu-item @click="openRouter" index="/setting/api">Api</el-menu-item>
+            <el-menu-item @click="openRouter" index="/setting/api">API</el-menu-item>
             <el-menu-item @click="openRouter" index="/setting/node">Node</el-menu-item>
         </el-sub-menu>
         <!-- <el-menu-item>

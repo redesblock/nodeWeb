@@ -1,21 +1,22 @@
 <template>
   <Page>
-    <Block title="Vouchers">
+    <Block title="Voucher">
       <template #button>
         <el-button type="primary" class="right mgb20" @click="addStampHandle"> 
         +
-        Buy Vouchers
+        Buy Voucher
        </el-button>
       </template>
       <el-table border :data="dataList.list" style="width: 100%">
-        <el-table-column prop="batchID" label="Voucher ID">
+        <el-table-column prop="label" label="Label" width="150"/>
+        <el-table-column prop="batchID" label="ID">
           <template #default="scope">
-            <div style="height: 50px;"><Encipherment title="Voucher ID" :str="scope.row.batchID"></Encipherment></div>
+            <div style="height: 50px;"><Encipherment title="ID" :str="scope.row.batchID"></Encipherment></div>
           </template>
         </el-table-column>
-        <el-table-column prop="capacity" label="Vouchers Capacity" width="260"/>
-        <el-table-column prop="amount" label="Vouchers TTL" width="180" />
-        <el-table-column prop="blockNumber" label="Voucher Block" width="200" />
+        <el-table-column prop="capacity" label="Capacity" width="260"/>
+        <el-table-column prop="amount" label="TTL" width="180" />
+        <el-table-column prop="blockNumber" label="Block" width="200" />
       </el-table>
     </Block>
   </Page>

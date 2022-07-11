@@ -1,6 +1,6 @@
 <template>
   <Page>
-    <Block title="Rewards">
+    <Block title="Reward">
       <el-row>
         <el-col :span="6">
           <el-card shadow="never" class="content">

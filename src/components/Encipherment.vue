@@ -53,7 +53,7 @@ const normalStr = computed(() => {
     return props.str
   }else {
     const splitValues = split(props.str)
-    return splitValues.join(" ")
+    return splitValues.join("")
   }
 })
 

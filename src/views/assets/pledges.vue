@@ -1,6 +1,6 @@
 <template>
   <Page>
-    <Block title="Pledges">
+    <Block title="Pledge">
       <template #button>
         <div>
           <el-button type="primary" @click="showPledgeHandle">PLEDGE </el-button>

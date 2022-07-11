@@ -13,7 +13,7 @@
       >
         <div class="logo-box">
           <img class="logo" src="../assets/img/logo.png" alt="">
-          <span class="text"> Welcome Back Dashboard</span>
+          <span class="text"> Welcome To Dashboard</span>
         </div>
         <el-menu-item @click="openRouter" index="/home">
           <template #title>
@@ -24,7 +24,7 @@
         <el-sub-menu index="files">
           <template #title>
             <el-icon><Files /></el-icon>
-            <span>Files</span>
+            <span>File</span>
           </template>
             <el-menu-item @click="openRouter" index="/files/upload">upload</el-menu-item>
             <el-menu-item @click="openRouter" index="/files/download">download</el-menu-item>
@@ -32,17 +32,17 @@
         <el-sub-menu index="Assets">
           <template #title>
             <el-icon><CreditCard /></el-icon>
-            <span>Assets</span>
+            <span>Asset</span>
           </template>
-            <el-menu-item @click="openRouter" index="/assets/chequebock">Chequebock</el-menu-item>
-            <el-menu-item @click="openRouter" index="/assets/vouchers">Vouchers</el-menu-item>
-            <el-menu-item @click="openRouter" index="/assets/rewards">Rewards</el-menu-item>
-            <el-menu-item @click="openRouter" index="/assets/pledges">Pledges</el-menu-item>
+            <el-menu-item @click="openRouter" index="/assets/chequebock">Chequebook</el-menu-item>
+            <el-menu-item @click="openRouter" index="/assets/vouchers">Voucher</el-menu-item>
+            <el-menu-item @click="openRouter" index="/assets/rewards">Reward</el-menu-item>
+            <el-menu-item @click="openRouter" index="/assets/pledges">Pledge</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="Settings">
           <template #title>
             <el-icon><Setting /></el-icon>
-            <span>Settings</span>
+            <span>Setting</span>
           </template>
             <el-menu-item @click="openRouter" index="/setting/api">Api</el-menu-item>
             <el-menu-item @click="openRouter" index="/setting/node">Node</el-menu-item>

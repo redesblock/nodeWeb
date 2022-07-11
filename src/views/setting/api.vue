@@ -1,6 +1,6 @@
 <template>
 <Page>
-    <Fold label="APISettings" show>
+    <Fold label="APISetting" show>
         <div class="content">
             <h3>Hop  API</h3>
             <div>

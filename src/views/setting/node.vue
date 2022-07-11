@@ -43,7 +43,7 @@
   
   <Fold isShowStatus :isHealth="appModule.status =='ok'"  label="Connection to Blockchain" marginTop="20px">
     <div class="content">
-      <div class="tips">Your NODE is connected to the xDai blockchain</div>
+      <div class="tips">Your NODE is connected to the BNB Smart Chain blockchain</div>
       <Encipherment line v-if="appModule.address.ethereum" title="Ethereum Address" :str="appModule.address.ethereum"></Encipherment>
     </div>
   </Fold>

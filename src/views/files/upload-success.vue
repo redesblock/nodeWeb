@@ -24,7 +24,7 @@
               <Encipherment line title="Hop Hash：" :str="metadata.hash"></Encipherment>
             </el-card>
             <div class="list">
-              <Encipherment @click="shareHandle" share title="Share on Hop Gateway" :str="'https://gateway.hop.org/access/'+metadata.hash"></Encipherment>
+              <Encipherment @click="shareHandle" share title="Share on Hop Gateway" :str="'https://gateway.hopot.io/access/'+metadata.hash"></Encipherment>
             </div>
 
             <div class="mgt20">

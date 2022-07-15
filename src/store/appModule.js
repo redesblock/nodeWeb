@@ -41,8 +41,8 @@ export const useAppModule = defineStore('appModule', {
         },
         percentageText: '',
         config: {
-            api: sessionStorage.getItem('api') ?? import.meta.env.VITE_BASE_API,
-            debugApi: sessionStorage.getItem('debug_api') ?? import.meta.env.VITE_BASE_DEBUG_API,
+            api: localStorage.getItem('api') ?? import.meta.env.VITE_BASE_API,
+            debugApi: localStorage.getItem('debug_api') ?? import.meta.env.VITE_BASE_DEBUG_API,
             env: import.meta.env.VITE_BASE_ENVIRONMENT || 'production'
         },
         chainState: {
@@ -110,10 +110,10 @@ export const useAppModule = defineStore('appModule', {
         initAppConfig({api, debugApi} = {}) {
             console.log(api)
             console.log(debugApi)
-            let s_api = sessionStorage.getItem('api')
-            let s_debug_api = sessionStorage.getItem('debug_api')
-            sessionStorage.setItem('api', api ?? s_api ?? import.meta.env.VITE_BASE_API)
-            sessionStorage.setItem('debug_api', debugApi ?? s_debug_api ?? import.meta.env.VITE_BASE_DEBUG_API)
+            let s_api = localStorage.getItem('api')
+            let s_debug_api = localStorage.getItem('debug_api')
+            localStorage.setItem('api', api ?? s_api ?? import.meta.env.VITE_BASE_API)
+            localStorage.setItem('debug_api', debugApi ?? s_debug_api ?? import.meta.env.VITE_BASE_DEBUG_API)
             this.config.api = api ?? s_api ?? import.meta.env.VITE_BASE_API
             this.config.debugApi = debugApi ?? s_debug_api ?? import.meta.env.VITE_BASE_DEBUG_API
             

@@ -11,13 +11,13 @@
         <el-col :span="12">
           <el-card shadow="never">
             <span>Total Balance</span>
-            <h3>{{pledges.availablePledgedBalance.toFixedDecimal()}}  Hop</h3>
+            <h3>{{pledges.availablePledgedBalance.toFixedDecimal()}}  Monopro</h3>
           </el-card>
         </el-col>
         <el-col :span="12">
           <el-card shadow="never">
             <span>Pledged  Amount</span>
-            <h3>{{pledges.pledgedBalance.toFixedDecimal()}}  Hop</h3>
+            <h3>{{pledges.pledgedBalance.toFixedDecimal()}}  Monopro</h3>
           </el-card>
         </el-col>
       </el-row>
@@ -68,7 +68,7 @@ import { ref, reactive, onMounted } from "vue";
 import PToken from "@/components/Token.vue";
 import { getPledge, getPledgeTransations, postPledgeStake, postPledgeUnstake } from "@/apis/http";
 import Token from "@/utils/Token";
-import { HOP_LINK_ORIGIN } from "@/utils/data";
+import { MOP_LINK_ORIGIN } from "@/utils/data";
 
 let dataList = reactive({
   list: [],
@@ -92,7 +92,7 @@ const onPageChange = (page) => {
 }
 
 function shareHandle(reference) {
-  window.open(`${HOP_LINK_ORIGIN}/tx/${reference}`, '_blank')
+  window.open(`${MOP_LINK_ORIGIN}/tx/${reference}`, '_blank')
 }
 
 function cancelHandle() {

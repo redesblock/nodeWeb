@@ -2,7 +2,7 @@
 <template>
 <Page>
     <el-card shadow="never" class="actions">
-        <span> HOP FILE HASH</span>
+        <span> MOP FILE HASH</span>
         <el-input clearable style="width: calc(100% - 400px); margin-left: 18px;" placeholder="place input file hash" v-model.trim="input"></el-input>
         <div style="display: inline-block;" class="mgl20">
         <el-button type="primary" @click="downloadHandle"> 
@@ -30,11 +30,11 @@
 import PTable  from "@/components/PTable.vue";
 import { Search, Close } from "@element-plus/icons-vue";
 import { reactive, ref, onMounted } from "vue";
-import { getPrettyDateString, recognizeEnsOrSwarmHash } from "@/utils/index";
-import { ManifestJs } from '@ethersphere/manifest-js'
+import { getPrettyDateString, recognizeEnsOrClusterHash } from "@/utils/index";
+import { ManifestJs } from '@redesblock/mop.js'
 import { putHistory,HISTORY_KEYS,determineHistoryName } from "@/utils/storage";
 import { ElMessage } from 'element-plus'
-import { beeApi } from "@/apis/Bee";
+import { mopApi } from "@/apis/Mop";
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -73,8 +73,8 @@ let pageOptions = reactive({
 
 async function downloadHandle() {
     try {
-        let identifier = recognizeEnsOrSwarmHash(input.value)
-        const manifestJs = new ManifestJs(beeApi)
+        let identifier = recognizeEnsOrClusterHash(input.value)
+        const manifestJs = new ManifestJs(mopApi)
         const feedIdentifier = await manifestJs.resolveFeedManifest(identifier)
 
         if (feedIdentifier) {

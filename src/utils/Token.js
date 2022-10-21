@@ -3,11 +3,11 @@ import { isInteger, makeBigNumber } from '../utils'
 
 const POSSIBLE_DECIMALS = [18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 
-const HOP_DECIMALS = 18
+const MOP_DECIMALS = 18
 
 export default class Token {
 
-  constructor(amount = '0' , decimals = HOP_DECIMALS) {
+  constructor(amount = '0' , decimals = MOP_DECIMALS) {
     const a = makeBigNumber(amount)
 
     if (!isInteger(a) || !POSSIBLE_DECIMALS.includes(decimals)) {
@@ -28,7 +28,7 @@ export default class Token {
    *
    * @returns new Token
    */
-  static fromDecimal(amount, decimals = HOP_DECIMALS){
+  static fromDecimal(amount, decimals = MOP_DECIMALS){
     const a = makeBigNumber(amount)
 
     // No need to do any validation here, it is done when the new token is created

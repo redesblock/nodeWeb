@@ -8,7 +8,7 @@
       ref="ruleFormRef"
       :size="formSize"
     >
-      <el-form-item class="label" label="HOP Token:" prop="token">
+      <el-form-item class="label" label="MOP Token:" prop="token">
         <el-input-number
         v-model="ruleForm.token"
         :max="0.1"

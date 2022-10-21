@@ -1,9 +1,9 @@
 <template>
 <Page>
-  <Fold isShowStatus :isHealth="appModule.apiHealth"  label="Connection to Hop  API">
+  <Fold isShowStatus :isHealth="appModule.apiHealth"  label="Connection to Mop  API">
     <div class="content">
-        <div class="tips"> The connection to the Hop NODEs debug APIhas been successful</div>
-        <h3>Hop  API</h3>
+        <div class="tips"> The connection to the Mop NODEs debug APIhas been successful</div>
+        <h3>Mop  API</h3>
         <div>
             <el-input v-model.trim="api" placeholder="please enter" />
             <div style="margin-top: 10px;">
@@ -13,10 +13,10 @@
         </div>
     </div>
   </Fold>
-  <Fold isShowStatus :isHealth="appModule.status =='ok'" label="Connection to Hop Debug API" marginTop="20px">
+  <Fold isShowStatus :isHealth="appModule.status =='ok'" label="Connection to Mop Debug API" marginTop="20px">
     <div class="content">
-        <div class="tips"> The connection to the Hop NODEs debug APIhas been successful</div>
-        <h3>Hop  Debug  API</h3>
+        <div class="tips"> The connection to the Mop NODEs debug APIhas been successful</div>
+        <h3>Mop  Debug  API</h3>
         <div>
             <el-input v-model.trim="debugApi" placeholder="please enter" />
             <div style="margin-top: 10px;">
@@ -27,9 +27,9 @@
     </div>
   </Fold>
   
-  <Fold isShowStatus :isHealth="appModule.status =='ok'"  label="Hop Version" marginTop="20px" >
+  <Fold isShowStatus :isHealth="appModule.status =='ok'"  label="Mop Version" marginTop="20px" >
     <div class="content">
-        <div class="tips"> You are running the latest version of Hop.</div>
+        <div class="tips"> You are running the latest version of Mop.</div>
         <div class="list-item">
           <span>Your Version</span>
           <span>{{appModule.version}}</span>
@@ -44,7 +44,7 @@
   <Fold isShowStatus :isHealth="appModule.status =='ok'"  label="Connection to Blockchain" marginTop="20px">
     <div class="content">
       <div class="tips">Your NODE is connected to the BNB Smart Chain blockchain</div>
-      <Encipherment line v-if="appModule.address.ethereum" title="Bsc Address" :str="appModule.address.ethereum"></Encipherment>
+      <Encipherment line v-if="appModule.address.bsc" title="Bsc Address" :str="appModule.address.bsc"></Encipherment>
     </div>
   </Fold>
 
@@ -63,7 +63,7 @@
 
   <Fold isShowStatus :isHealth="appModule.status =='ok'" label="Connection to Peers" marginTop="20px">
     <div class="content">
-        <div class="tips"> You are connected to other Hop NODEs</div>
+        <div class="tips"> You are connected to other Mop NODEs</div>
         <div class="list-item">
           <span>Overall Health Indicator</span>
           <span>{{appModule.percentageText}}</span>

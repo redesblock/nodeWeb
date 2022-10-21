@@ -1,7 +1,7 @@
 
 <template>
   <Page>
-    <Block title="Hop Base NODE">
+    <Block title="Mop Base NODE">
       <el-card shadow="never">
         <template #header>
           <div class="version">{{appModule.version}}</div>
@@ -17,7 +17,7 @@
         </div>
       </el-card>
     </Block>
-    <Block title="Hop NODE Connectivity">
+    <Block title="Mop NODE Connectivity">
       <el-card shadow="never">
        <div class="board-card">
          <div>
@@ -72,7 +72,7 @@
     <Block title="Blockchain">
       <el-card shadow="never">
         <div class="item">
-          <Encipherment showAmount :amount="bscAmount.toFixedDecimal()" @click="sharehandle" share title="Bsc address" :str="appModule.address.ethereum"></Encipherment>
+          <Encipherment showAmount :amount="bscAmount.toFixedDecimal()" @click="sharehandle" share title="Bsc address" :str="appModule.address.bsc"></Encipherment>
         </div>
         <div class="item">
           <Encipherment showAmount :amount="chequebookAmount.toFixedDecimal()" @click="sharehandle" share title="Chequebook address" :str="appModule.chequebookAddress"></Encipherment>
@@ -92,7 +92,7 @@ import Encipherment from "@/components/Encipherment.vue";
 import { getAddresseAmount, getChequebookAmount } from "@/apis/http";
 import { onMounted, ref } from "vue";
 import Token from "@/utils/Token";
-import { HOP_LINK_ORIGIN } from "@/utils/data";
+import { MOP_LINK_ORIGIN } from "@/utils/data";
 
 const appModule = useAppModule();
 
@@ -101,7 +101,7 @@ const chequebookAmount = ref(new Token('0'))
 
 
 function sharehandle(reference) {
-  window.open(`${HOP_LINK_ORIGIN}/address/${reference}`, '_blank')
+  window.open(`${MOP_LINK_ORIGIN}/address/${reference}`, '_blank')
 }
 
 async function fetchAddresseAmount() {

@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import Token from "@/utils/Token";
-import { HOP_LINK_DOMAIN } from "./data";
+import { MOP_LINK_DOMAIN } from "./data";
 export const lengthWithoutPrefix = (s) => s.replace(/^0x/i, '').length;
 
 export const isPrefixedHexString = (s) =>{
@@ -42,7 +42,6 @@ export function makeBigNumber(value){
   
     if (typeof value === 'bigint') return new BigNumber(value.toString())
   
-    // FIXME: bee-js still returns some values as numbers and even outside of SAFE INTEGER bounds
     if (typeof value === 'number' /* && Number.isSafeInteger(value)*/) return new BigNumber(value)
   
     throw new TypeError(`Not a BigNumber or BigNumber convertible value. Type: ${typeof value} value: ${value}`)
@@ -135,16 +134,16 @@ export function mergeAccounting( balances, settlements, uncashedAmounts){
 
 const regexpMatchHash = /(?:^|[^a-f0-9]+)([a-f0-9]{64}|[a-f0-9]{128})(?:$|[^a-f0-9]+)/i
 
-export function extractSwarmHash(string){
+export function extractClusterHash(string){
   const matches = string.match(regexpMatchHash)
 
   return (matches && matches[1]) || undefined
 }
 
-// Matches the CID from hop-link subdomain
-const regexpMatchCID = new RegExp(`https://(bah5acgza[a-z0-9]{52})\\.${HOP_LINK_DOMAIN}`, 'i')
+// Matches the CID from mop-link subdomain
+const regexpMatchCID = new RegExp(`https://(bah5acgza[a-z0-9]{52})\\.${MOP_LINK_DOMAIN}`, 'i')
 
-export function extractSwarmCid(s){
+export function extractClusterCid(s){
   const matches = s.match(regexpMatchCID)
 
   if (!matches || !matches[1]) {
@@ -175,8 +174,8 @@ export function extractEns(value){
   return (matches && matches[1]) || undefined
 }
 
-export function recognizeEnsOrSwarmHash(value) {
-  return extractEns(value) || extractSwarmHash(value) || extractSwarmCid(value) || value
+export function recognizeEnsOrClusterHash(value) {
+  return extractEns(value) || extractClusterHash(value) || extractClusterCid(value) || value
 }
 
 export function uuidV4() {
@@ -232,12 +231,10 @@ export function convertAmountToSeconds(amount, pricePerBlock) {
   // TODO: blocktime should come directly from the blockchain as it may differ between different networks
   const blockTime = 5 // On mainnet there is 5 seconds between blocks
 
-  // See https://github.com/ethersphere/bee/blob/66f079930d739182c4c79eb6008784afeeba1096/pkg/debugapi/postage.go#L410-L413
   return (amount * blockTime) / pricePerBlock
 }
 
 export function calculateStampPrice(depth, amount) {
-  // See https://github.com/ethersphere/bee/blob/66f079930d739182c4c79eb6008784afeeba1096/pkg/debugapi/postage.go#L410-L413
   return new Token(amount * BigInt(2 ** depth)) // FIXME: the 2 ** depth should be performed on bigint already
 }
 
@@ -254,12 +251,12 @@ const DEFAULT_POLLING_FREQUENCY = 1_000
 const DEFAULT_STAMP_USABLE_TIMEOUT = 5_000
 
 
-export async function waitUntilStampUsable(batchId,beeDebug,options){
+export async function waitUntilStampUsable(batchId,mopDebug,options){
   const timeout = options?.timeout || DEFAULT_STAMP_USABLE_TIMEOUT
   const pollingFrequency = options?.pollingFrequency || DEFAULT_POLLING_FREQUENCY
 
   for (let i = 0; i < timeout; i += pollingFrequency) {
-    const stamp = await beeDebug.getPostageBatch(batchId)
+    const stamp = await mopDebug.getVoucherBatch(batchId)
 
     if (stamp.usable) return stamp
     await sleepMs(pollingFrequency)

@@ -8,7 +8,7 @@ import {
     getChainState
  } from "@/apis/index";
 import { pickThreshold } from "@/utils/data";
-import { useBeeApi } from "@/apis/Bee";
+import { useMopApi } from "@/apis/Mop";
 import semver from "semver";
 export const useAppModule = defineStore('appModule', {
     state: () => {
@@ -24,7 +24,7 @@ export const useAppModule = defineStore('appModule', {
         address: {
             overlay: '',
             underlay: [],
-            ethereum: '',
+            bsc: '',
             publicKey: '',
             pssPublicKey: '',
         },
@@ -117,7 +117,7 @@ export const useAppModule = defineStore('appModule', {
             this.config.api = api ?? s_api ?? import.meta.env.VITE_BASE_API
             this.config.debugApi = debugApi ?? s_debug_api ?? import.meta.env.VITE_BASE_DEBUG_API
             
-            useBeeApi({api, debugApi})
+            useMopApi({api, debugApi})
         }
     }
   })

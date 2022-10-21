@@ -37,7 +37,7 @@ export default defineConfig(({command, mode}) => {
         "safe-buffer": "buffer",
         fs: "memfs",
         path: "path-browserify",
-        crypto: "crypto-browserify",
+        //crypto: "crypto-browserify",
         "readable-stream": "readable-stream-no-circular",
         timers: "timers-browserify",
         os: "os-browserify",

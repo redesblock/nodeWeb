@@ -10,7 +10,7 @@
                   <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
               </div>
               <div>
-                  <p v-if="metadata.hash">Hop Hash: {{shortenHash(metadata.hash)}}</p>
+                  <p v-if="metadata.hash">Mop Hash: {{shortenHash(metadata.hash)}}</p>
                   <p v-if="metadata.name">{{metadata?.type === 'folder' ? 'Folder Name' : 'Filename'}}: {{shortenText(metadata?.name)}}</p>
                   <p>Kind: {{metadata.type}}</p>
                   <p v-if="metadata.size">Size: {{getHumanReadableFileSize(metadata.size)}}</p>
@@ -21,10 +21,10 @@
 
         <div>
             <el-card shadow="never" style="margin-top: 10px;">
-              <Encipherment line title="Hop Hash：" :str="metadata.hash"></Encipherment>
+              <Encipherment line title="Mop Hash：" :str="metadata.hash"></Encipherment>
             </el-card>
             <div class="list">
-              <Encipherment @click="shareHandle" share title="Share on Hop Gateway" :str="'https://gateway.hopot.io/access/'+metadata.hash + '/'"></Encipherment>
+              <Encipherment @click="shareHandle" share title="Share on Mop Gateway" :str="'https://gateway.hopot.io/access/'+metadata.hash + '/'"></Encipherment>
             </div>
 
             <div class="mgt20">
@@ -44,14 +44,14 @@
 </template>
 <script setup>
 import { ref, onMounted, reactive } from "vue";
-import { beeApi, beeDebugApi } from "@/apis/Bee";
+import { mopApi, mopDebugApi } from "@/apis/Mop";
 import { getMetadata, getHumanReadableFileSize, packageFile, detectIndexHtml, getAssetNameFromFiles } from "@/utils/file";
 import Encipherment from "@/components/Encipherment.vue";
 import { shortenText  } from "@/utils/index";
 import { config, META_FILE_NAME, PREVIEW_FILE_NAME } from "@/utils/data";
 import { putHistory, HISTORY_KEYS, shortenHash, determineHistoryName } from "@/utils/storage";
 import { ElMessage, ElLoading } from 'element-plus'
-import { ManifestJs } from '@ethersphere/manifest-js'
+import { ManifestJs } from '@redesblock/mop.js'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import { useAppModule } from "@/store/appModule";
@@ -70,7 +70,7 @@ let metadata = ref({
   hash: ''
 })
 let previewUri = ref('')
-let swarmEntries = ref({})
+let clusterEntries = ref({})
 
 let uploadOrigin = { origin: 'UPLOAD' }
 
@@ -81,7 +81,7 @@ async function getDetail(reference) {
       background: 'rgba(0, 0, 0, 0.7)',
   })
   try {
-    const manifestJs = new ManifestJs(beeApi)
+    const manifestJs = new ManifestJs(mopApi)
     const isManifest = await manifestJs.isManifest(reference)
 
     if (!isManifest) {
@@ -101,7 +101,7 @@ async function getDetail(reference) {
 
     delete entries[META_FILE_NAME]
     delete entries[PREVIEW_FILE_NAME]
-    swarmEntries.value = entries
+    clusterEntries.value = entries
 
     const count = Object.keys(entries).length
 
@@ -115,13 +115,13 @@ async function getDetail(reference) {
       indexDocument
     }
   
-    const mtdt = await beeApi.downloadFile(reference, META_FILE_NAME)
+    const mtdt = await mopApi.downloadFile(reference, META_FILE_NAME)
     const remoteMetadata = mtdt.data.text()
     metadata.value = { ...metadata.value, ...(JSON.parse(remoteMetadata)) }
     loading.close()
     
     if (previewFile) {
-      previewUri.value = (`${store.api}/hop/${reference}/${PREVIEW_FILE_NAME}`)
+      previewUri.value = (`${store.api}/mop/${reference}/${PREVIEW_FILE_NAME}`)
     }
   } catch (e) {
     // console.log(e.message)
@@ -147,17 +147,17 @@ async function download() {
       background: 'rgba(0, 0, 0, 0.7)',
   })
   try {
-    if (!beeApi) {
+    if (!mopApi) {
       return
     }
     const {hash: reference, indexDocument} = metadata.value
     putHistory(HISTORY_KEYS.DOWNLOAD_HISTORY, reference, determineHistoryName(reference, indexDocument))
-    if (Object.keys(swarmEntries.value).length === 1) {
-      window.open(`${store.api}/hop/${reference}/`, '_blank')
+    if (Object.keys(clusterEntries.value).length === 1) {
+      window.open(`${store.api}/mop/${reference}/`, '_blank')
     } else {
       const zip = new JSZip()
-      for (const [path, hash] of Object.entries(swarmEntries.value)) {
-        zip.file(path, await beeApi.downloadData(hash))
+      for (const [path, hash] of Object.entries(clusterEntries.value)) {
+        zip.file(path, await mopApi.downloadData(hash))
       }
       const content = await zip.generateAsync({ type: 'blob' })
       saveAs(content, reference + '.zip')

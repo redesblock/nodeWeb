@@ -2,7 +2,7 @@
 <Page>
     <Fold label="APISetting" show>
         <div class="content">
-            <h3>Hop  API</h3>
+            <h3>Mop  API</h3>
             <div>
                 <el-input v-model.trim="api" placeholder="please enter" />
                 <div style="margin-top: 10px;">
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="content">
-            <h3>Hop  Debug  API</h3>
+            <h3>Mop  Debug  API</h3>
             <div>
                 <el-input v-model.trim="debugApi" placeholder="please enter" />
                 <div style="margin-top: 10px;">

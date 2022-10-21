@@ -52,7 +52,7 @@
 
 <script setup>
 import { ref, reactive, watch } from "vue";
-import { createPostageBatch } from "@/apis/index";
+import { createVoucherBatch } from "@/apis/index";
 import { ElLoading, ElMessage } from 'element-plus'
 import { calculateStampPrice, convertAmountToSeconds, convertDepthToBytes, secondsToTimeString } from "@/utils/index";
 import { getHumanReadableFileSize } from "@/utils/file";
@@ -146,9 +146,9 @@ const confirmClick = async (formEl) => {
         text: 'Service Pending',
         background: 'rgba(0, 0, 0, 0.7)',
       })
-      let options = ruleForm.Label ? { label: ruleForm.Label } : undefined
+      let options = ruleForm.Label ? { label: ruleForm.Label, waitForUsable: false } : {waitForUsable: false}
 
-      createPostageBatch(ruleForm.Amount, ruleForm.Depth, options).then(data => {
+      createVoucherBatch(ruleForm.Amount, ruleForm.Depth, options).then(data => {
         ElMessage({
           message: `create successful: batchID ${data}`,
           type: 'success'

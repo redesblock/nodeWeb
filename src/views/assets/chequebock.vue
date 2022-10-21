@@ -23,11 +23,11 @@
              <span class="number">{{cardObj.availableBalance.toFixedDecimal()}} MOP</span>
          </div>
          <div>
-           <div class="label">Total Cheques Amount Sent</div>
+           <div class="label">Total Amount Sent</div>
              <span class="number">{{cardObj.totalSent.toFixedDecimal()}} MOP</span>
          </div>
          <div>
-           <div class="label">Total Cheques Amount Received</div>
+           <div class="label">Total Amount Received</div>
              <span class="number">{{cardObj.totalReceived.toFixedDecimal()}} MOP</span>
          </div>
          

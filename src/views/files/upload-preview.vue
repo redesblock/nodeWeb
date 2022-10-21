@@ -22,7 +22,7 @@
       </el-card>
 
       <div>
-          <h3>You need a postage vouchers to upload.</h3>
+          <h3>You need a voucher vouchers to upload.</h3>
           <el-card shadow="never">
             <el-select  
             v-model="batchID" 
@@ -45,7 +45,7 @@
           </el-card>
 
           <el-card shadow="never" style="margin-top: 10px;">
-            <h3>Associated postage vouchers:</h3>
+            <h3>Associated voucher vouchers:</h3>
             <h4>{{batchID && batchID.slice(0, 8)}}</h4>
           </el-card>
           <div class="mgt20">
@@ -69,13 +69,13 @@
 </template>
 <script setup>
 import { ref, onMounted, reactive, computed } from "vue";
-import { beeApi, beeDebugApi } from "@/apis/Bee";
+import { mopApi, mopDebugApi } from "@/apis/Mop";
 import { getMetadata, getHumanReadableFileSize, packageFile, detectIndexHtml, getAssetNameFromFiles } from "@/utils/file";
 import Stamp from "@/components/Stamp.vue";
 import { shortenText,waitUntilStampUsable  } from "@/utils/index";
 import { resize,  } from "@/utils/image";
 import { PREVIEW_DIMENSIONS, META_FILE_NAME, PREVIEW_FILE_NAME } from "@/utils/data";
-import { getAllPostageBatch } from "@/apis/index";
+import { getAllVoucherBatch } from "@/apis/index";
 import { putHistory, HISTORY_KEYS } from "@/utils/storage";
 import { ElMessage, ElLoading } from 'element-plus'
 
@@ -98,14 +98,14 @@ let previewBlob
 let uploadOrigin = { origin: 'UPLOAD' }
 const router = useRouter()
 
-function enrichStamp(postageBatch) {
-  const { depth, bucketDepth, utilization } = postageBatch
+function enrichStamp(voucherBatch) {
+  const { depth, bucketDepth, utilization } = voucherBatch
 
   const usage = utilization / Math.pow(2, depth - bucketDepth)
   const usageText = `${Math.ceil(usage * 100)}%`
   const capacity = `${getHumanReadableFileSize(2 ** depth * 4096 * usage)} / ${getHumanReadableFileSize(2 ** depth * 4096)}`
   return {
-    ...postageBatch,
+    ...voucherBatch,
     usage,
     usageText,
     capacity
@@ -134,7 +134,7 @@ function selectChange(item) {
 
 }
 function fetchGetStamps() {
-  getAllPostageBatch().then(data => {
+  getAllVoucherBatch().then(data => {
     stampList.value = data.map(enrichStamp)
   })
   
@@ -216,11 +216,11 @@ async function uploadFiles() {
     })
 
     try {
-      if (beeDebugApi) {
-        await waitUntilStampUsable(batchID.value, beeDebugApi)
+      if (mopDebugApi) {
+        await waitUntilStampUsable(batchID.value, mopDebugApi)
       }
 
-      beeApi
+      mopApi
       .uploadFiles(batchID.value, fls, { indexDocument })
       .then(hash => {
         // console.log(hash)

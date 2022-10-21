@@ -29,7 +29,7 @@
 
 <script setup>
 import Stamp from "@/components/Stamp.vue";
-import { getAllPostageBatch } from "@/apis/index";
+import { getAllVoucherBatch } from "@/apis/index";
 import { getHumanReadableFileSize } from "@/utils/file";
 import Encipherment from "@/components/Encipherment.vue";
 import {
@@ -52,14 +52,14 @@ let dataList = reactive({
   total: 0
 })
 
-function enrichStamp(postageBatch) {
-  const { depth, bucketDepth, utilization } = postageBatch
+function enrichStamp(voucherBatch) {
+  const { depth, bucketDepth, utilization } = voucherBatch
 
   const usage = utilization / Math.pow(2, depth - bucketDepth)
   const usageText = `${Math.ceil(usage * 100)}%`
   const capacity = `${getHumanReadableFileSize(2 ** depth * 4096 * usage)} / ${getHumanReadableFileSize(2 ** depth * 4096)}`
   return {
-    ...postageBatch,
+    ...voucherBatch,
     usage,
     usageText,
     capacity
@@ -67,7 +67,7 @@ function enrichStamp(postageBatch) {
 }
 
 function fetchGetStamps() {
-  getAllPostageBatch().then(data => {
+  getAllVoucherBatch().then(data => {
     dataList.list = data.map(enrichStamp)
     dataList.total = dataList.list.length
   })

@@ -11,7 +11,7 @@
         <el-col :span="6">
           <el-card shadow="never" class="content">
             <span>System Rewards</span>
-            <h3>{{reward.systemBalance.toFixedDecimal()}}  HOP</h3>
+            <h3>{{reward.systemBalance.toFixedDecimal()}}  MOP</h3>
           </el-card>
         </el-col>
         <el-col :span="6">
@@ -61,7 +61,7 @@ import PToken from "@/components/Token.vue";
 import { ref, reactive, onMounted } from "vue";
 import { getReward, getRewardTransation, postRewardCash, getAddresseAmount } from "@/apis/http";
 import Token from "@/utils/Token";
-import { HOP_LINK_ORIGIN } from "@/utils/data";
+import { MOP_LINK_ORIGIN } from "@/utils/data";
 
 let dataList = reactive({
   list: [],
@@ -86,7 +86,7 @@ const onPageChange = (page) => {
 }
 
 function shareHandle(reference) {
-  window.open(`${HOP_LINK_ORIGIN}/tx/${reference}`, '_blank')
+  window.open(`${MOP_LINK_ORIGIN}/tx/${reference}`, '_blank')
 }
 
 function cancelHandle(params) {
